@@ -1,5 +1,6 @@
 #pragma once
 #include "Core.h"
+#include "Time.h"
 
 namespace Engine
 {
@@ -34,6 +35,7 @@ namespace Engine
 	private:
 
 		SDL_Window* _window;
+		Time _time;
 		bool _isRunning;
 	};
 }

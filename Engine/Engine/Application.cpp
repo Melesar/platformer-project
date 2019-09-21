@@ -43,7 +43,9 @@ void Engine::Application::Setup()
 void Engine::Application::Update()
 {
 	HandleEvents();
-	Update(0);
+
+	_time.Update();
+	Update(_time.delta);
 }
 
 
@@ -58,6 +60,8 @@ void Engine::Application::HandleEvents()
 
 void Engine::Application::OnExit()
 {
+	SDL_DestroyWindow(_window);
+	SDL_Quit();
 }
 
 
