@@ -1,11 +1,11 @@
-#include <Engine/Application.h>
+#include "Platformer.h"
 #undef main
 
 
 int main (int argc, char** argv)
 {
-	Engine::Application app;
-	app.Run();
+	Platformer app;
+	app.Run(argc, argv);
 	
 	return 0;
 }
