@@ -8,8 +8,8 @@ namespace Engine
 	{
 	public:
 
-		void Render();
-		void SetBackgroundColor(Color color);
+		void render();
+		void setBackgroundColor(Color color);
 
 		Renderer(SDL_Window* window);
 		~Renderer();

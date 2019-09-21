@@ -10,7 +10,7 @@ public:
 	
 protected:
 
-	void Setup() override;
-	void Update(float deltaTime) override;
+	void setup() override;
+	void update(float deltaTime) override;
 };
 

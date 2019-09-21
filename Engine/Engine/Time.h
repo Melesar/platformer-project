@@ -6,7 +6,7 @@ namespace Engine
 	class ENGINE_API Time
 	{
 	public:
-		void Update();
+		void update();
 		
 		float delta();
 

@@ -1,18 +1,21 @@
 #include "Core.h"
 #include "Renderer.h"
 
-void Engine::Renderer::Render()
+void Engine::Renderer::render()
 {
+	SDL_GL_SwapWindow(_window);
+	
 	glClearColor(_backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Engine::Renderer::SetBackgroundColor(Color color)
+void Engine::Renderer::setBackgroundColor(Color color)
 {
 	_backgroundColor = color;
 }
 
 Engine::Renderer::Renderer(SDL_Window* window) :
+	_window(window),
 	_context(SDL_GL_CreateContext(window)),
 	_windowSurface(SDL_GetWindowSurface(window))
 {

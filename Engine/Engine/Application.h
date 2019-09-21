@@ -10,36 +10,36 @@ namespace Engine
 	class ENGINE_API Application
 	{
 	public: 
-		void Run();
-		void Run(int argc, char** argv);
+		void run();
+		void run(int argc, char** argv);
 
-		bool IsRunning();
+		bool isRunning() const;
 
 		virtual ~Application() = default;
 
 	protected:
 
-		void Stop();
-		virtual void Setup();
-		virtual void Update(float deltaTime) = 0;
-		virtual void OnExit();
+		void stop();
+		virtual void setup();
+		virtual void update(float deltaTime) = 0;
+		virtual void onExit();
 
 	private:
 
-		void InitSDL();
-		void Update();
+		void initSDL();
+		void update();
 
-		void HandleEvents();
+		void handleEvents();
 
 	protected:
 
 		std::string _title;
-		Renderer* _renderer;
+		Renderer* _renderer = nullptr;
 
 	private:
 
-		SDL_Window* _window;
-		Time _time;
-		bool _isRunning;
+		SDL_Window* _window = nullptr;
+		Time _time = {};
+		bool _isRunning = false;
 	};
 }

@@ -2,59 +2,59 @@
 #include "Application.h"
 #include "Rendering/Renderer.h"
 
-void Engine::Application::Run()
+void Engine::Application::run()
 {
 	_isRunning = true;
 
-	Setup();
+	setup();
 	while (_isRunning)
 	{
-		Update();
+		update();
 	}
 
-	OnExit();
+	onExit();
 }
 
-void Engine::Application::Run(int argc, char** argv)
+void Engine::Application::run(int argc, char** argv)
 {
-	Run();
+	run();
 }
 
-bool Engine::Application::IsRunning()
+bool Engine::Application::isRunning() const
 {
 	return _isRunning;
 }
 
-void Engine::Application::InitSDL()
+void Engine::Application::initSDL()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	_window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
 }
 
-void Engine::Application::Stop()
+void Engine::Application::stop()
 {
 	_isRunning = false;
 }
 
-void Engine::Application::Setup()
+void Engine::Application::setup()
 {
-	InitSDL();
+	initSDL();
 
-	_renderer = new Engine::Renderer(_window);
+	_renderer = new Renderer(_window);
 }
 
-void Engine::Application::Update()
+void Engine::Application::update()
 {
-	HandleEvents();
+	handleEvents();
 
-	_time.Update();
-	Update(_time.delta());
+	_time.update();
+	update(_time.delta());
 
-	_renderer->Render();
+	_renderer->render();
 }
 
 
-void Engine::Application::HandleEvents()
+void Engine::Application::handleEvents()
 {
 	SDL_Event e[1];
 	int count = SDL_PeepEvents(e, 1, SDL_GETEVENT, SDL_QUIT, SDL_QUIT);
@@ -63,7 +63,7 @@ void Engine::Application::HandleEvents()
 	SDL_PumpEvents();
 }
 
-void Engine::Application::OnExit()
+void Engine::Application::onExit()
 {
 	delete _renderer;
 

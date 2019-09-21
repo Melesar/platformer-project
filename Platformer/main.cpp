@@ -5,7 +5,7 @@
 int main (int argc, char** argv)
 {
 	Platformer app;
-	app.Run(argc, argv);
+	app.run(argc, argv);
 	
 	return 0;
 }

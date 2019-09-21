@@ -1,7 +1,7 @@
 #include "Core.h"
 #include "Time.h"
 
-void Engine::Time::Update()
+void Engine::Time::update()
 {
 	_lastTick = SDL_GetTicks();
 }

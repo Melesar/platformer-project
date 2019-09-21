@@ -7,13 +7,13 @@ Platformer::Platformer()
 }
 
 
-void Platformer::Setup()
+void Platformer::setup()
 {
-	Engine::Application::Setup();
-	_renderer->SetBackgroundColor({ 1.f, 0.f, 0.f, 1.f });
+	Application::setup();
+	_renderer->setBackgroundColor({ 1.f, 0.f, 0.f, 1.f });
 }
 
-void Platformer::Update(float deltaTime)
+void Platformer::update(float deltaTime)
 {
 	
 }
