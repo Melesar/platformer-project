@@ -2,8 +2,11 @@
 #include "Core.h"
 #include "Time.h"
 
+
 namespace Engine
 {
+	class Renderer;
+
 	class ENGINE_API Application
 	{
 	public: 
@@ -31,6 +34,7 @@ namespace Engine
 	protected:
 
 		std::string _title;
+		Renderer* _renderer;
 
 	private:
 

@@ -1,5 +1,6 @@
 #include "Core.h"
 #include "Application.h"
+#include "Rendering/Renderer.h"
 
 void Engine::Application::Run()
 {
@@ -38,6 +39,8 @@ void Engine::Application::Stop()
 void Engine::Application::Setup()
 {
 	InitSDL();
+
+	_renderer = new Engine::Renderer(_window);
 }
 
 void Engine::Application::Update()
@@ -45,7 +48,9 @@ void Engine::Application::Update()
 	HandleEvents();
 
 	_time.Update();
-	Update(_time.delta);
+	Update(_time.delta());
+
+	_renderer->Render();
 }
 
 
@@ -60,6 +65,8 @@ void Engine::Application::HandleEvents()
 
 void Engine::Application::OnExit()
 {
+	delete _renderer;
+
 	SDL_DestroyWindow(_window);
 	SDL_Quit();
 }

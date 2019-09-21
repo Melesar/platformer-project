@@ -1,5 +1,5 @@
 #pragma once
-#include <Engine/Application.h>
+#include <Application.h>
 
 class Platformer : public Engine::Application
 {
@@ -10,6 +10,7 @@ public:
 	
 protected:
 
+	void Setup() override;
 	void Update(float deltaTime) override;
 };
 
