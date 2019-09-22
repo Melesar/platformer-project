@@ -39,8 +39,10 @@ void Engine::Application::stop()
 void Engine::Application::setup()
 {
 	initSDL();
-
+	
 	_renderer = new Renderer(_window);
+	
+	setScreenSize();
 }
 
 void Engine::Application::update()
@@ -51,6 +53,19 @@ void Engine::Application::update()
 	update(_time.delta());
 
 	_renderer->render();
+}
+
+void Engine::Application::setScreenSize() const
+{
+	SDL_DisplayMode dm;
+	if (SDL_GetCurrentDisplayMode(0, &dm) != 0)
+	{
+		_renderer->setOutputSize(1, 1, 5.f);
+	}
+	else
+	{
+		_renderer->setOutputSize(dm.w, dm.h, 5.f);
+	}
 }
 
 
@@ -69,6 +84,28 @@ void Engine::Application::onExit()
 
 	SDL_DestroyWindow(_window);
 	SDL_Quit();
+}
+
+Engine::Sprite* Engine::Application::createSprite()
+{
+	const auto s = new Sprite();
+	_renderer->submitForRendering(s);
+	
+	return s;
+}
+
+Engine::Sprite* Engine::Application::createSprite(int pixelsPerUnit)
+{
+	const auto s = new Sprite(pixelsPerUnit);
+	_renderer->submitForRendering(s);
+
+	return s;
+}
+
+void Engine::Application::destroySprite(Sprite* sprite)
+{
+	_renderer->removeFromRenderingPool(sprite);
+	delete sprite;
 }
 
 

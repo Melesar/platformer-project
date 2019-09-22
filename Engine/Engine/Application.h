@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "Time.h"
+#include "Rendering/Sprite.h"
 
 
 namespace Engine
@@ -24,10 +25,16 @@ namespace Engine
 		virtual void update(float deltaTime) = 0;
 		virtual void onExit();
 
+		Sprite* createSprite();
+		Sprite* createSprite(int pixelsPerUnit);
+
+		void destroySprite(Sprite* sprite);
+
 	private:
 
 		void initSDL();
 		void update();
+		void setScreenSize() const;
 
 		void handleEvents();
 

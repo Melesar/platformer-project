@@ -14,5 +14,9 @@
 #include <glm/glm.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <glm/gtx/transform.hpp>
 
 #include <iostream>
+#include <vector>
+#include <set>
+#include <memory>

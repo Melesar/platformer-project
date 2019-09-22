@@ -4,22 +4,41 @@
 
 namespace Engine
 {
+	class IRenderable;
+
 	class ENGINE_API Renderer
 	{
 	public:
 
+		void submitForRendering(IRenderable* renderable);
+		void removeFromRenderingPool(IRenderable* renderable);
+		
 		void render();
 		void setBackgroundColor(Color color);
+		void setOutputSize(int screenWidth, int screenHeight, float worldHeight);
+		
+		glm::vec2 worldToScreenPos(glm::vec2 worldPos) const;
 
-		Renderer(SDL_Window* window);
+		explicit Renderer(SDL_Window* window);
+		
+		Renderer(const Renderer& other) = delete;
+		Renderer& operator = (const Renderer& other) = delete;
+		
 		~Renderer();
 
 	private:
 
+		float _aspect;
+		float _worldHeight, _worldWidth;
+		int _outputWidth, _outputHeight;
+		int _renderablesCount = 0;
+		
 		Color _backgroundColor;
-
 		SDL_Window* _window;
 		SDL_GLContext _context;
 		SDL_Surface* _windowSurface;
+
+		std::set<IRenderable*> _renderablesSet;
+		std::vector<IRenderable*> _renderablesList;
 	};
 }
