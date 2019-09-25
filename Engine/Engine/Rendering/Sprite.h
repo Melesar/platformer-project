@@ -11,6 +11,8 @@ namespace Engine
 	public:
 		void render() const override;
 		void setViewMatrix(const glm::mat3x3& matrix) override;
+
+		void move(const glm::vec2& offset);
 		
 		glm::vec2 getPosition() const;
 		float getScale() const;

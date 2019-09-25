@@ -17,6 +17,11 @@ void Engine::Sprite::setViewMatrix(const glm::mat3x3& matrix)
 	_viewMatrix = matrix;
 }
 
+void Engine::Sprite::move(const glm::vec2& offset)
+{
+	setPosition(_position + offset);
+}
+
 glm::vec2 Engine::Sprite::getPosition() const
 {
 	return _position;

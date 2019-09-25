@@ -11,15 +11,18 @@ void Platformer::setup()
 	Application::setup();
 	_renderer->setBackgroundColor({ 0.42, 0.77, 0.77, 1 });
 
-	_sprite = createSprite();
+	_player = createSprite();
 }
 
 void Platformer::update(float deltaTime)
 {
-		
+	const float moveSpeed = 3.f;
+	glm::vec2 offset = moveSpeed * deltaTime * _input.getMoveDirection();
+	
+	_player->move(offset);
 }
 
 void Platformer::onExit()
 {
-	destroySprite(_sprite);
+	destroySprite(_player);
 }

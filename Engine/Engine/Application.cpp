@@ -53,8 +53,8 @@ void Engine::Application::update()
 {
 	handleEvents();
 
-	_time.update();
 	update(_time.delta());
+	_time.update();
 
 	_renderer->render();
 }
