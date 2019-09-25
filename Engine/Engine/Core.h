@@ -17,6 +17,8 @@
 #include <glm/gtx/transform.hpp>
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <set>
 #include <memory>
+#include <string>

@@ -4,11 +4,14 @@
 
 namespace Engine
 {
+	class Shader;
+	
 	class ENGINE_API Sprite : public IRenderable
 	{
 	public:
-		void Render() const override;
-
+		void render() const override;
+		void setViewMatrix(const glm::mat3x3& matrix) override;
+		
 		glm::vec2 getPosition() const;
 		float getScale() const;
 		float getRotation() const;
@@ -23,7 +26,8 @@ namespace Engine
 
 	private:
 
-		glm::mat4x4 updateTransformMatrix() const;
+		glm::mat3x3 updateTransformMatrix() const;
+		void bindMesh();
 		void rebuildMesh();
 		
 	private:
@@ -33,7 +37,28 @@ namespace Engine
 		float _rotation;
 		float _scale;
 		
-		glm::mat4x4 _transformation;
+		glm::mat3x3 _transformation;
+		glm::mat3x3 _viewMatrix;
+
+		glm::vec3 _vertices[4];
+		glm::vec2 _uvs[4];
+		int _indices[6];
+
+		enum
+		{
+			BUFFER_VERTICES,
+			BUFFER_UVS,
+			BUFFER_INDICES,
+
+			NUM_BUFFERS,
+		};
+
+		GLuint _vao;
+		GLuint _vbo[NUM_BUFFERS];
+
+		std::unique_ptr<Shader> _shader;
+
+		const std::string _shaderName = "shader";
 	};
 }
 

@@ -40,5 +40,7 @@ namespace Engine
 
 		std::set<IRenderable*> _renderablesSet;
 		std::vector<IRenderable*> _renderablesList;
+
+		glm::mat2x2 _viewMatrix;
 	};
 }

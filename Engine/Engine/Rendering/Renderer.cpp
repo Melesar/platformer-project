@@ -4,11 +4,13 @@
 
 void Engine::Renderer::submitForRendering(IRenderable* renderable)
 {
-	if (_renderablesSet.find(renderable) == _renderablesSet.end())
+	if (_renderablesSet.find(renderable) != _renderablesSet.end())
 	{
 		return;
 	}
 
+	renderable->setViewMatrix(_viewMatrix);
+	
 	_renderablesSet.emplace(renderable);
 	_renderablesList.push_back(renderable);
 
@@ -26,7 +28,7 @@ void Engine::Renderer::removeFromRenderingPool(IRenderable* renderable)
 			if (_renderablesList[i] == renderable)
 			{
 				std::swap(_renderablesList[i], _renderablesList[_renderablesCount - 1]);
-				_renderablesList.erase(_renderablesList.cend());
+				_renderablesList.erase(_renderablesList.cend() - 1);
 				_renderablesCount -= 1;
 				break;
 			}
@@ -43,7 +45,7 @@ void Engine::Renderer::render()
 
 	for (int i = 0; i < _renderablesCount; ++i)
 	{
-		_renderablesList[i]->Render();
+		_renderablesList[i]->render();
 	}
 }
 
@@ -61,6 +63,9 @@ void Engine::Renderer::setOutputSize(int screenWidth, int screenHeight, float wo
 
 	_worldHeight = worldHeight;
 	_worldWidth = _worldHeight * _aspect;
+
+	_viewMatrix[0][0] = 1.f / _worldWidth;
+	_viewMatrix[1][1] = 1.f / _worldHeight;
 }
 
 Engine::Renderer::Renderer(SDL_Window* window) :
