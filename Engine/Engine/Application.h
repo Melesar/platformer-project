@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "Time.h"
 #include "Rendering/Sprite.h"
+#include "Input/Input.h"
 
 
 namespace Engine
@@ -42,6 +43,7 @@ namespace Engine
 		std::string _title;
 		bool _isFullscreen = false;
 		Renderer* _renderer = nullptr;
+		Input _input;
 
 	private:
 

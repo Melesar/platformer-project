@@ -66,7 +66,7 @@ void Engine::Application::handleEvents()
 	int count = SDL_PeepEvents(e, 1, SDL_GETEVENT, SDL_QUIT, SDL_QUIT);
 	_isRunning = count == 0;
 
-	SDL_PumpEvents();
+	_input.handleEvents();
 }
 
 void Engine::Application::onExit()
