@@ -29,7 +29,7 @@ glm::vec2 Input::getMoveDirection() const
 
 bool Input::isJump() const
 {
-	return keyPressed(Space);
+	return keyPressed(SPACE);
 }
 
 
@@ -66,12 +66,12 @@ void Input::handleKeyboardInput(SDL_Event* events, int count)
 {
 	for (int i = 0; i < count; i++) {
 		if (events[i].type == SDL_KEYDOWN) {
-			keysPressed[mapping[events[i].key.keysym.sym]] = true;
-			keysHold[mapping[events[i].key.keysym.sym]] = true;
+			_keysPressed[mapping[events[i].key.keysym.sym]] = true;
+			_keysHold[mapping[events[i].key.keysym.sym]] = true;
 		}
 		else if (events[i].type == SDL_KEYUP) {
-			keysHold[mapping[events[i].key.keysym.sym]] = false;
-			keysReleased[mapping[events[i].key.keysym.sym]] = true;
+			_keysHold[mapping[events[i].key.keysym.sym]] = false;
+			_keysReleased[mapping[events[i].key.keysym.sym]] = true;
 		}
 	}
 }
@@ -82,23 +82,23 @@ void Input::handleMouseInput(SDL_Event* events, int count)
 		MouseButton button;
 		switch (events[i].button.button) {
 			case SDL_BUTTON_LEFT:
-				button = Left;
+				button = LEFT;
 				break;
 			case SDL_BUTTON_RIGHT:
-				button = Right;
+				button = RIGHT;
 				break;
 			case SDL_BUTTON_MIDDLE:
-				button = Middle;
+				button = MIDDLE;
 				break;
 		}
 
 		if (events[i].type == SDL_MOUSEBUTTONDOWN) {
-			mouseButtonsPressed[button] = true;
-			mouseButtonsHold[button] = true;
+			_mouseButtonsPressed[button] = true;
+			_mouseButtonsHold[button] = true;
 		}
 		else if (events[i].type == SDL_MOUSEBUTTONUP) {
-			mouseButtonsReleased[button] = true;
-			mouseButtonsHold[button] = false;
+			_mouseButtonsReleased[button] = true;
+			_mouseButtonsHold[button] = false;
 		}
 	}
 }
@@ -106,16 +106,16 @@ void Input::handleMouseInput(SDL_Event* events, int count)
 void Input::resetKeys()
 {
 	for (int i = 0; i < KEYS_AMOUNT; ++i) {
-		keysReleased[i] = false;
-		keysPressed[i] = false;
+		_keysReleased[i] = false;
+		_keysPressed[i] = false;
 	}
 }
 
 void Input::resetMouseButtons()
 {
 	for (int i = 0; i < BUTTONS_AMOUNT; ++i) {
-		mouseButtonsPressed[i] = false;
-		mouseButtonsReleased[i] = false;
+		_mouseButtonsPressed[i] = false;
+		_mouseButtonsReleased[i] = false;
 	}
 }
 
@@ -134,19 +134,19 @@ void Input::initMapping()
 	mapping[SDLK_x] = X;
 	mapping[SDLK_c] = C;
 
-	mapping[SDLK_SPACE] = Space;
-	mapping[SDLK_RETURN] = Return;
-	mapping[SDLK_BACKSPACE] = Backspace;
+	mapping[SDLK_SPACE] = SPACE;
+	mapping[SDLK_RETURN] = RETURN;
+	mapping[SDLK_BACKSPACE] = BACKSPACE;
 }
 
 void Input::initHoldings()
 {
 	for (int i = 0; i < KEYS_AMOUNT; ++i) {
-		keysHold[i] = false;
+		_keysHold[i] = false;
 	}
 
 	for (int i = 0; i < BUTTONS_AMOUNT; ++i) {
-		mouseButtonsHold[i] = false;
+		_mouseButtonsHold[i] = false;
 	}
 }
 

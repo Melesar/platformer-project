@@ -40,11 +40,11 @@ namespace Engine
 		float _scale;
 		
 		glm::mat3x3 _transformation;
-		glm::mat3x3 _viewMatrix;
+		glm::mat3x3 _viewMatrix{};
 
-		glm::vec3 _vertices[4];
-		glm::vec2 _uvs[4];
-		int _indices[6];
+		glm::vec3 _vertices[4]{};
+		glm::vec2 _uvs[4]{};
+		int _indices[6]{};
 
 		enum
 		{
@@ -55,8 +55,8 @@ namespace Engine
 			NUM_BUFFERS,
 		};
 
-		GLuint _vao;
-		GLuint _vbo[NUM_BUFFERS];
+		GLuint _vao{};
+		GLuint _vbo[NUM_BUFFERS]{};
 
 		std::unique_ptr<Shader> _shader;
 

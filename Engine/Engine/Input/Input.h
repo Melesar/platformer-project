@@ -11,16 +11,16 @@ public:
 	{
 		W, A, S, D,
 		F, R, E, Q, C, Z, X,
-		Space,
-		Return,
-		Backspace,
+		SPACE,
+		RETURN,
+		BACKSPACE,
 
 		KEYS_AMOUNT
 	};
 
 	enum MouseButton
 	{
-		Left, Right, Middle,
+		LEFT, RIGHT, MIDDLE,
 
 		BUTTONS_AMOUNT
 	};
@@ -28,13 +28,13 @@ public:
 	glm::vec2 getMoveDirection() const;
 	bool isJump() const;
 
-	bool keyPressed(KeyCode key) const { return keysPressed[key]; }
-	bool keyHold(KeyCode key) const { return keysHold[key]; }
-	bool keyReleased(KeyCode key) const { return keysReleased[key]; }
+	bool keyPressed(KeyCode key) const { return _keysPressed[key]; }
+	bool keyHold(KeyCode key) const { return _keysHold[key]; }
+	bool keyReleased(KeyCode key) const { return _keysReleased[key]; }
 
-	bool mouseButtonPressed(MouseButton button) const { return mouseButtonsPressed[button]; }
-	bool mouseButtonHold(MouseButton button) const { return mouseButtonsHold[button]; }
-	bool mouseButtonReleased(MouseButton button) const { return mouseButtonsReleased[button]; }
+	bool mouseButtonPressed(MouseButton button) const { return _mouseButtonsPressed[button]; }
+	bool mouseButtonHold(MouseButton button) const { return _mouseButtonsHold[button]; }
+	bool mouseButtonReleased(MouseButton button) const { return _mouseButtonsReleased[button]; }
 
 	glm::vec2 mouseCoords() const;
 	
@@ -45,13 +45,13 @@ private:
 	//Mapping between SDL key codes and custom ones
 	unsigned int mapping[323];
 
-	bool keysPressed[KEYS_AMOUNT];
-	bool keysHold[KEYS_AMOUNT];
-	bool keysReleased[KEYS_AMOUNT];
+	bool _keysPressed[KEYS_AMOUNT];
+	bool _keysHold[KEYS_AMOUNT];
+	bool _keysReleased[KEYS_AMOUNT];
 
-	bool mouseButtonsPressed[BUTTONS_AMOUNT];
-	bool mouseButtonsHold[BUTTONS_AMOUNT];
-	bool mouseButtonsReleased[BUTTONS_AMOUNT];
+	bool _mouseButtonsPressed[BUTTONS_AMOUNT];
+	bool _mouseButtonsHold[BUTTONS_AMOUNT];
+	bool _mouseButtonsReleased[BUTTONS_AMOUNT];
 
 	void peekInputEvents();
 	void handleKeyboardInput(SDL_Event* events, int count);

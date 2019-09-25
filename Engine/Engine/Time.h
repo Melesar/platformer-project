@@ -8,7 +8,7 @@ namespace Engine
 	public:
 		void update();
 		
-		float delta();
+		float delta() const;
 
 	private:
 		unsigned int _lastTick;
