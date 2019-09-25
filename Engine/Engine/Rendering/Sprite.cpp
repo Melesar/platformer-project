@@ -87,7 +87,7 @@ glm::mat3x3 Engine::Sprite::updateTransformMatrix() const
 	transformation[0][0] = _scale * glm::cos(glm::radians(_rotation));
 	transformation[0][1] = -glm::sin(glm::radians(_rotation));
 	transformation[0][2] = 0;
-	transformation[1][0] = -transformation[0][1]; // sin
+	transformation[1][0] = -transformation[0][1];
 	transformation[1][1] = transformation[0][0];
 	transformation[1][2] = 0;
 	transformation[2][0] = _position.x;

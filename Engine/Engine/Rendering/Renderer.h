@@ -15,7 +15,6 @@ namespace Engine
 		
 		void render();
 		void setBackgroundColor(Color color);
-		void setOutputSize(int screenWidth, int screenHeight, float worldHeight);
 		
 		glm::vec2 worldToScreenPos(glm::vec2 worldPos) const;
 
@@ -25,6 +24,10 @@ namespace Engine
 		Renderer& operator = (const Renderer& other) = delete;
 		
 		~Renderer();
+
+	private:
+
+		void setOutputSize(int screenWidth, int screenHeight, float worldHeight);
 
 	private:
 

@@ -34,13 +34,13 @@ namespace Engine
 
 		void initSDL();
 		void update();
-		void setScreenSize() const;
 
 		void handleEvents();
 
 	protected:
 
 		std::string _title;
+		bool _isFullscreen = false;
 		Renderer* _renderer = nullptr;
 
 	private:

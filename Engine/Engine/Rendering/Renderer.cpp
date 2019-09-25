@@ -84,6 +84,10 @@ Engine::Renderer::Renderer(SDL_Window* window) :
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+	int width, height;
+	SDL_GetWindowSize(_window, &width, &height);
+	setOutputSize(width, height, 5.f);
+
 	glewInit();
 }
 

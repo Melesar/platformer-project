@@ -28,7 +28,13 @@ bool Engine::Application::isRunning() const
 void Engine::Application::initSDL()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
-	_window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
+	SDL_DisplayMode dm;
+	if (!_isFullscreen || SDL_GetCurrentDisplayMode(0, &dm) != 0)
+	{
+		dm.w = 800;
+		dm.h = 600;
+	}
+	_window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, dm.w, dm.h, SDL_WINDOW_OPENGL);
 }
 
 void Engine::Application::stop()
@@ -41,8 +47,6 @@ void Engine::Application::setup()
 	initSDL();
 	
 	_renderer = new Renderer(_window);
-	
-	setScreenSize();
 }
 
 void Engine::Application::update()
@@ -53,19 +57,6 @@ void Engine::Application::update()
 	update(_time.delta());
 
 	_renderer->render();
-}
-
-void Engine::Application::setScreenSize() const
-{
-	SDL_DisplayMode dm;
-	if (SDL_GetCurrentDisplayMode(0, &dm) != 0)
-	{
-		_renderer->setOutputSize(1, 1, 5.f);
-	}
-	else
-	{
-		_renderer->setOutputSize(dm.w, dm.h, 5.f);
-	}
 }
 
 
