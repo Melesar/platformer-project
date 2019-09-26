@@ -1,4 +1,5 @@
 #include "Platformer.h"
+#include "Rendering/Texture.h"
 #undef main
 
 

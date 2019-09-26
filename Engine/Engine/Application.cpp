@@ -1,6 +1,7 @@
 #include "Core.h"
 #include "Application.h"
 #include "Rendering/Renderer.h"
+#include "Rendering/Texture.h"
 
 void Engine::Application::run()
 {
@@ -79,17 +80,11 @@ void Engine::Application::onExit()
 
 Engine::Sprite* Engine::Application::createSprite()
 {
-	const auto s = new Sprite();
+	std::shared_ptr<Texture> elliot = std::make_shared<Texture>("../res/Elliot.png", ELLIOT);
+	//const auto s = new Sprite();
+	const auto s = new Sprite(elliot, 500, 500);
 	_renderer->submitForRendering(s);
 	
-	return s;
-}
-
-Engine::Sprite* Engine::Application::createSprite(int pixelsPerUnit)
-{
-	const auto s = new Sprite(pixelsPerUnit);
-	_renderer->submitForRendering(s);
-
 	return s;
 }
 

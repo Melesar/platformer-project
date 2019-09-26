@@ -1,7 +1,7 @@
 ﻿#include <Core.h>
 #include "Input.h"
 
-glm::vec2 Input::getMoveDirection() const
+glm::vec2 Engine::Input::getMoveDirection() const
 {
 	glm::vec2 dir(0.f);
 	
@@ -27,13 +27,13 @@ glm::vec2 Input::getMoveDirection() const
 }
 
 
-bool Input::isJump() const
+bool Engine::Input::isJump() const
 {
 	return keyPressed(SPACE);
 }
 
 
-glm::vec2 Input::mouseCoords() const
+glm::vec2 Engine::Input::mouseCoords() const
 {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
@@ -41,7 +41,7 @@ glm::vec2 Input::mouseCoords() const
 	return glm::vec2(x, y);
 }
 
-void Input::handleEvents()
+void Engine::Input::handleEvents()
 {
 	resetKeys();
 	resetMouseButtons();
@@ -49,7 +49,7 @@ void Input::handleEvents()
 	peekInputEvents();
 }
 
-void Input::peekInputEvents()
+void Engine::Input::peekInputEvents()
 {
 	SDL_Event mouseEvents[2];
 	SDL_Event keyboardEvents[2];
@@ -62,7 +62,7 @@ void Input::peekInputEvents()
 	handleMouseInput(mouseEvents, mouseCount);
 }
 
-void Input::handleKeyboardInput(SDL_Event* events, int count)
+void Engine::Input::handleKeyboardInput(SDL_Event* events, int count)
 {
 	for (int i = 0; i < count; i++) {
 		if (events[i].type == SDL_KEYDOWN) {
@@ -76,7 +76,7 @@ void Input::handleKeyboardInput(SDL_Event* events, int count)
 	}
 }
 
-void Input::handleMouseInput(SDL_Event* events, int count)
+void Engine::Input::handleMouseInput(SDL_Event* events, int count)
 {
 	for (int i = 0; i < count; ++i) {
 		MouseButton button;
@@ -103,7 +103,7 @@ void Input::handleMouseInput(SDL_Event* events, int count)
 	}
 }
 
-void Input::resetKeys()
+void Engine::Input::resetKeys()
 {
 	for (int i = 0; i < KEYS_AMOUNT; ++i) {
 		_keysReleased[i] = false;
@@ -111,7 +111,7 @@ void Input::resetKeys()
 	}
 }
 
-void Input::resetMouseButtons()
+void Engine::Input::resetMouseButtons()
 {
 	for (int i = 0; i < BUTTONS_AMOUNT; ++i) {
 		_mouseButtonsPressed[i] = false;
@@ -119,7 +119,7 @@ void Input::resetMouseButtons()
 	}
 }
 
-void Input::initMapping()
+void Engine::Input::initMapping()
 {
 	mapping[SDLK_w] = W;
 	mapping[SDLK_a] = A;
@@ -139,7 +139,7 @@ void Input::initMapping()
 	mapping[SDLK_BACKSPACE] = BACKSPACE;
 }
 
-void Input::initHoldings()
+void Engine::Input::initHoldings()
 {
 	for (int i = 0; i < KEYS_AMOUNT; ++i) {
 		_keysHold[i] = false;
@@ -150,7 +150,7 @@ void Input::initHoldings()
 	}
 }
 
-Input::Input()
+Engine::Input::Input()
 {
 	initMapping();
 	initHoldings();

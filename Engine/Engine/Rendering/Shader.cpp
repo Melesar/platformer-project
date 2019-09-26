@@ -1,6 +1,6 @@
 ﻿#include "Core.h"
 #include "Shader.h"
-
+#include "Data/Color.h"
 
 Engine::Shader::Shader(const std::string& fileName)
 {
@@ -25,6 +25,7 @@ Engine::Shader::Shader(const std::string& fileName)
 
 	_uniforms[TRANSFORM_U] = glGetUniformLocation(_program, "transform");
 	_uniforms[DIFFUSE_U]   = glGetUniformLocation(_program, "diffuse");
+	_uniforms[COLOR_U]     = glGetUniformLocation(_program, "color");
 }
 
 
@@ -48,6 +49,17 @@ void Engine::Shader::setTransform(const glm::mat3x3& transform)
 {
 	glUniformMatrix3fv(_uniforms[TRANSFORM_U], 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&transform));
 }
+
+void Engine::Shader::setDiffuse(int textureIndex)
+{
+	glUniform1i(_uniforms[DIFFUSE_U], textureIndex);
+}
+
+void Engine::Shader::setColor(const Color& color)
+{
+	glUniform4fv(_uniforms[COLOR_U], 1, reinterpret_cast<const GLfloat*>(&color));
+}
+
 
 std::string Engine::Shader::loadShader(const std::string& fileName) const
 {

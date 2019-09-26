@@ -1,11 +1,19 @@
 ﻿#include "Core.h"
 #include "Sprite.h"
+#include <utility>
 #include "Shader.h"
+#include "Texture.h"
 
 void Engine::Sprite::render() const
 {
 	_shader->bind();
+	if (_texture != nullptr)
+	{
+		_texture->bind();
+		_shader->setDiffuse(_texture->id());
+	}
 	_shader->setTransform(_viewMatrix * _transformation);
+	_shader->setColor(_color);
 
 	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
@@ -55,12 +63,19 @@ void Engine::Sprite::setScale(const float scale)
 	_transformation = updateTransformMatrix();
 }
 
+void Engine::Sprite::setColor(const Color& color)
+{
+	_color = color;
+}
+
 Engine::Sprite::Sprite() :
-	_pixelsPerUnit(100),
+	_ppuHorizontal(100),
+	_ppuVertical(100),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
-	_transformation(updateTransformMatrix())
+	_transformation(updateTransformMatrix()),
+	_texture(nullptr)
 {
 	rebuildMesh();
 	bindMesh();
@@ -68,18 +83,37 @@ Engine::Sprite::Sprite() :
 	_shader = std::make_unique<Shader>(_shaderName);
 }
 
-Engine::Sprite::Sprite(int pixelsPerUnit) :
-	_pixelsPerUnit(pixelsPerUnit),
+Engine::Sprite::Sprite(int ppuVertical, int ppuHorizontal) :
+	_ppuHorizontal(ppuHorizontal),
+	_ppuVertical(ppuVertical),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
-	_transformation(updateTransformMatrix())
+	_transformation(updateTransformMatrix()),
+	_texture(nullptr)
+{
+	rebuildMesh();
+	bindMesh();
+
+	_shader = std::make_unique<Shader>(_shaderName);
+	
+}
+
+Engine::Sprite::Sprite(std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal) :
+	_ppuHorizontal(ppuHorizontal),
+	_ppuVertical(ppuVertical),
+	_position(glm::vec2(0.f)),
+	_rotation(0.f),
+	_scale(1.f),
+	_transformation(updateTransformMatrix()),
+	_texture(std::move(texture))
 {
 	rebuildMesh();
 	bindMesh();
 
 	_shader = std::make_unique<Shader>(_shaderName);
 }
+
 
 Engine::Sprite::~Sprite()
 {
@@ -112,27 +146,30 @@ void Engine::Sprite::bindMesh()
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_VERTICES]);
 	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _vertices[0], _vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
-	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _uvs[0], _uvs, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo[BUFFER_INDICES]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof _indices[0], _indices, GL_STATIC_DRAW);
-
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
+	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _uvs[0], _uvs, GL_STATIC_DRAW);
+
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo[BUFFER_INDICES]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof _indices[0], _indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 }
 
 void Engine::Sprite::rebuildMesh()
 {
-	_vertices[0] = glm::vec3(-1, -1, 0);
-	_vertices[1] = glm::vec3(-1, 1, 0);
-	_vertices[2] = glm::vec3(1, 1, 0);
-	_vertices[3] = glm::vec3(1, -1, 0);
+	int extentX = _texture != nullptr ? _texture->width() / _ppuHorizontal : _ppuHorizontal / 100;
+	int extentY = _texture != nullptr ? _texture->height() / _ppuVertical : _ppuVertical / 100;
+	
+	_vertices[0] = glm::vec2(-extentX, -extentY);
+	_vertices[1] = glm::vec2(-extentX, extentY);
+	_vertices[2] = glm::vec2(extentX, extentY);
+	_vertices[3] = glm::vec2(extentX, -extentY);
 
 	_uvs[0] = glm::vec2(0, 0);
 	_uvs[1] = glm::vec2(0, 1);

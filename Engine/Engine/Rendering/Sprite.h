@@ -1,10 +1,12 @@
 ﻿#pragma once
 #include <Core.h>
+#include <Data/Color.h>
 #include <Rendering/IRenderable.h>
 
 namespace Engine
 {
 	class Shader;
+	class Texture;
 	
 	class ENGINE_API Sprite : public IRenderable
 	{
@@ -22,8 +24,12 @@ namespace Engine
 		void setRotation(float rotation);
 		void setScale(float scale);
 
+		void setColor(const Color& color);
+
 		Sprite();
-		explicit Sprite(int pixelsPerUnit);
+		Sprite(int ppuVertical, int ppuHorizontal);
+		Sprite(std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal);
+		
 		~Sprite();
 
 	private:
@@ -33,7 +39,7 @@ namespace Engine
 		void rebuildMesh();
 		
 	private:
-		int _pixelsPerUnit;
+		int _ppuHorizontal, _ppuVertical;
 
 		glm::vec2 _position;
 		float _rotation;
@@ -42,7 +48,7 @@ namespace Engine
 		glm::mat3x3 _transformation;
 		glm::mat3x3 _viewMatrix{};
 
-		glm::vec3 _vertices[4]{};
+		glm::vec2 _vertices[4]{};
 		glm::vec2 _uvs[4]{};
 		int _indices[6]{};
 
@@ -59,6 +65,8 @@ namespace Engine
 		GLuint _vbo[NUM_BUFFERS]{};
 
 		std::unique_ptr<Shader> _shader;
+		std::shared_ptr<Texture> _texture;
+		Color _color = {1, 1, 1, 1};
 
 		const std::string _shaderName = "shader";
 	};

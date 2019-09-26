@@ -88,7 +88,11 @@ Engine::Renderer::Renderer(SDL_Window* window) :
 	SDL_GetWindowSize(_window, &width, &height);
 	setOutputSize(width, height, 5.f);
 
+	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 	glewInit();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 
@@ -96,6 +100,7 @@ Engine::Renderer::~Renderer()
 {
 	SDL_FreeSurface(_windowSurface);
 	SDL_GL_DeleteContext(_context);
+	IMG_Quit();
 }
 
 glm::vec2 Engine::Renderer::worldToScreenPos(glm::vec2 worldPos) const

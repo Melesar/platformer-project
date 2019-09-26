@@ -27,7 +27,6 @@ namespace Engine
 		virtual void onExit();
 
 		Sprite* createSprite();
-		Sprite* createSprite(int pixelsPerUnit);
 
 		void destroySprite(Sprite* sprite);
 

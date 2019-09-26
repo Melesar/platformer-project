@@ -3,6 +3,8 @@
 
 namespace Engine
 {
+	struct Color;
+	
 	class ENGINE_API Shader
 	{
 	public:
@@ -11,6 +13,8 @@ namespace Engine
 
 		void bind() const;
 		void setTransform(const glm::mat3x3& transform);
+		void setDiffuse(int textureIndex);
+		void setColor(const Color& color);
 
 	private:
 		
@@ -25,6 +29,7 @@ namespace Engine
 			TRANSFORM_U,
 			TRANSLATION_U,
 			DIFFUSE_U,
+			COLOR_U,
 
 			NUM_UNIFORMS
 		};
