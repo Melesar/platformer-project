@@ -154,10 +154,10 @@ void Engine::Sprite::bindMesh()
 
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-
+	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo[BUFFER_INDICES]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof _indices[0], _indices, GL_STATIC_DRAW);
-
+	
 	glBindVertexArray(0);
 }
 
