@@ -66,7 +66,7 @@ void Engine::Renderer::setOutputSize(int screenWidth, int screenHeight, float wo
 
 	_viewMatrix[0][0] = 1.f / _worldWidth;
 	_viewMatrix[1][1] = 1.f / _worldHeight;
-	_viewMatrix[2][2] = 0;
+	_viewMatrix[2][2] = _maxDepthInv;
 }
 
 Engine::Renderer::Renderer(SDL_Window* window) :

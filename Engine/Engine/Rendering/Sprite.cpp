@@ -13,8 +13,7 @@ void Engine::Sprite::render() const
 		_shader->setDiffuse(_texture->id());
 	}
 
-	const glm::mat3x3 finalTransform = _viewMatrix * _transformation;
-	_shader->setTransform(finalTransform);
+	_shader->setTransform(_viewMatrix * _transformation);
 	_shader->setColor(_color);
 
 	glBindVertexArray(_vao);
@@ -181,10 +180,10 @@ void Engine::Sprite::rebuildMesh()
 	int extentX = _texture != nullptr ? _texture->width() / _ppuHorizontal : _ppuHorizontal / 100;
 	int extentY = _texture != nullptr ? _texture->height() / _ppuVertical : _ppuVertical / 100;
 	
-	_vertices[0] = glm::vec3(-extentX, -extentY, 0);
-	_vertices[1] = glm::vec3(-extentX, extentY, 0);
-	_vertices[2] = glm::vec3(extentX, extentY, 0);
-	_vertices[3] = glm::vec3(extentX, -extentY, 0);
+	_vertices[0] = glm::vec3(-extentX, -extentY, 1);
+	_vertices[1] = glm::vec3(-extentX, extentY, 1);
+	_vertices[2] = glm::vec3(extentX, extentY, 1);
+	_vertices[3] = glm::vec3(extentX, -extentY, 1);
 
 	_uvs[0] = glm::vec2(0, 0);
 	_uvs[1] = glm::vec2(0, 1);
