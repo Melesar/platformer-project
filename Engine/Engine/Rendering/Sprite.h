@@ -51,7 +51,7 @@ namespace Engine
 		glm::mat3x3 _transformation;
 		glm::mat3x3 _viewMatrix{};
 
-		glm::vec2 _vertices[4]{};
+		glm::vec3 _vertices[4]{};
 		glm::vec2 _uvs[4]{};
 		int _indices[6]{};
 
