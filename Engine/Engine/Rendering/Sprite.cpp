@@ -12,7 +12,9 @@ void Engine::Sprite::render() const
 		_texture->bind();
 		_shader->setDiffuse(_texture->id());
 	}
-	_shader->setTransform(_viewMatrix * _transformation);
+
+	const glm::mat3x3 finalTransform = _viewMatrix * _transformation;
+	_shader->setTransform(finalTransform);
 	_shader->setColor(_color);
 
 	glBindVertexArray(_vao);
@@ -61,6 +63,11 @@ void Engine::Sprite::setScale(const float scale)
 {
 	_scale = scale;
 	_transformation = updateTransformMatrix();
+}
+
+void Engine::Sprite::setSortingOrder(int order)
+{
+	_sortingOrder = order;
 }
 
 void Engine::Sprite::setColor(const Color& color)

@@ -8,7 +8,7 @@ namespace Engine
 	class Shader;
 	class Texture;
 	
-	class ENGINE_API Sprite : public IRenderable
+	class ENGINE_API Sprite final : public IRenderable
 	{
 	public:
 		void render() const override;
@@ -23,6 +23,7 @@ namespace Engine
 		void setPosition(const glm::vec2& position);
 		void setRotation(float rotation);
 		void setScale(float scale);
+		void setSortingOrder(int order);
 
 		void setColor(const Color& color);
 
@@ -31,7 +32,7 @@ namespace Engine
 		Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal);
 		explicit Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture);
 		
-		~Sprite();
+		virtual ~Sprite();
 
 	private:
 
@@ -45,6 +46,7 @@ namespace Engine
 		glm::vec2 _position;
 		float _rotation;
 		float _scale;
+		int _sortingOrder = 0;
 		
 		glm::mat3x3 _transformation;
 		glm::mat3x3 _viewMatrix{};

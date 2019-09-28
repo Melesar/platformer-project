@@ -35,6 +35,9 @@ namespace Engine
 		float _worldHeight, _worldWidth;
 		int _outputWidth, _outputHeight;
 		int _renderablesCount = 0;
+
+		const int _maxDepth = 100;
+		const float _maxDepthInv = 1.f / _maxDepth;
 		
 		Color _backgroundColor;
 		SDL_Window* _window;
@@ -44,6 +47,6 @@ namespace Engine
 		std::set<IRenderable*> _renderablesSet;
 		std::vector<IRenderable*> _renderablesList;
 
-		glm::mat2x2 _viewMatrix;
+		glm::mat3x3 _viewMatrix;
 	};
 }
