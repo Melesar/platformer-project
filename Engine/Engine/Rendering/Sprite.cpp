@@ -27,9 +27,19 @@ void Engine::Sprite::setViewMatrix(const glm::mat3x3& matrix)
 	_viewMatrix = matrix;
 }
 
+int Engine::Sprite::sortingOrder() const
+{
+	return _sortingOrder;
+}
+
 void Engine::Sprite::move(const glm::vec2& offset)
 {
 	setPosition(_position + offset);
+}
+
+void Engine::Sprite::rotate(float deltaAngle)
+{
+	setRotation(_rotation + deltaAngle);
 }
 
 glm::vec2 Engine::Sprite::getPosition() const
@@ -147,7 +157,7 @@ glm::mat3x3 Engine::Sprite::updateTransformMatrix() const
 	transformation[1][2] = 0;
 	transformation[2][0] = _position.x;
 	transformation[2][1] = _position.y;
-	transformation[2][2] = _sortingOrder;
+	transformation[2][2] = 1;
 	
 	return transformation;
 }
@@ -163,7 +173,7 @@ void Engine::Sprite::bindMesh()
 	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _vertices[0], _vertices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
 	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _uvs[0], _uvs, GL_STATIC_DRAW);
@@ -182,10 +192,10 @@ void Engine::Sprite::rebuildMesh()
 	float extentX = _texture != nullptr ? static_cast<float>(_texture->width()) / _ppuHorizontal : _ppuHorizontal * 0.01f;
 	float extentY = _texture != nullptr ? static_cast<float>(_texture->height()) / _ppuVertical : _ppuVertical * 0.01f;
 	
-	_vertices[0] = glm::vec3(-extentX, -extentY, 1);
-	_vertices[1] = glm::vec3(-extentX, extentY, 1);
-	_vertices[2] = glm::vec3(extentX, extentY, 1);
-	_vertices[3] = glm::vec3(extentX, -extentY, 1);
+	_vertices[0] = glm::vec2(-extentX, -extentY);
+	_vertices[1] = glm::vec2(-extentX, extentY);
+	_vertices[2] = glm::vec2(extentX, extentY);
+	_vertices[3] = glm::vec2(extentX, -extentY);
 
 	_uvs[0] = glm::vec2(0, 0);
 	_uvs[1] = glm::vec2(0, 1);

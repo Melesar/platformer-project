@@ -36,9 +36,6 @@ namespace Engine
 		int _outputWidth, _outputHeight;
 		int _renderablesCount = 0;
 
-		const int _maxDepth = 100;
-		const float _maxDepthInv = 1.f / _maxDepth;
-		
 		Color _backgroundColor;
 		SDL_Window* _window;
 		SDL_GLContext _context;

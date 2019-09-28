@@ -13,8 +13,10 @@ namespace Engine
 	public:
 		void render() const override;
 		void setViewMatrix(const glm::mat3x3& matrix) override;
+		int sortingOrder() const override;
 
 		void move(const glm::vec2& offset);
+		void rotate(float deltaAngle);
 		
 		glm::vec2 getPosition() const;
 		float getScale() const;
@@ -51,7 +53,7 @@ namespace Engine
 		glm::mat3x3 _transformation;
 		glm::mat3x3 _viewMatrix{};
 
-		glm::vec3 _vertices[4]{};
+		glm::vec2 _vertices[4]{};
 		glm::vec2 _uvs[4]{};
 		int _indices[6]{};
 

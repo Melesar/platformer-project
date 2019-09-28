@@ -7,6 +7,7 @@ namespace Engine
 	{
 	public:
 		virtual void render() const = 0;
+		virtual int sortingOrder() const = 0;
 		virtual void setViewMatrix(const glm::mat3x3& matrix) = 0;
 	};
 }

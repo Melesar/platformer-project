@@ -43,9 +43,18 @@ void Engine::Renderer::render()
 	glClearColor(_backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+	auto cmp = [](IRenderable* left, IRenderable* right) {return left->sortingOrder() >= right->sortingOrder(); };
+	std::priority_queue<IRenderable*, std::vector<IRenderable*>, decltype(cmp)> queue(cmp);
 	for (int i = 0; i < _renderablesCount; ++i)
 	{
-		_renderablesList[i]->render();
+		queue.push(_renderablesList[i]);
+	}
+
+	while (!queue.empty())
+	{
+		queue.top()->render();
+		queue.pop();
 	}
 }
 
@@ -66,7 +75,7 @@ void Engine::Renderer::setOutputSize(int screenWidth, int screenHeight, float wo
 
 	_viewMatrix[0][0] = 1.f / _worldWidth;
 	_viewMatrix[1][1] = 1.f / _worldHeight;
-	_viewMatrix[2][2] = _maxDepthInv;
+	_viewMatrix[2][2] = 1;
 }
 
 Engine::Renderer::Renderer(SDL_Window* window) :
