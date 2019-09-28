@@ -13,7 +13,8 @@ void Engine::Sprite::render() const
 		_shader->setDiffuse(_texture->id());
 	}
 
-	_shader->setTransform(_viewMatrix * _transformation);
+	const glm::mat3x3 finalTransform = _viewMatrix * _transformation;
+	_shader->setTransform(finalTransform);
 	_shader->setColor(_color);
 
 	glBindVertexArray(_vao);
@@ -67,6 +68,7 @@ void Engine::Sprite::setScale(const float scale)
 void Engine::Sprite::setSortingOrder(int order)
 {
 	_sortingOrder = order;
+	_transformation = updateTransformMatrix();
 }
 
 void Engine::Sprite::setColor(const Color& color)
@@ -145,7 +147,7 @@ glm::mat3x3 Engine::Sprite::updateTransformMatrix() const
 	transformation[1][2] = 0;
 	transformation[2][0] = _position.x;
 	transformation[2][1] = _position.y;
-	transformation[2][2] = 1;
+	transformation[2][2] = _sortingOrder;
 	
 	return transformation;
 }
@@ -177,8 +179,8 @@ void Engine::Sprite::bindMesh()
 
 void Engine::Sprite::rebuildMesh()
 {
-	int extentX = _texture != nullptr ? _texture->width() / _ppuHorizontal : _ppuHorizontal / 100;
-	int extentY = _texture != nullptr ? _texture->height() / _ppuVertical : _ppuVertical / 100;
+	float extentX = _texture != nullptr ? static_cast<float>(_texture->width()) / _ppuHorizontal : _ppuHorizontal * 0.01f;
+	float extentY = _texture != nullptr ? static_cast<float>(_texture->height()) / _ppuVertical : _ppuVertical * 0.01f;
 	
 	_vertices[0] = glm::vec3(-extentX, -extentY, 1);
 	_vertices[1] = glm::vec3(-extentX, extentY, 1);

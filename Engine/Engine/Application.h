@@ -54,5 +54,7 @@ namespace Engine
 		SDL_Window* _window = nullptr;
 		Time _time = {};
 		bool _isRunning = false;
+
+		std::vector<Sprite*> _sprites;
 	};
 }

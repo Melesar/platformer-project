@@ -71,7 +71,6 @@ namespace Engine
 		std::shared_ptr<Texture> _texture = nullptr;
 		Color _color = {1, 1, 1, 1};
 
-		const std::string _shaderName = "shader";
 		const int defaultPpu = 100;
 	};
 }

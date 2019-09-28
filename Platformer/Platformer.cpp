@@ -24,6 +24,5 @@ void Platformer::update(float deltaTime)
 
 void Platformer::onExit()
 {
-	destroySprite(_player);
 	Application::onExit();
 }
