@@ -6,8 +6,8 @@ Engine::Shader::Shader(const std::string& fileName)
 {
 	_program = glCreateProgram();
 
-	_shaders[0] = createShader(loadShader("../res/" + fileName + "Vertex.shader"), GL_VERTEX_SHADER);
-	_shaders[1] = createShader(loadShader("../res/" + fileName + "Fragment.shader"), GL_FRAGMENT_SHADER);
+	_shaders[0] = createShader(loadShader(fileName + ".vs"), GL_VERTEX_SHADER);
+	_shaders[1] = createShader(loadShader(fileName + ".fs"), GL_FRAGMENT_SHADER);
 
 	for (size_t i = 0; i < ShadersAmount; i++)
 	{

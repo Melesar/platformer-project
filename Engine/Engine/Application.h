@@ -3,6 +3,7 @@
 #include "Time.h"
 #include "Rendering/Sprite.h"
 #include "Input/Input.h"
+#include "Data/ResourceRepository.h"
 
 
 namespace Engine
@@ -27,6 +28,8 @@ namespace Engine
 		virtual void onExit();
 
 		Sprite* createSprite();
+		Sprite* createSprite(TextureId id);
+		Sprite* createSprite(TextureId id, int ppuHorizontal, int ppuVertical);
 
 		void destroySprite(Sprite* sprite);
 
@@ -41,8 +44,10 @@ namespace Engine
 
 		std::string _title;
 		bool _isFullscreen = false;
+		
 		Renderer* _renderer = nullptr;
 		Input _input;
+		ResourcesRepository _resources;
 
 	private:
 

@@ -11,8 +11,7 @@ void Platformer::setup()
 	Application::setup();
 	_renderer->setBackgroundColor({ 0.42, 0.77, 0.77, 1 });
 
-	_player = createSprite();
-	//_player->setColor({ 0.97, 0.57, 0.12, 1 });
+	_player = createSprite(Engine::TEX_ELLIOT, 500, 500);
 }
 
 void Platformer::update(float deltaTime)

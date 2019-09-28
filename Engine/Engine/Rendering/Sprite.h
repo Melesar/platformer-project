@@ -26,9 +26,10 @@ namespace Engine
 
 		void setColor(const Color& color);
 
-		Sprite();
-		Sprite(int ppuVertical, int ppuHorizontal);
-		Sprite(std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal);
+		Sprite(std::shared_ptr<Shader> shader);
+		Sprite(std::shared_ptr<Shader> shader, int ppuVertical, int ppuHorizontal);
+		Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal);
+		explicit Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture);
 		
 		~Sprite();
 
@@ -64,11 +65,12 @@ namespace Engine
 		GLuint _vao{};
 		GLuint _vbo[NUM_BUFFERS]{};
 
-		std::unique_ptr<Shader> _shader;
-		std::shared_ptr<Texture> _texture;
+		std::shared_ptr<Shader> _shader;
+		std::shared_ptr<Texture> _texture = nullptr;
 		Color _color = {1, 1, 1, 1};
 
 		const std::string _shaderName = "shader";
+		const int defaultPpu = 100;
 	};
 }
 

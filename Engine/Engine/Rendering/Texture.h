@@ -1,12 +1,8 @@
 ﻿#pragma once
+#include "Data/ResourceRepository.h"
 
 namespace Engine
 {
-	enum TextureId
-	{
-		NONE,
-		ELLIOT,
-	};
 	
 	class ENGINE_API Texture
 	{
@@ -29,7 +25,7 @@ namespace Engine
 		const int MAX_TEXTURES = 32;
 
 		int _width, _height;
-		TextureId _id = NONE;
+		TextureId _id;
 		
 		GLuint _textureData;
 	};

@@ -46,8 +46,9 @@ void Engine::Application::stop()
 void Engine::Application::setup()
 {
 	initSDL();
-	
+
 	_renderer = new Renderer(_window);
+	_resources.loadResources();
 }
 
 void Engine::Application::update()
@@ -80,13 +81,33 @@ void Engine::Application::onExit()
 
 Engine::Sprite* Engine::Application::createSprite()
 {
-	std::shared_ptr<Texture> elliot = std::make_shared<Texture>("../res/Elliot.png", ELLIOT);
-	//const auto s = new Sprite();
-	const auto s = new Sprite(elliot, 500, 500);
+	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
+	const auto s = new Sprite(shader);
 	_renderer->submitForRendering(s);
 	
 	return s;
 }
+
+Engine::Sprite* Engine::Application::createSprite(TextureId id)
+{
+	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
+	std::shared_ptr<Texture> texture = _resources.getTexture(id);
+	const auto s = new Sprite(shader, texture);
+	_renderer->submitForRendering(s);
+
+	return s;
+}
+
+Engine::Sprite* Engine::Application::createSprite(TextureId id, int ppuHorizontal, int ppuVertical)
+{
+	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
+	std::shared_ptr<Texture> texture = _resources.getTexture(id);
+	const auto s = new Sprite(shader, texture, ppuVertical, ppuHorizontal);;
+	_renderer->submitForRendering(s);
+
+	return s;
+}
+
 
 void Engine::Application::destroySprite(Sprite* sprite)
 {

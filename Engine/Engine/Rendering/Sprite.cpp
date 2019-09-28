@@ -68,50 +68,58 @@ void Engine::Sprite::setColor(const Color& color)
 	_color = color;
 }
 
-Engine::Sprite::Sprite() :
+Engine::Sprite::Sprite(std::shared_ptr<Shader> shader) :
 	_ppuHorizontal(100),
 	_ppuVertical(100),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
 	_transformation(updateTransformMatrix()),
-	_texture(nullptr)
+	_shader(std::move(shader))
 {
 	rebuildMesh();
 	bindMesh();
-
-	_shader = std::make_unique<Shader>(_shaderName);
 }
 
-Engine::Sprite::Sprite(int ppuVertical, int ppuHorizontal) :
+Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, int ppuVertical, int ppuHorizontal) :
 	_ppuHorizontal(ppuHorizontal),
 	_ppuVertical(ppuVertical),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
 	_transformation(updateTransformMatrix()),
-	_texture(nullptr)
+	_shader(std::move(shader))
 {
 	rebuildMesh();
 	bindMesh();
-
-	_shader = std::make_unique<Shader>(_shaderName);
-	
 }
 
-Engine::Sprite::Sprite(std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal) :
+Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal) :
 	_ppuHorizontal(ppuHorizontal),
 	_ppuVertical(ppuVertical),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
 	_transformation(updateTransformMatrix()),
+	_shader(std::move(shader)),
 	_texture(std::move(texture))
 {
 	rebuildMesh();
 	bindMesh();
+}
 
-	_shader = std::make_unique<Shader>(_shaderName);
+Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture) :
+	_ppuHorizontal(100),
+	_ppuVertical(100),
+	_position(glm::vec2(0.f)),
+	_rotation(0.f),
+	_scale(1.f),
+	_transformation(updateTransformMatrix()),
+	_shader(std::move(shader)),
+	_texture(std::move(texture))
+{
+	rebuildMesh();
+	bindMesh();
 }
 
 
