@@ -43,6 +43,21 @@ void Engine::Sprite::rotate(float deltaAngle)
 	setRotation(_rotation + deltaAngle);
 }
 
+void Engine::Sprite::flipX(bool flip)
+{
+	float uv01 = flip ? _size.x : 0;
+	float uv23 = flip ? 0 : _size.x;
+	if (_uvs[0].x == uv01 && _uvs[2].x == uv23)
+	{
+		return;
+	}
+
+	_uvs[0].x = _uvs[1].x = uv01;
+	_uvs[2].x = _uvs[3].x = uv23;
+	
+	resetUVs();
+}
+
 glm::vec2 Engine::Sprite::getPosition() const
 {
 	return _position;
@@ -91,8 +106,7 @@ void Engine::Sprite::setSize(glm::vec2 size)
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_VERTICES]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof _vertices[0], _vertices);
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof _uvs[0], _uvs);
+	resetUVs();
 }
 
 void Engine::Sprite::setColor(const Color& color)
@@ -189,7 +203,7 @@ void Engine::Sprite::bindMesh()
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_VERTICES]);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _vertices[0], _vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _vertices[0], _vertices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
@@ -201,6 +215,12 @@ void Engine::Sprite::bindMesh()
 	
 	glBindVertexArray(0);
 
+}
+
+void Engine::Sprite::resetUVs()
+{
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof _uvs[0], _uvs);
 }
 
 void Engine::Sprite::rebuildMesh()

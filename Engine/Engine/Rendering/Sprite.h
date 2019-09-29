@@ -18,6 +18,8 @@ namespace Engine
 
 		void move(const glm::vec2& offset);
 		void rotate(float deltaAngle);
+		void resetUVs();
+		void flipX(bool flip);
 		
 		glm::vec2 getPosition() const;
 		float getScale() const;
@@ -28,7 +30,6 @@ namespace Engine
 		void setScale(float scale);
 		void setSortingOrder(int order);
 		void setSize(glm::vec2 size);
-
 		void setColor(const Color& color);
 
 		Sprite(std::shared_ptr<Shader> shader);
