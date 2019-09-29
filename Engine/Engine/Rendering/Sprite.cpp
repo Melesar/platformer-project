@@ -82,6 +82,19 @@ void Engine::Sprite::setSortingOrder(int order)
 	updateTransform();
 }
 
+void Engine::Sprite::setSize(glm::vec2 size)
+{
+	_size = size;
+
+	rebuildMesh();
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_VERTICES]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof _vertices[0], _vertices);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof _uvs[0], _uvs);
+}
+
 void Engine::Sprite::setColor(const Color& color)
 {
 	_color = color;
@@ -168,33 +181,34 @@ void Engine::Sprite::updateTransform()
 
 void Engine::Sprite::bindMesh()
 {
-	glGenBuffers(1, &_vao);
+	glGenVertexArrays(1, &_vao);
 	glBindVertexArray(_vao);
 
 	glGenBuffers(NUM_BUFFERS, _vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_VERTICES]);
-	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _vertices[0], _vertices, GL_STATIC_DRAW);
-
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
-	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _uvs[0], _uvs, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _vertices[0], _vertices, GL_DYNAMIC_DRAW);
 
 	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_UVS]);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-	
+	glBufferData(GL_ARRAY_BUFFER, 4 * sizeof _uvs[0], _uvs, GL_DYNAMIC_DRAW);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vbo[BUFFER_INDICES]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof _indices[0], _indices, GL_STATIC_DRAW);
 	
 	glBindVertexArray(0);
+
 }
 
 void Engine::Sprite::rebuildMesh()
 {
 	float extentX = _texture != nullptr ? static_cast<float>(_texture->width()) / _ppuHorizontal : _ppuHorizontal * 0.01f;
 	float extentY = _texture != nullptr ? static_cast<float>(_texture->height()) / _ppuVertical : _ppuVertical * 0.01f;
+	extentX *= _size.x * 0.5;
+	extentY *= _size.y * 0.5;
 	
 	_vertices[0] = glm::vec2(-extentX, -extentY);
 	_vertices[1] = glm::vec2(-extentX, extentY);
@@ -202,9 +216,9 @@ void Engine::Sprite::rebuildMesh()
 	_vertices[3] = glm::vec2(extentX, -extentY);
 
 	_uvs[0] = glm::vec2(0, 0);
-	_uvs[1] = glm::vec2(0, 1);
-	_uvs[2] = glm::vec2(1, 1);
-	_uvs[3] = glm::vec2(1, 0);
+	_uvs[1] = glm::vec2(0, _size.y);
+	_uvs[2] = glm::vec2(_size.x, _size.y);
+	_uvs[3] = glm::vec2(_size.x, 0);
 
 	_indices[0] = 0;
 	_indices[1] = 1;

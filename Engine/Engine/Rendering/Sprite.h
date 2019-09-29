@@ -27,6 +27,7 @@ namespace Engine
 		void setRotation(float rotation);
 		void setScale(float scale);
 		void setSortingOrder(int order);
+		void setSize(glm::vec2 size);
 
 		void setColor(const Color& color);
 
@@ -50,6 +51,7 @@ namespace Engine
 		float _rotation;
 		float _scale;
 		int _sortingOrder = 0;
+		glm::vec2 _size{ 1, 1 };
 		
 		glm::mat3x3 _transformation;
 		glm::mat3x3 _viewMatrix{};

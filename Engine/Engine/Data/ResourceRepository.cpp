@@ -29,6 +29,7 @@ void Engine::ResourcesRepository::loadShaders()
 void Engine::ResourcesRepository::loadTextures()
 {
 	loadTexture("Elliot.png", TEX_ELLIOT);
+	loadTexture("Platform.png", TEX_PLATFORM);
 }
 
 void Engine::ResourcesRepository::loadTexture(const std::string& textureName, TextureId id)
