@@ -4,6 +4,7 @@
 #include "Rendering/Sprite.h"
 #include "Input/Input.h"
 #include "Data/ResourceRepository.h"
+#include "Physics/Raycaster.h"
 
 
 namespace Engine
@@ -48,6 +49,7 @@ namespace Engine
 		Renderer* _renderer = nullptr;
 		Input _input;
 		ResourcesRepository _resources;
+		Raycaster _raycaster;
 
 	private:
 

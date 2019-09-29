@@ -2,13 +2,14 @@
 #include <Core.h>
 #include <Data/Color.h>
 #include <Rendering/IRenderable.h>
+#include "Physics/BoundingBox.h"
 
 namespace Engine
 {
 	class Shader;
 	class Texture;
 	
-	class ENGINE_API Sprite final : public IRenderable
+	class ENGINE_API Sprite final : public IRenderable, public BoundingBox
 	{
 	public:
 		void render() const override;
