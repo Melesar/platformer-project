@@ -17,5 +17,6 @@ protected:
 private:
 
 	Engine::Sprite* _player;
+	Engine::Sprite* _enemy;
 };
 

@@ -8,9 +8,11 @@ void Engine::Application::run()
 	_isRunning = true;
 
 	setup();
+	updatePendingSprites();
 	while (_isRunning)
 	{
 		update();
+		updatePendingSprites();
 	}
 
 	onExit();
@@ -71,6 +73,18 @@ void Engine::Application::handleEvents()
 	_input.handleEvents();
 }
 
+void Engine::Application::updatePendingSprites()
+{
+	for (Sprite* sprite : _pendingSprites)
+	{
+		_renderer->submitForRendering(sprite);
+		_raycaster.addBoundingBox(*sprite);
+		_sprites.push_back(sprite);
+	}
+
+	_pendingSprites.erase(_pendingSprites.begin(), _pendingSprites.end());
+}
+
 void Engine::Application::onExit()
 {
 	for (Sprite* sprite : _sprites)
@@ -88,9 +102,7 @@ Engine::Sprite* Engine::Application::createSprite()
 {
 	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
 	const auto s = new Sprite(shader);
-	_renderer->submitForRendering(s);
-	_raycaster.addBoundingBox(*s);
-	_sprites.push_back(s);
+	_pendingSprites.push_back(s);
 	
 	return s;
 }
@@ -100,9 +112,7 @@ Engine::Sprite* Engine::Application::createSprite(TextureId id)
 	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
 	std::shared_ptr<Texture> texture = _resources.getTexture(id);
 	const auto s = new Sprite(shader, texture);
-	_renderer->submitForRendering(s);
-	_raycaster.addBoundingBox(*s);
-	_sprites.push_back(s);
+	_pendingSprites.push_back(s);
 
 	return s;
 }
@@ -112,9 +122,7 @@ Engine::Sprite* Engine::Application::createSprite(TextureId id, int ppuHorizonta
 	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
 	std::shared_ptr<Texture> texture = _resources.getTexture(id);
 	const auto s = new Sprite(shader, texture, ppuVertical, ppuHorizontal);;
-	_renderer->submitForRendering(s);
-	_raycaster.addBoundingBox(*s);
-	_sprites.push_back(s);
+	_pendingSprites.push_back(s);
 
 	return s;
 }
@@ -124,6 +132,8 @@ void Engine::Application::destroySprite(Sprite* sprite)
 {
 	_renderer->removeFromRenderingPool(sprite);
 	_raycaster.removeBoundingBox(*sprite);
+	
+	//TODO remove sprite from _sprites and _pendingSprites
 	
 	delete sprite;
 }

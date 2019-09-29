@@ -1,5 +1,7 @@
 #include "Platformer.h"
 #include <Rendering/Renderer.h>
+#include "Physics/Ray.h"
+#include "Physics/Intersection.h"
 
 Platformer::Platformer()
 {
@@ -20,18 +22,25 @@ void Platformer::setup()
 	enemy1->setSortingOrder(10);
 	enemy1->layer = Engine::BoundingBox::ENEMY;
 
-	Engine::Sprite* enemy2 = createSprite(Engine::TEX_ELLIOT, 700, 700);
-	enemy2->setPosition({ 3, -2 });
-	enemy2->setSortingOrder(70);
-	enemy2->layer = Engine::BoundingBox::ENEMY;
+	_enemy = createSprite(Engine::TEX_ELLIOT, 700, 700);
+	_enemy->setPosition({ 3, -2 });
+	_enemy->setSortingOrder(70);
+	_enemy->layer = Engine::BoundingBox::ENEMY;
 }
 
 void Platformer::update(float deltaTime)
 {
 	const float moveSpeed = 3.f;
 	glm::vec2 offset = moveSpeed * deltaTime * _input.getMoveDirection();
-	
+
 	_player->move(offset);
+	
+	Engine::Ray ray(_player->getPosition(), glm::vec2(offset.x, 0));
+	Engine::Intersection i{};
+	if (_raycaster.raycast(ray, 3., Engine::BoundingBox::PLATFORM, i))
+	{
+		std::cout << "Intersection at distance " << i.distance << std::endl;
+	}
 }
 
 void Platformer::onExit()

@@ -39,7 +39,7 @@ namespace Engine
 
 	private:
 
-		glm::mat3x3 updateTransformMatrix() const;
+		void updateTransform();
 		void bindMesh();
 		void rebuildMesh();
 		

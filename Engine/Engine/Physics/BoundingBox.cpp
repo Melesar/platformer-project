@@ -29,7 +29,7 @@ bool Engine::BoundingBox::intersects(const Ray& ray, Intersection& intersection)
 	}
 
 	intersection.distance = tmin;
-	return true;
+	return intersection.distance > 0;
 }
 
 bool Engine::BoundingBox::operator==(const BoundingBox& other) const

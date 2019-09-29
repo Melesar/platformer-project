@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Texture.h"
 
+
 void Engine::Sprite::render() const
 {
 	_shader->bind();
@@ -50,7 +51,7 @@ glm::vec2 Engine::Sprite::getPosition() const
 void Engine::Sprite::setPosition(const glm::vec2& position)
 {
 	_position = position;
-	_transformation = updateTransformMatrix();
+	updateTransform();
 }
 
 float Engine::Sprite::getRotation() const
@@ -61,7 +62,7 @@ float Engine::Sprite::getRotation() const
 void Engine::Sprite::setRotation(const float rotation)
 {
 	_rotation = rotation;
-	_transformation = updateTransformMatrix();
+	updateTransform();
 }
 
 float Engine::Sprite::getScale() const
@@ -72,13 +73,13 @@ float Engine::Sprite::getScale() const
 void Engine::Sprite::setScale(const float scale)
 {
 	_scale = scale;
-	_transformation = updateTransformMatrix();
+	updateTransform();
 }
 
 void Engine::Sprite::setSortingOrder(int order)
 {
 	_sortingOrder = order;
-	_transformation = updateTransformMatrix();
+	updateTransform();
 }
 
 void Engine::Sprite::setColor(const Color& color)
@@ -92,11 +93,11 @@ Engine::Sprite::Sprite(std::shared_ptr<Shader> shader) :
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
-	_transformation(updateTransformMatrix()),
 	_shader(std::move(shader))
 {
 	rebuildMesh();
 	bindMesh();
+	updateTransform();
 }
 
 Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, int ppuVertical, int ppuHorizontal) :
@@ -105,11 +106,11 @@ Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, int ppuVertical, int ppuH
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
-	_transformation(updateTransformMatrix()),
 	_shader(std::move(shader))
 {
 	rebuildMesh();
 	bindMesh();
+	updateTransform();
 }
 
 Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal) :
@@ -118,12 +119,12 @@ Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> 
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
-	_transformation(updateTransformMatrix()),
 	_shader(std::move(shader)),
 	_texture(std::move(texture))
 {
 	rebuildMesh();
 	bindMesh();
+	updateTransform();
 }
 
 Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture) :
@@ -132,12 +133,12 @@ Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> 
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
-	_transformation(updateTransformMatrix()),
 	_shader(std::move(shader)),
 	_texture(std::move(texture))
 {
 	rebuildMesh();
 	bindMesh();
+	updateTransform();
 }
 
 
@@ -146,7 +147,7 @@ Engine::Sprite::~Sprite()
 	glDeleteVertexArrays(1, &_vao);
 }
 
-glm::mat3x3 Engine::Sprite::updateTransformMatrix() const
+void Engine::Sprite::updateTransform() 
 {
 	glm::mat3x3 transformation;
 	transformation[0][0] = _scale * glm::cos(glm::radians(_rotation));
@@ -158,8 +159,11 @@ glm::mat3x3 Engine::Sprite::updateTransformMatrix() const
 	transformation[2][0] = _position.x;
 	transformation[2][1] = _position.y;
 	transformation[2][2] = 1;
+
+	min = vec2(transformation * vec3(_vertices[0], 1));
+	max = vec2(transformation * vec3(_vertices[2], 1));
 	
-	return transformation;
+	_transformation = transformation;
 }
 
 void Engine::Sprite::bindMesh()

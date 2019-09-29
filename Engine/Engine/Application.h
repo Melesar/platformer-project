@@ -40,6 +40,7 @@ namespace Engine
 		void update();
 
 		void handleEvents();
+		void updatePendingSprites();
 
 	protected:
 
@@ -58,5 +59,6 @@ namespace Engine
 		bool _isRunning = false;
 
 		std::vector<Sprite*> _sprites;
+		std::vector<Sprite*> _pendingSprites;
 	};
 }
