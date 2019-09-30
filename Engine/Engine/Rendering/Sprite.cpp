@@ -14,18 +14,21 @@ void Engine::Sprite::render() const
 		_shader->setDiffuse(_texture->id());
 	}
 
-	const glm::mat3x3 finalTransform = _viewMatrix * _transformation;
-	_shader->setTransform(finalTransform);
+	_shader->setTransform(_transformMatrix);
 	_shader->setColor(_color);
 
 	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
+
+	_shader->unbind();
+	drawDebug();
 }
 
 void Engine::Sprite::setViewMatrix(const glm::mat3x3& matrix)
 {
 	_viewMatrix = matrix;
+	_transformMatrix = _viewMatrix * _modelMatrix;
 }
 
 int Engine::Sprite::sortingOrder() const
@@ -177,26 +180,46 @@ Engine::Sprite::~Sprite()
 
 void Engine::Sprite::updateBoundingBox()
 {
-	min = vec2(_transformation * vec3(_vertices[0], 1));
-	max = vec2(_transformation * vec3(_vertices[2], 1));
+	min = vec2(_modelMatrix * vec3(_vertices[0], 1));
+	max = vec2(_modelMatrix * vec3(_vertices[2], 1));
+}
+
+void Engine::Sprite::drawDebug() const
+{
+	glm::vec2 boxMin = _viewMatrix * vec3(min, 1);
+	glm::vec2 boxMax = _viewMatrix * vec3(max, 1);
+
+	glBegin(GL_LINES);
+	glColor3d(0, 1, 0);
+	glVertex2f(boxMin.x, boxMin.y);
+	glVertex2f(boxMin.x, boxMax.y);
+
+	glVertex2f(boxMin.x, boxMax.y);
+	glVertex2f(boxMax.x, boxMax.y);
+	
+	glVertex2f(boxMax.x, boxMax.y);
+	glVertex2f(boxMax.x, boxMin.y);
+
+	glVertex2f(boxMax.x, boxMin.y);
+	glVertex2f(boxMin.x, boxMin.y);
+	glEnd();
 }
 
 void Engine::Sprite::updateTransform() 
 {
-	glm::mat3x3 transformation;
-	transformation[0][0] = _scale * glm::cos(glm::radians(_rotation));
-	transformation[0][1] = -glm::sin(glm::radians(_rotation));
-	transformation[0][2] = 0;
-	transformation[1][0] = -transformation[0][1];
-	transformation[1][1] = transformation[0][0];
-	transformation[1][2] = 0;
-	transformation[2][0] = _position.x;
-	transformation[2][1] = _position.y;
-	transformation[2][2] = 1;
+	_modelMatrix[0][0] = _scale * glm::cos(glm::radians(_rotation));
+	_modelMatrix[0][1] = -glm::sin(glm::radians(_rotation));
+	_modelMatrix[0][2] = 0;
+	_modelMatrix[1][0] = -_modelMatrix[0][1];
+	_modelMatrix[1][1] = _modelMatrix[0][0];
+	_modelMatrix[1][2] = 0;
+	_modelMatrix[2][0] = _position.x;
+	_modelMatrix[2][1] = _position.y;
+	_modelMatrix[2][2] = 1;
 
 	updateBoundingBox();
 	
-	_transformation = transformation;
+	_transformMatrix = _viewMatrix * _modelMatrix;
 }
 
 void Engine::Sprite::bindMesh()

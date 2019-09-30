@@ -43,7 +43,6 @@ void Engine::Renderer::render()
 	glClearColor(_backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
 	auto cmp = [](IRenderable* left, IRenderable* right) {return left->sortingOrder() >= right->sortingOrder(); };
 	std::priority_queue<IRenderable*, std::vector<IRenderable*>, decltype(cmp)> queue(cmp);
 	for (int i = 0; i < _renderablesCount; ++i)

@@ -12,6 +12,7 @@ namespace Engine
 		virtual ~Shader();
 
 		void bind() const;
+		void unbind() const;
 		void setTransform(const glm::mat3x3& transform);
 		void setDiffuse(int textureIndex);
 		void setColor(const Color& color);

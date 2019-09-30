@@ -45,6 +45,7 @@ namespace Engine
 		void bindMesh();
 		void rebuildMesh();
 		void updateBoundingBox();
+		void drawDebug() const;
 
 	private:
 		int _ppuHorizontal, _ppuVertical;
@@ -55,8 +56,9 @@ namespace Engine
 		int _sortingOrder = 0;
 		glm::vec2 _size{ 1, 1 };
 		
-		glm::mat3x3 _transformation;
+		glm::mat3x3 _modelMatrix;
 		glm::mat3x3 _viewMatrix{};
+		glm::mat3x3 _transformMatrix;
 
 		glm::vec2 _vertices[4]{};
 		glm::vec2 _uvs[4]{};

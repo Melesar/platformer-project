@@ -45,6 +45,11 @@ void Engine::Shader::bind() const
 	glUseProgram(_program);
 }
 
+void Engine::Shader::unbind() const
+{
+	glUseProgram(0);
+}
+
 void Engine::Shader::setTransform(const glm::mat3x3& transform)
 {
 	glUniformMatrix3fv(_uniforms[TRANSFORM_U], 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&transform));
