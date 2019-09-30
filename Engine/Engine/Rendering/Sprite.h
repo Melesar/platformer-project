@@ -3,19 +3,21 @@
 #include <Data/Color.h>
 #include <Rendering/IRenderable.h>
 #include "Physics/BoundingBox.h"
+#include "Physics/IPhysicsBody.h"
 
 namespace Engine
 {
 	class Shader;
 	class Texture;
 	
-	class ENGINE_API Sprite final : public IRenderable, public BoundingBox
+	class ENGINE_API Sprite final : public IRenderable, public IPhysicsBody
 	{
 	public:
 		void render() const override;
 		void setViewMatrix(const glm::mat3x3& matrix) override;
 		int sortingOrder() const override;
-
+		const BoundingBox& getBoundingBox() const override;
+		
 		void move(const glm::vec2& offset);
 		void rotate(float deltaAngle);
 		void resetUVs();
@@ -31,7 +33,8 @@ namespace Engine
 		void setSortingOrder(int order);
 		void setSize(glm::vec2 size);
 		void setColor(const Color& color);
-
+		void setLayer(BoundingBox::Layer layer);
+		
 		Sprite(std::shared_ptr<Shader> shader);
 		Sprite(std::shared_ptr<Shader> shader, int ppuVertical, int ppuHorizontal);
 		Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal);
@@ -59,6 +62,8 @@ namespace Engine
 		glm::mat3x3 _modelMatrix;
 		glm::mat3x3 _viewMatrix{};
 		glm::mat3x3 _transformMatrix;
+
+		BoundingBox bb;
 
 		glm::vec2 _vertices[4]{};
 		glm::vec2 _uvs[4]{};

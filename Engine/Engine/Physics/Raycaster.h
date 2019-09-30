@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Core.h"
 #include "Physics/BoundingBox.h"
-
+#include "Physics/IPhysicsBody.h"
 
 namespace Engine
 {
@@ -12,8 +12,8 @@ namespace Engine
 	public:
 		Raycaster();
 		
-		void addBoundingBox(const BoundingBox& box);
-		void removeBoundingBox(const BoundingBox& box);
+		void addBoundingBox(const IPhysicsBody& body);
+		void removeBoundingBox(const IPhysicsBody& body);
 		
 		bool raycast(const Ray& ray, Intersection& i) const;
 		bool raycast(const Ray& ray, float maxDistance, Intersection& i) const;

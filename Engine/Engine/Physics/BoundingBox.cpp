@@ -32,6 +32,16 @@ bool Engine::BoundingBox::intersects(const Ray& ray, Intersection& intersection)
 	return intersection.distance > 0;
 }
 
+float Engine::BoundingBox::getWidth() const
+{
+	return glm::abs(max.x - min.x);
+}
+
+float Engine::BoundingBox::getHeight() const
+{
+	return glm::abs(max.y - min.y);
+}
+
 bool Engine::BoundingBox::operator==(const BoundingBox& other) const
 {
 	return min == other.min && max == other.max;

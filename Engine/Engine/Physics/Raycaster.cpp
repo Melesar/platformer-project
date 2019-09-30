@@ -7,13 +7,15 @@ Engine::Raycaster::Raycaster()
 	_boxes.resize(BoundingBox::NUM_LAYERS);
 }
 
-void Engine::Raycaster::addBoundingBox(const BoundingBox& box)
+void Engine::Raycaster::addBoundingBox(const IPhysicsBody& body)
 {
+	const BoundingBox box = body.getBoundingBox();
 	_boxes[box.layer].push_back(box);
 }
 
-void Engine::Raycaster::removeBoundingBox(const BoundingBox& box)
+void Engine::Raycaster::removeBoundingBox(const IPhysicsBody& body)
 {
+	const BoundingBox box = body.getBoundingBox();
 	std::vector<BoundingBox> layerBoxes = _boxes[box.layer];
 	for (size_t i = 0; i < layerBoxes.size(); ++i)
 	{

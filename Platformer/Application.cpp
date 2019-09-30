@@ -16,7 +16,7 @@ void Platformer::Application::setup()
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
 
 	Engine::Sprite* platform = createSprite(Engine::TEX_PLATFORM, 300, 300);
-	platform->layer = Engine::BoundingBox::PLATFORM;
+	platform->setLayer(Engine::BoundingBox::PLATFORM);
 	platform->setPosition({ 0, -4 });
 	platform->setSize({ 8, 1 });
 }

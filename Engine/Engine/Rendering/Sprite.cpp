@@ -36,6 +36,11 @@ int Engine::Sprite::sortingOrder() const
 	return _sortingOrder;
 }
 
+const Engine::BoundingBox& Engine::Sprite::getBoundingBox() const
+{
+	return bb;
+}
+
 void Engine::Sprite::move(const glm::vec2& offset)
 {
 	setPosition(_position + offset);
@@ -118,6 +123,11 @@ void Engine::Sprite::setColor(const Color& color)
 	_color = color;
 }
 
+void Engine::Sprite::setLayer(BoundingBox::Layer layer)
+{
+	bb.layer = layer;
+}
+
 Engine::Sprite::Sprite(std::shared_ptr<Shader> shader) :
 	_ppuHorizontal(100),
 	_ppuVertical(100),
@@ -180,8 +190,8 @@ Engine::Sprite::~Sprite()
 
 void Engine::Sprite::updateBoundingBox()
 {
-	min = vec2(_modelMatrix * vec3(_vertices[0], 1));
-	max = vec2(_modelMatrix * vec3(_vertices[2], 1));
+	bb.min = vec2(_modelMatrix * vec3(_vertices[0], 1));
+	bb.max = vec2(_modelMatrix * vec3(_vertices[2], 1));
 }
 
 void Engine::Sprite::drawDebug() const

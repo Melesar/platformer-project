@@ -48,14 +48,48 @@ void Platformer::CharacterController::move(glm::vec2& velocity)
 
 bool Platformer::CharacterController::bottomCollisions(glm::vec2 velocity, Engine::Intersection& it) const
 {
-	Engine::Ray r(_sprite->min + glm::vec2(0, _skinWidth), { 0, -1 });
-	return _raycaster.raycast(r, glm::abs(velocity.y) + _skinWidth, Engine::BoundingBox::PLATFORM, it);
+	Engine::Intersection intersec{  };
+	glm::vec2 origin = _bounds.min + glm::vec2(0, _skinWidth);
+	Engine::Ray r(origin, { 0, -1 });
+
+	const float maxDistance = glm::abs(velocity.y) + _skinWidth;
+	float distance = maxDistance;
+	for (int i = 0; i < _verticalRays + 1; ++i)
+	{
+		r.setOrigin(origin + glm::vec2(i * _verticalRaySpacing, 0));
+		
+		bool isHit = _raycaster.raycast(r, distance, Engine::BoundingBox::PLATFORM, intersec);
+		if (isHit && intersec.distance < distance)
+		{
+			distance = intersec.distance;
+		}
+	}
+
+	it.distance = distance;
+	return distance < maxDistance;
 }
 
 bool Platformer::CharacterController::topCollisions(glm::vec2 velocity, Engine::Intersection& it) const
 {
-	Engine::Ray r(_sprite->max + glm::vec2(0, -_skinWidth), { 0, 1 });
-	return _raycaster.raycast(r, glm::abs(velocity.y) + _skinWidth, Engine::BoundingBox::PLATFORM, it);
+	Engine::Intersection intersec{  };
+	glm::vec2 origin = _bounds.max + glm::vec2(0, -_skinWidth);
+	Engine::Ray r(origin, { 0, 1 });
+
+	const float maxDistance = glm::abs(velocity.y) + _skinWidth;
+	float distance = maxDistance;
+	for (int i = 0; i < _verticalRays + 1; ++i)
+	{
+		r.setOrigin(origin - glm::vec2(i * _verticalRaySpacing, 0));
+		
+		bool isHit = _raycaster.raycast(r, distance, Engine::BoundingBox::PLATFORM, intersec);
+		if (isHit && intersec.distance < distance)
+		{
+			distance = intersec.distance;
+		}
+	}
+
+	it.distance = distance;
+	return distance < maxDistance;
 }
 
 void Platformer::CharacterController::jump()
@@ -77,6 +111,9 @@ bool Platformer::CharacterController::isGrounded() const
 }
 
 Platformer::CharacterController::CharacterController(const Engine::Raycaster& raycaster, Engine::Sprite* sprite) :
+	_bounds(sprite->getBoundingBox()),
+	_horizontalRaySpacing(_bounds.getHeight() / _horizontalRays),
+	_verticalRaySpacing(_bounds.getWidth() / _verticalRays),
 	_raycaster(raycaster),
 	_sprite(sprite)
 {

@@ -96,6 +96,7 @@
     <ClInclude Include="Engine\Input\Input.h" />
     <ClInclude Include="Engine\Physics\BoundingBox.h" />
     <ClInclude Include="Engine\Physics\Intersection.h" />
+    <ClInclude Include="Engine\Physics\IPhysicsBody.h" />
     <ClInclude Include="Engine\Physics\Ray.h" />
     <ClInclude Include="Engine\Physics\Raycaster.h" />
     <ClInclude Include="Engine\Rendering\IRenderable.h" />

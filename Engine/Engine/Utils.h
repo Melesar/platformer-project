@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <Core.h>
+#include "Physics/BoundingBox.h"
 
 inline std::ostream& operator << (std::ostream& stream, glm::vec3 vec)
 {

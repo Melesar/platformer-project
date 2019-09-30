@@ -24,6 +24,9 @@ namespace Engine
 		bool intersects(const Ray& ray, Intersection& intersection) const;
 		bool intersects(const BoundingBox& other) const;
 
+		float getWidth() const;
+		float getHeight() const;
+
 		bool operator == (const BoundingBox& other) const;
 	};
 }
