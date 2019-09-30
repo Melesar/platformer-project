@@ -2,4 +2,6 @@
 intermediate/
 bin/
 DevAssets/
-*.vcxproj*
+
+*.vcxproj.filters
+*.vcxproj.user
