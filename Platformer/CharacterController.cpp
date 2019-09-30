@@ -5,48 +5,69 @@
 
 void Platformer::CharacterController::move(glm::vec2 moveDirection, float deltaTime)
 {
-	const float offsetX = _moveSpeed * deltaTime * moveDirection.x;
+	const float offsetX = _moveSpeed * moveDirection.x;
 	_velocity.x = offsetX;
 	if (offsetX != 0)
 	{
 		_sprite->flipX(offsetX < 0);
 	}
 
-	if (!isGrounded())
-	{
-		_velocity.y -= _gravity * deltaTime;
-	}
-	else
-	{
-		_velocity.y = 0;
-	}
+	_velocity.y -= _gravity * deltaTime;
 
-	move(_velocity);
+	glm::vec2 frameVelocity = _velocity * deltaTime;
+	move(frameVelocity);
 
-	_sprite->move(_velocity);
+	_sprite->move(frameVelocity);
 }
 
 void Platformer::CharacterController::move(glm::vec2& velocity)
 {
-	Engine::Intersection i;
-	if (bottomCollisions(i))
+	Engine::Intersection i {};
+	if (velocity.y < 0)
 	{
-		velocity.y = -(i.distance - _skinWidth);
-		_isGrounded = true;
+		if (bottomCollisions(velocity, i))
+		{
+			velocity.y = -(i.distance - _skinWidth);
+			_isGrounded = true;
+		}
+		else
+		{
+			_isGrounded = false;
+		}
+	}
+	else if (velocity.y > 0)
+	{
+		if (topCollisions(velocity, i))
+		{
+			velocity.y = i.distance - _skinWidth;
+		}
+
+		_isGrounded = false;
 	}
 }
 
-bool Platformer::CharacterController::bottomCollisions(Engine::Intersection& it) const
+bool Platformer::CharacterController::bottomCollisions(glm::vec2 velocity, Engine::Intersection& it) const
 {
-	Engine::Ray r(_sprite->min + glm::vec2(_skinWidth, 0.), { 0, -1 });
-	return _raycaster.raycast(r, glm::abs(_velocity.y) + _skinWidth, Engine::BoundingBox::PLATFORM, it);
+	Engine::Ray r(_sprite->min + glm::vec2(0, _skinWidth), { 0, -1 });
+	return _raycaster.raycast(r, glm::abs(velocity.y) + _skinWidth, Engine::BoundingBox::PLATFORM, it);
+}
+
+bool Platformer::CharacterController::topCollisions(glm::vec2 velocity, Engine::Intersection& it) const
+{
+	Engine::Ray r(_sprite->max + glm::vec2(0, -_skinWidth), { 0, 1 });
+	return _raycaster.raycast(r, glm::abs(velocity.y) + _skinWidth, Engine::BoundingBox::PLATFORM, it);
 }
 
 void Platformer::CharacterController::jump()
 {
 	if (isGrounded())
 	{
-		_velocity.y += _jumpVelocity;
+		std::cout << "Jump" << std::endl;
+		_velocity.y = _jumpVelocity;
+	}
+	else
+	{
+		std::cout << "Not grounded" << std::endl;
 	}
 }
 

@@ -13,12 +13,12 @@ Platformer::Player::Player(Engine::Sprite* sprite, const Engine::Input& input, c
 
 void Platformer::Player::update(float deltaTime)
 {
-	_controller.move(_input.getMoveDirection(), deltaTime);
-
 	if (_input.isJump())
 	{
 		_controller.jump();
 	}
+	
+	_controller.move(_input.getMoveDirection(), deltaTime);
 }
 
 Platformer::Player::~Player()

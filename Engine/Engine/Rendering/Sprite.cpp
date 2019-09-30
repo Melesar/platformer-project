@@ -186,23 +186,7 @@ void Engine::Sprite::updateBoundingBox()
 
 void Engine::Sprite::drawDebug() const
 {
-	glm::vec2 boxMin = _viewMatrix * vec3(min, 1);
-	glm::vec2 boxMax = _viewMatrix * vec3(max, 1);
-
-	glBegin(GL_LINES);
-	glColor3d(0, 1, 0);
-	glVertex2f(boxMin.x, boxMin.y);
-	glVertex2f(boxMin.x, boxMax.y);
-
-	glVertex2f(boxMin.x, boxMax.y);
-	glVertex2f(boxMax.x, boxMax.y);
 	
-	glVertex2f(boxMax.x, boxMax.y);
-	glVertex2f(boxMax.x, boxMin.y);
-
-	glVertex2f(boxMax.x, boxMin.y);
-	glVertex2f(boxMin.x, boxMin.y);
-	glEnd();
 }
 
 void Engine::Sprite::updateTransform() 

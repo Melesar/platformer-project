@@ -23,13 +23,14 @@ namespace Platformer
 
 		void move(glm::vec2& velocity);
 
-		bool bottomCollisions(Engine::Intersection& it) const;
+		bool bottomCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
+		bool topCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
 		
 	private:
 
 		const float _moveSpeed = 3.f;
 		const float _jumpHeight = 3.f;
-		const float _topJumpTime = 1.f;
+		const float _topJumpTime = 0.5f;
 
 		const float _skinWidth = 0.05f;
 
