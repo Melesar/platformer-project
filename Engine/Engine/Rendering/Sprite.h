@@ -44,7 +44,8 @@ namespace Engine
 		void updateTransform();
 		void bindMesh();
 		void rebuildMesh();
-		
+		void updateBoundingBox();
+
 	private:
 		int _ppuHorizontal, _ppuVertical;
 

@@ -26,6 +26,7 @@
 #include <queue>
 
 #include <memory>
+#include <algorithm>
 #include <string>
 
 #include "Utils.h"

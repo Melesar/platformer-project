@@ -2,6 +2,7 @@
 #include "Rendering/Sprite.h"
 #include "Input/Input.h"
 #include "Physics/Raycaster.h"
+#include "CharacterController.h"
 
 namespace Platformer
 {
@@ -14,10 +15,13 @@ namespace Platformer
 		void update(float deltaTime);
 
 	private:
+		
 		Engine::Sprite* _sprite;
 
 		const Engine::Input& _input;
 		const Engine::Raycaster& _raycaster;
+
+		CharacterController _controller;
 	};
 }
 

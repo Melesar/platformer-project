@@ -7,10 +7,12 @@ namespace Engine
 	{
 	public:
 		void update();
+		void init();
 		
 		float delta() const;
 
 	private:
 		unsigned int _lastTick;
+		float _delta;
 	};
 }

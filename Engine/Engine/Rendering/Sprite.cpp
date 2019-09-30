@@ -102,6 +102,7 @@ void Engine::Sprite::setSize(glm::vec2 size)
 	_size = size;
 
 	rebuildMesh();
+	updateBoundingBox();
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo[BUFFER_VERTICES]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof _vertices[0], _vertices);
@@ -174,6 +175,12 @@ Engine::Sprite::~Sprite()
 	glDeleteVertexArrays(1, &_vao);
 }
 
+void Engine::Sprite::updateBoundingBox()
+{
+	min = vec2(_transformation * vec3(_vertices[0], 1));
+	max = vec2(_transformation * vec3(_vertices[2], 1));
+}
+
 void Engine::Sprite::updateTransform() 
 {
 	glm::mat3x3 transformation;
@@ -187,8 +194,7 @@ void Engine::Sprite::updateTransform()
 	transformation[2][1] = _position.y;
 	transformation[2][2] = 1;
 
-	min = vec2(transformation * vec3(_vertices[0], 1));
-	max = vec2(transformation * vec3(_vertices[2], 1));
+	updateBoundingBox();
 	
 	_transformation = transformation;
 }

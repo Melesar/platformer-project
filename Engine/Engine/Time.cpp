@@ -3,10 +3,18 @@
 
 void Engine::Time::update()
 {
+	const unsigned currentTicks = SDL_GetTicks();
+	_delta = static_cast<float>(currentTicks - _lastTick) / 1000.0f;
+	_lastTick = currentTicks;
+}
+
+void Engine::Time::init()
+{
 	_lastTick = SDL_GetTicks();
+	_delta = 0.f;
 }
 
 float Engine::Time::delta() const
 {
-	return static_cast<float>(SDL_GetTicks() - _lastTick) / 1000.0f;
+	return _delta;
 }

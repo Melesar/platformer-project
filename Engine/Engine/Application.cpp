@@ -9,10 +9,15 @@ void Engine::Application::run()
 
 	setup();
 	updatePendingSprites();
+
+	_time.init();
+	
 	while (_isRunning)
 	{
 		update();
 		updatePendingSprites();
+
+		_time.update();
 	}
 
 	onExit();
@@ -58,7 +63,6 @@ void Engine::Application::update()
 	handleEvents();
 
 	update(_time.delta());
-	_time.update();
 
 	_renderer->render();
 }
@@ -133,7 +137,8 @@ void Engine::Application::destroySprite(Sprite* sprite)
 	_renderer->removeFromRenderingPool(sprite);
 	_raycaster.removeBoundingBox(*sprite);
 	
-	//TODO remove sprite from _sprites and _pendingSprites
+	std::remove(_sprites.begin(), _sprites.end(), sprite);
+	std::remove(_pendingSprites.begin(), _pendingSprites.end(), sprite);
 	
 	delete sprite;
 }
