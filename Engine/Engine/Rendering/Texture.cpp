@@ -24,6 +24,7 @@ Engine::Texture::Texture(const std::string& filename, TextureId id) : _id(id)
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageData->w, imageData->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData->pixels);
+	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	SDL_FreeSurface(imageData);

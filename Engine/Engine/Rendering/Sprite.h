@@ -63,7 +63,7 @@ namespace Engine
 		glm::mat3x3 _viewMatrix{};
 		glm::mat3x3 _transformMatrix;
 
-		BoundingBox bb;
+		BoundingBox _bb;
 
 		glm::vec2 _vertices[4]{};
 		glm::vec2 _uvs[4]{};
@@ -84,8 +84,6 @@ namespace Engine
 		std::shared_ptr<Shader> _shader;
 		std::shared_ptr<Texture> _texture = nullptr;
 		Color _color = {1, 1, 1, 1};
-
-		const int defaultPpu = 100;
 	};
 }
 

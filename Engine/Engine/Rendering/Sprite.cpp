@@ -38,7 +38,7 @@ int Engine::Sprite::sortingOrder() const
 
 const Engine::BoundingBox& Engine::Sprite::getBoundingBox() const
 {
-	return bb;
+	return _bb;
 }
 
 void Engine::Sprite::move(const glm::vec2& offset)
@@ -125,7 +125,7 @@ void Engine::Sprite::setColor(const Color& color)
 
 void Engine::Sprite::setLayer(BoundingBox::Layer layer)
 {
-	bb.layer = layer;
+	_bb.layer = layer;
 }
 
 Engine::Sprite::Sprite(std::shared_ptr<Shader> shader) :
