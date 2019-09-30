@@ -31,7 +31,6 @@ void Platformer::CharacterController::move(glm::vec2& velocity)
 	Engine::Intersection i;
 	if (bottomCollisions(i))
 	{
-		std::cout << "Collision" << std::endl;
 		velocity.y = -(i.distance - _skinWidth);
 		_isGrounded = true;
 	}

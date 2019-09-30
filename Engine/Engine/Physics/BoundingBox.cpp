@@ -13,7 +13,7 @@ bool Engine::BoundingBox::intersects(const Ray& ray, Intersection& intersection)
 	float t1x = (max.x - orig.x) * invDir.x;
 	float t1y = (max.y - orig.y) * invDir.y;
 
-	float tmin = glm::max(glm::min(t0x, t1x), glm::min(t0y, t0y));
+	float tmin = glm::max(glm::min(t0x, t1x), glm::min(t0y, t1y));
 	float tmax = glm::min(glm::max(t0x, t1x), glm::max(t0y, t1y));
 
 	if (tmax < 0)
