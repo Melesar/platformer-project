@@ -12,7 +12,20 @@ void Engine::Renderer::submitForRendering(IRenderable* renderable)
 	renderable->setViewMatrix(_viewMatrix);
 	
 	_renderablesSet.emplace(renderable);
-	_renderablesList.push_back(renderable);
+	bool inserted = false;
+	for(auto i = _renderablesList.begin(); i != _renderablesList.end(); ++i)
+	{
+		if ((*i)->sortingOrder() > renderable->sortingOrder())
+		{
+			_renderablesList.insert(i, renderable);
+			inserted = true;
+			break;
+		}
+	}
+	if (!inserted)
+	{
+		_renderablesList.push_back(renderable);
+	}
 
 	_renderablesCount += 1;
 }
@@ -23,16 +36,8 @@ void Engine::Renderer::removeFromRenderingPool(IRenderable* renderable)
 	if (iter != _renderablesSet.end())
 	{
 		_renderablesSet.erase(iter);
-		for (int i = 0; i < _renderablesCount; ++i)
-		{
-			if (_renderablesList[i] == renderable)
-			{
-				std::swap(_renderablesList[i], _renderablesList[_renderablesCount - 1]);
-				_renderablesList.erase(_renderablesList.cend() - 1);
-				_renderablesCount -= 1;
-				break;
-			}
-		}
+		_renderablesList.remove(renderable);
+		_renderablesCount -= 1;
 	}
 }
 
@@ -43,23 +48,30 @@ void Engine::Renderer::render()
 	glClearColor(_backgroundColor.r, _backgroundColor.g, _backgroundColor.b, _backgroundColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	auto cmp = [](IRenderable* left, IRenderable* right) {return left->sortingOrder() >= right->sortingOrder(); };
-	std::priority_queue<IRenderable*, std::vector<IRenderable*>, decltype(cmp)> queue(cmp);
-	for (int i = 0; i < _renderablesCount; ++i)
+	for (auto renderable : _renderablesList)
 	{
-		queue.push(_renderablesList[i]);
-	}
-
-	while (!queue.empty())
-	{
-		queue.top()->render();
-		queue.pop();
+		renderable->render();
 	}
 }
 
 void Engine::Renderer::setBackgroundColor(Color color)
 {
 	_backgroundColor = color;
+}
+
+float Engine::Renderer::worldWidth() const
+{
+	return _worldWidth;
+}
+
+float Engine::Renderer::worldHeight() const
+{
+	return _worldHeight;
+}
+
+float Engine::Renderer::aspect() const
+{
+	return  _aspect;
 }
 
 void Engine::Renderer::setOutputSize(int screenWidth, int screenHeight, float worldHeight)
@@ -77,7 +89,7 @@ void Engine::Renderer::setOutputSize(int screenWidth, int screenHeight, float wo
 	_viewMatrix[2][2] = 1;
 }
 
-Engine::Renderer::Renderer(SDL_Window* window) :
+Engine::Renderer::Renderer(SDL_Window* window, float worldHeight) :
 	_window(window),
 	_context(SDL_GL_CreateContext(window)),
 	_windowSurface(SDL_GetWindowSurface(window))
@@ -93,7 +105,7 @@ Engine::Renderer::Renderer(SDL_Window* window) :
 
 	int width, height;
 	SDL_GetWindowSize(_window, &width, &height);
-	setOutputSize(width, height, 5.f);
+	setOutputSize(width, height, worldHeight);
 
 	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
 	glewInit();

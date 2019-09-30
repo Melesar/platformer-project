@@ -5,6 +5,8 @@
 Platformer::Application::Application()
 {
 	_title = "Platformer project";
+	_isFullscreen = true;
+	_worldHeight = 7.5f;
 }
 
 void Platformer::Application::setup()
@@ -15,15 +17,8 @@ void Platformer::Application::setup()
 	Engine::Sprite* playerSprite = createSprite(Engine::TEX_ELLIOT, 500);
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
 
-	Engine::Sprite* ground = createSprite(Engine::TEX_PLATFORM, 128);
-	ground->setLayer(Engine::BoundingBox::PLATFORM);
-	ground->setPosition({ 0, -4 });
-	ground->setSize({ 8, 1 });
-
-	Engine::Sprite* box = createSprite(Engine::TEX_PLATFORM, 128);
-	box->setLayer(Engine::BoundingBox::PLATFORM);
-	box->setPosition({ 3, -2 });
-	box->setSortingOrder(1);
+	createPlatform({0, -4}, {_renderer->worldWidth(), 1});
+	createPlatform({ 3, -2 });
 }
 
 bool flip = false;
@@ -36,4 +31,22 @@ void Platformer::Application::update(float deltaTime)
 void Platformer::Application::onExit()
 {
 	Engine::Application::onExit();
+}
+
+Engine::Sprite* Platformer::Application::createPlatform(glm::vec2 position)
+{
+	Engine::Sprite* platform = createSprite(Engine::TEX_PLATFORM, 256);
+	platform->setLayer(Engine::BoundingBox::PLATFORM);
+	platform->setPosition(position);
+	platform->setSortingOrder(10);
+
+	return platform;
+}
+
+Engine::Sprite* Platformer::Application::createPlatform(glm::vec2 position, glm::vec2 size)
+{
+	Engine::Sprite* platform = createPlatform(position);
+	platform->setSize(size);
+
+	return platform;
 }

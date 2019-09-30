@@ -54,7 +54,7 @@ void Engine::Application::setup()
 {
 	initSDL();
 
-	_renderer = new Renderer(_window);
+	_renderer = new Renderer(_window, _worldHeight);
 	_resources.loadResources();
 }
 

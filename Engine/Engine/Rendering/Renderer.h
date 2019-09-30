@@ -15,10 +15,14 @@ namespace Engine
 		
 		void render();
 		void setBackgroundColor(Color color);
+
+		float worldWidth() const;
+		float worldHeight() const;
+		float aspect() const;
 		
 		glm::vec2 worldToScreenPos(glm::vec2 worldPos) const;
 
-		explicit Renderer(SDL_Window* window);
+		explicit Renderer(SDL_Window* window, float worldHeight);
 		
 		Renderer(const Renderer& other) = delete;
 		Renderer& operator = (const Renderer& other) = delete;
@@ -36,14 +40,14 @@ namespace Engine
 		int _outputWidth, _outputHeight;
 		int _renderablesCount = 0;
 
+		glm::mat3x3 _viewMatrix;
+		
 		Color _backgroundColor;
 		SDL_Window* _window;
 		SDL_GLContext _context;
 		SDL_Surface* _windowSurface;
 
 		std::set<IRenderable*> _renderablesSet;
-		std::vector<IRenderable*> _renderablesList;
-
-		glm::mat3x3 _viewMatrix;
+		std::list<IRenderable*> _renderablesList;
 	};
 }

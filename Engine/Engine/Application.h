@@ -48,6 +48,7 @@ namespace Engine
 
 		std::string _title;
 		bool _isFullscreen = false;
+		float _worldHeight = 5.f;
 		
 		Renderer* _renderer = nullptr;
 		Input _input;

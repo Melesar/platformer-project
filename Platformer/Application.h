@@ -20,6 +20,11 @@ namespace Platformer
 
 	private:
 
+		Engine::Sprite* createPlatform(glm::vec2 position);
+		Engine::Sprite* createPlatform(glm::vec2 position, glm::vec2 size);
+
+	private:
+
 		std::unique_ptr<Player> _player;
 	};
 }
