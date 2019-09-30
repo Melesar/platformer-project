@@ -25,6 +25,8 @@ namespace Platformer
 
 		bool bottomCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
 		bool topCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
+		bool rightCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
+		bool leftCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
 		
 	private:
 
@@ -41,8 +43,8 @@ namespace Platformer
 		
 		const Engine::BoundingBox& _bounds;
 
-		const float _horizontalRaySpacing;
-		const float _verticalRaySpacing;
+		const float _horizontalRaySpacing = _bounds.getHeight() / _horizontalRays;
+		const float _verticalRaySpacing = _bounds.getWidth() / _verticalRays;
 
 		glm::vec2 _velocity {0};
 		bool _isGrounded = false;

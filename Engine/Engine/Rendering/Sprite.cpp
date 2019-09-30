@@ -196,7 +196,6 @@ void Engine::Sprite::updateBoundingBox()
 
 void Engine::Sprite::drawDebug() const
 {
-	
 }
 
 void Engine::Sprite::updateTransform() 

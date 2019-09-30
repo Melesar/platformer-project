@@ -42,6 +42,8 @@ namespace Engine
 		void handleEvents();
 		void updatePendingSprites();
 
+		static void removeSprite(std::vector<Sprite*>& vector, Sprite* s);
+
 	protected:
 
 		std::string _title;

@@ -29,6 +29,7 @@ void Platformer::CharacterController::move(glm::vec2& velocity)
 		{
 			velocity.y = -(i.distance - _skinWidth);
 			_isGrounded = true;
+			_velocity.y = 0;
 		}
 		else
 		{
@@ -43,6 +44,15 @@ void Platformer::CharacterController::move(glm::vec2& velocity)
 		}
 
 		_isGrounded = false;
+	}
+
+	if (velocity.x > 0 && rightCollisions(velocity, i))
+	{
+		velocity.x = i.distance - _skinWidth;
+	}
+	else if (velocity.x < 0 && leftCollisions(velocity, i))
+	{
+		velocity.x = -(i.distance - _skinWidth);
 	}
 }
 
@@ -92,16 +102,57 @@ bool Platformer::CharacterController::topCollisions(glm::vec2 velocity, Engine::
 	return distance < maxDistance;
 }
 
+bool Platformer::CharacterController::rightCollisions(glm::vec2 velocity, Engine::Intersection& it) const
+{
+	Engine::Intersection intersec{  };
+	glm::vec2 origin = _bounds.max + glm::vec2(-_skinWidth, 0);
+	Engine::Ray r(origin, { 1, 0 });
+
+	const float maxDistance = glm::abs(velocity.x) + _skinWidth;
+	float distance = maxDistance;
+	for (int i = 0; i < _horizontalRays + 1; ++i)
+	{
+		r.setOrigin(origin - glm::vec2(0, i * _horizontalRaySpacing));
+
+		bool isHit = _raycaster.raycast(r, distance, Engine::BoundingBox::PLATFORM, intersec);
+		if (isHit && intersec.distance < distance)
+		{
+			distance = intersec.distance;
+		}
+	}
+
+	it.distance = distance;
+	return distance < maxDistance;
+}
+
+bool Platformer::CharacterController::leftCollisions(glm::vec2 velocity, Engine::Intersection& it) const
+{
+	Engine::Intersection intersec{  };
+	glm::vec2 origin = _bounds.min + glm::vec2(_skinWidth, 0);
+	Engine::Ray r(origin, { -1, 0 });
+
+	const float maxDistance = glm::abs(velocity.x) + _skinWidth;
+	float distance = maxDistance;
+	for (int i = 0; i < _horizontalRays + 1; ++i)
+	{
+		r.setOrigin(origin + glm::vec2(0, i * _horizontalRaySpacing));
+
+		bool isHit = _raycaster.raycast(r, distance, Engine::BoundingBox::PLATFORM, intersec);
+		if (isHit && intersec.distance < distance)
+		{
+			distance = intersec.distance;
+		}
+	}
+
+	it.distance = distance;
+	return distance < maxDistance;
+}
+
 void Platformer::CharacterController::jump()
 {
 	if (isGrounded())
 	{
-		std::cout << "Jump" << std::endl;
 		_velocity.y = _jumpVelocity;
-	}
-	else
-	{
-		std::cout << "Not grounded" << std::endl;
 	}
 }
 
@@ -112,8 +163,6 @@ bool Platformer::CharacterController::isGrounded() const
 
 Platformer::CharacterController::CharacterController(const Engine::Raycaster& raycaster, Engine::Sprite* sprite) :
 	_bounds(sprite->getBoundingBox()),
-	_horizontalRaySpacing(_bounds.getHeight() / _horizontalRays),
-	_verticalRaySpacing(_bounds.getWidth() / _verticalRays),
 	_raycaster(raycaster),
 	_sprite(sprite)
 {

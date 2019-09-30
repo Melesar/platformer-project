@@ -91,9 +91,9 @@ void Engine::Application::updatePendingSprites()
 
 void Engine::Application::onExit()
 {
-	for (Sprite* sprite : _sprites)
+	while(!_sprites.empty())
 	{
-		destroySprite(sprite);
+		destroySprite(*(_sprites.end() - 1));
 	}
 	
 	delete _renderer;
@@ -136,9 +136,21 @@ void Engine::Application::destroySprite(Sprite* sprite)
 {
 	_renderer->removeFromRenderingPool(sprite);
 	_raycaster.removeBoundingBox(*sprite);
-	
-	std::remove(_sprites.begin(), _sprites.end(), sprite);
-	std::remove(_pendingSprites.begin(), _pendingSprites.end(), sprite);
+
+	removeSprite(_sprites, sprite);
+	removeSprite(_pendingSprites, sprite);
 	
 	delete sprite;
+}
+
+void Engine::Application::removeSprite(std::vector<Sprite*>& vector, Sprite* s)
+{
+	for (auto i = vector.begin(); i < vector.end(); ++i)
+	{
+		if (*i == s)
+		{
+			vector.erase(i);
+			return;
+		}
+	}
 }

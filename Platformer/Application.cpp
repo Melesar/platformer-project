@@ -15,10 +15,15 @@ void Platformer::Application::setup()
 	Engine::Sprite* playerSprite = createSprite(Engine::TEX_ELLIOT, 500, 500);
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
 
-	Engine::Sprite* platform = createSprite(Engine::TEX_PLATFORM, 300, 300);
-	platform->setLayer(Engine::BoundingBox::PLATFORM);
-	platform->setPosition({ 0, -4 });
-	platform->setSize({ 8, 1 });
+	Engine::Sprite* ground = createSprite(Engine::TEX_PLATFORM, 300, 300);
+	ground->setLayer(Engine::BoundingBox::PLATFORM);
+	ground->setPosition({ 0, -4 });
+	ground->setSize({ 8, 1 });
+
+	Engine::Sprite* box = createSprite(Engine::TEX_PLATFORM, 300, 300);
+	box->setLayer(Engine::BoundingBox::PLATFORM);
+	box->setPosition({ 3, -2 });
+	box->setSortingOrder(1);
 }
 
 bool flip = false;
