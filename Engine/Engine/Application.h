@@ -30,7 +30,7 @@ namespace Engine
 
 		Sprite* createSprite();
 		Sprite* createSprite(TextureId id);
-		Sprite* createSprite(TextureId id, int ppuHorizontal, int ppuVertical);
+		Sprite* createSprite(TextureId id, int ppu);
 
 		void destroySprite(Sprite* sprite);
 

@@ -121,11 +121,11 @@ Engine::Sprite* Engine::Application::createSprite(TextureId id)
 	return s;
 }
 
-Engine::Sprite* Engine::Application::createSprite(TextureId id, int ppuHorizontal, int ppuVertical)
+Engine::Sprite* Engine::Application::createSprite(TextureId id, int ppu)
 {
 	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
 	std::shared_ptr<Texture> texture = _resources.getTexture(id);
-	const auto s = new Sprite(shader, texture, ppuVertical, ppuHorizontal);;
+	const auto s = new Sprite(shader, texture, ppu);
 	_pendingSprites.push_back(s);
 
 	return s;

@@ -3,6 +3,17 @@
 
 namespace Engine
 {
+	enum WrapMode
+	{
+		REPEAT = GL_REPEAT,
+		CLAMP = GL_CLAMP,
+	};
+
+	enum FilteringMode
+	{
+		POINT = GL_NEAREST_MIPMAP_NEAREST,
+		LINEAR = GL_LINEAR_MIPMAP_LINEAR,
+	};
 	
 	class ENGINE_API Texture
 	{
@@ -18,7 +29,15 @@ namespace Engine
 		int width() const;
 		int height() const;
 
+		void setWrapMode(WrapMode wrapMode);
+		void setFiltering(FilteringMode filtering);
+
 		TextureId id() const;
+
+	private:
+
+		static void setWrapModeInternal(WrapMode wrapMode);
+		static void setFilteringInternal(FilteringMode filtering);
 		
 	private:
 

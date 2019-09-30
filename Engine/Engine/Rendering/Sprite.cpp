@@ -129,8 +129,7 @@ void Engine::Sprite::setLayer(BoundingBox::Layer layer)
 }
 
 Engine::Sprite::Sprite(std::shared_ptr<Shader> shader) :
-	_ppuHorizontal(100),
-	_ppuVertical(100),
+	_ppu(100),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
@@ -141,9 +140,8 @@ Engine::Sprite::Sprite(std::shared_ptr<Shader> shader) :
 	updateTransform();
 }
 
-Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, int ppuVertical, int ppuHorizontal) :
-	_ppuHorizontal(ppuHorizontal),
-	_ppuVertical(ppuVertical),
+Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, int ppu) :
+	_ppu(ppu),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
@@ -154,9 +152,8 @@ Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, int ppuVertical, int ppuH
 	updateTransform();
 }
 
-Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal) :
-	_ppuHorizontal(ppuHorizontal),
-	_ppuVertical(ppuVertical),
+Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppu) :
+	_ppu(ppu),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
@@ -169,8 +166,7 @@ Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> 
 }
 
 Engine::Sprite::Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture) :
-	_ppuHorizontal(100),
-	_ppuVertical(100),
+	_ppu(100),
 	_position(glm::vec2(0.f)),
 	_rotation(0.f),
 	_scale(1.f),
@@ -190,8 +186,8 @@ Engine::Sprite::~Sprite()
 
 void Engine::Sprite::updateBoundingBox()
 {
-	bb.min = vec2(_modelMatrix * vec3(_vertices[0], 1));
-	bb.max = vec2(_modelMatrix * vec3(_vertices[2], 1));
+	_bb.min = vec2(_modelMatrix * vec3(_vertices[0], 1));
+	_bb.max = vec2(_modelMatrix * vec3(_vertices[2], 1));
 }
 
 void Engine::Sprite::drawDebug() const
@@ -247,10 +243,10 @@ void Engine::Sprite::resetUVs()
 
 void Engine::Sprite::rebuildMesh()
 {
-	float extentX = _texture != nullptr ? static_cast<float>(_texture->width()) / _ppuHorizontal : _ppuHorizontal * 0.01f;
-	float extentY = _texture != nullptr ? static_cast<float>(_texture->height()) / _ppuVertical : _ppuVertical * 0.01f;
-	extentX *= _size.x * 0.5;
-	extentY *= _size.y * 0.5;
+	float extentX = _texture != nullptr ? static_cast<float>(_texture->width()) / _ppu : _ppu * 0.01f;
+	float extentY = _texture != nullptr ? static_cast<float>(_texture->height()) / _ppu : _ppu * 0.01f;
+	extentX *= _size.x * 0.5f;
+	extentY *= _size.y * 0.5f;
 	
 	_vertices[0] = glm::vec2(-extentX, -extentY);
 	_vertices[1] = glm::vec2(-extentX, extentY);

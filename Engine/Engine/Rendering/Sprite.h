@@ -36,8 +36,8 @@ namespace Engine
 		void setLayer(BoundingBox::Layer layer);
 		
 		Sprite(std::shared_ptr<Shader> shader);
-		Sprite(std::shared_ptr<Shader> shader, int ppuVertical, int ppuHorizontal);
-		Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppuVertical, int ppuHorizontal);
+		Sprite(std::shared_ptr<Shader> shader, int ppu);
+		Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppu);
 		explicit Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture);
 		
 		virtual ~Sprite();
@@ -51,7 +51,7 @@ namespace Engine
 		void drawDebug() const;
 
 	private:
-		int _ppuHorizontal, _ppuVertical;
+		int _ppu;
 
 		glm::vec2 _position;
 		float _rotation;

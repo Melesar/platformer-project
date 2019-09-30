@@ -17,12 +17,9 @@ Engine::Texture::Texture(const std::string& filename, TextureId id) : _id(id)
 	glGenTextures(1, &_textureData);
 	glBindTexture(GL_TEXTURE_2D, _textureData);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	setWrapModeInternal(REPEAT);
+	setFilteringInternal(LINEAR);
+	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageData->w, imageData->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData->pixels);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -52,6 +49,34 @@ int Engine::Texture::height() const
 {
 	return _height;
 }
+
+void Engine::Texture::setWrapMode(WrapMode wrapMode)
+{
+	glBindTexture(GL_TEXTURE_2D, _textureData);
+	setWrapModeInternal(wrapMode);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+void Engine::Texture::setFiltering(FilteringMode filtering)
+{
+	glBindTexture(GL_TEXTURE_2D, _textureData);
+	setFilteringInternal(filtering);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Engine::Texture::setWrapModeInternal(WrapMode wrapMode)
+{
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+}
+
+void Engine::Texture::setFilteringInternal(FilteringMode filtering)
+{
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filtering);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filtering);
+}
+
 
 Engine::TextureId Engine::Texture::id() const
 {
