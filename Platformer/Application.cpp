@@ -14,7 +14,7 @@ void Platformer::Application::setup()
 	Engine::Application::setup();
 	_renderer->setBackgroundColor({ 0.42, 0.77, 0.77, 1 });
 
-	Engine::Sprite* playerSprite = createSprite(Engine::TEX_ELLIOT, 500);
+	Engine::Sprite* playerSprite = createSprite(Engine::TEX_ELLIOT, 256);
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
 
 	createPlatform({0, -4}, {_renderer->worldWidth(), 1});
