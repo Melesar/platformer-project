@@ -23,6 +23,9 @@ namespace Platformer
 		Engine::Sprite* createPlatform(glm::vec2 position);
 		Engine::Sprite* createPlatform(glm::vec2 position, glm::vec2 size);
 
+		void createWalls(const glm::vec2 worldSize);
+		void createPlatforms(const glm::vec2 worldSize);
+		
 	private:
 
 		std::unique_ptr<Player> _player;

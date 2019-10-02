@@ -6,7 +6,9 @@ Platformer::Application::Application()
 {
 	_title = "Platformer project";
 	_worldHeight = 10.f;
+	_isFullscreen = true;
 }
+
 
 void Platformer::Application::setup()
 {
@@ -16,20 +18,37 @@ void Platformer::Application::setup()
 	Engine::Sprite* playerSprite = createSprite(Engine::TEX_ELLIOT, 512);
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
 	
-	glm::vec2 worldSize = { _renderer->worldWidth(), _renderer->worldHeight() };
-	createPlatform({0, -4.5f}, { worldSize.x, 1});
-	createPlatform({ 3, 0 });
-	createPlatform({ -3, -2 }, { 6, 1 });
+	const glm::vec2 worldSize = { _renderer->worldWidth(), _renderer->worldHeight() };
+	
+	createPlatforms(worldSize);
+	createWalls(worldSize);
+}
 
-	Engine::BoundingBox leftWall{ {-0.5f * worldSize.x - 1.f, -0.5f * worldSize.y}, {-0.5f * worldSize.x, 0.5f * worldSize.y} };
-	Engine::BoundingBox rightWall{ {0.5f * worldSize.x, -0.5f * worldSize.y}, {0.5f * worldSize.x + 1.f, 0.5f * worldSize.y} };
-	Engine::BoundingBox topWall{ {-0.5f * worldSize.x, 0.5f * worldSize.y}, {0.5f * worldSize.x, 0.5f * worldSize.y + 1.f} };
+void Platformer::Application::createPlatforms(const glm::vec2 worldSize)
+{
+	const glm::vec2 worldExtents = worldSize * 0.5f;
+	createPlatform({ 0, -4.5f }, { worldSize.x, 1 });
+
+	float platformWidth = worldSize.x * 0.333f;
+	createPlatform({ -worldExtents.x + 0.5f * platformWidth, -2 }, { platformWidth, 1 });
+	createPlatform({ 0, 0 }, {worldSize.x * 0.167f, 1});
+	createPlatform({worldExtents.x - platformWidth * 0.5f, 1 }, { platformWidth, 1 });
+
+	createPlatform({ -4, 2 });
+	platformWidth *= 0.5f;
+	createPlatform({ -worldExtents.x + platformWidth * 0.5f, 2 }, { platformWidth, 1 });
+}
+
+void Platformer::Application::createWalls(const glm::vec2 worldSize)
+{
+	const glm::vec2 worldExtents = worldSize * 0.5f;
+	Engine::BoundingBox leftWall{ {-worldExtents.x - 1.f, -worldExtents.y}, {-worldExtents.x, worldExtents.y} };
+	Engine::BoundingBox rightWall{ {worldExtents.x, -worldExtents.y}, {worldExtents.x + 1.f, worldExtents.y} };
+	Engine::BoundingBox topWall{ {-worldExtents.x, worldExtents.y}, {worldExtents.x, worldExtents.y + 1.f} };
 	_raycaster.addBoundingBox(leftWall);
 	_raycaster.addBoundingBox(rightWall);
 	_raycaster.addBoundingBox(topWall);
 }
-
-bool flip = false;
 
 void Platformer::Application::update(float deltaTime)
 {
