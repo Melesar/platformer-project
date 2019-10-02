@@ -31,7 +31,7 @@ namespace Engine
 
 	private:
 
-		void setOutputSize(int screenWidth, int screenHeight, float worldHeight);
+		void setOutputSize(int screenWidth, int screenHeight, float halfWorldHeight);
 
 	private:
 

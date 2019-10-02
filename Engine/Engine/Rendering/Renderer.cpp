@@ -84,8 +84,8 @@ void Engine::Renderer::setOutputSize(int screenWidth, int screenHeight, float wo
 	_worldHeight = worldHeight;
 	_worldWidth = _worldHeight * _aspect;
 
-	_viewMatrix[0][0] = 1.f / _worldWidth;
-	_viewMatrix[1][1] = 1.f / _worldHeight;
+	_viewMatrix[0][0] = 2.f / _worldWidth;
+	_viewMatrix[1][1] = 2.f / _worldHeight;
 	_viewMatrix[2][2] = 1;
 }
 

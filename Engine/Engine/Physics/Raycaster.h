@@ -13,6 +13,7 @@ namespace Engine
 		Raycaster();
 		
 		void addBoundingBox(const IPhysicsBody& body);
+		void addBoundingBox(const BoundingBox& body);
 		void removeBoundingBox(const IPhysicsBody& body);
 		
 		bool raycast(const Ray& ray, Intersection& i) const;

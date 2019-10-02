@@ -53,8 +53,8 @@ void Engine::Sprite::rotate(float deltaAngle)
 
 void Engine::Sprite::flipX(bool flip)
 {
-	float uv01 = flip ? _size.x : 0;
-	float uv23 = flip ? 0 : _size.x;
+	float uv01 = flip ? _size.x * _invDefaultSize.x : 0;
+	float uv23 = flip ? 0 : _size.x * _invDefaultSize.x;
 	if (_uvs[0].x == uv01 && _uvs[2].x == uv23)
 	{
 		return;
@@ -243,20 +243,19 @@ void Engine::Sprite::resetUVs()
 
 void Engine::Sprite::rebuildMesh()
 {
-	float extentX = _texture != nullptr ? static_cast<float>(_texture->width()) / _ppu : _ppu * 0.01f;
-	float extentY = _texture != nullptr ? static_cast<float>(_texture->height()) / _ppu : _ppu * 0.01f;
-	extentX *= _size.x * 0.5f;
-	extentY *= _size.y * 0.5f;
+	float extentX = _size.x * 0.5f;
+	float extentY = _size.y * 0.5f;
 	
 	_vertices[0] = glm::vec2(-extentX, -extentY);
 	_vertices[1] = glm::vec2(-extentX, extentY);
 	_vertices[2] = glm::vec2(extentX, extentY);
 	_vertices[3] = glm::vec2(extentX, -extentY);
 
+	glm::vec2 uvTop = _size * _invDefaultSize;
 	_uvs[0] = glm::vec2(0, 0);
-	_uvs[1] = glm::vec2(0, _size.y);
-	_uvs[2] = glm::vec2(_size.x, _size.y);
-	_uvs[3] = glm::vec2(_size.x, 0);
+	_uvs[1] = glm::vec2(0, uvTop.y);
+	_uvs[2] = glm::vec2(uvTop.x, uvTop.y);
+	_uvs[3] = glm::vec2(uvTop.x, 0);
 
 	_indices[0] = 0;
 	_indices[1] = 1;

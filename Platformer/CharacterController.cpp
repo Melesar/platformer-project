@@ -1,4 +1,5 @@
-﻿#include "CharacterController.h"
+﻿#include "Core.h"
+#include "CharacterController.h"
 #include "Rendering/Sprite.h"
 #include "Physics/Ray.h"
 #include "Physics/Intersection.h"
@@ -41,6 +42,7 @@ void Platformer::CharacterController::move(glm::vec2& velocity)
 		if (topCollisions(velocity, i))
 		{
 			velocity.y = i.distance - _skinWidth;
+			_velocity.y = 0.f;
 		}
 
 		_isGrounded = false;

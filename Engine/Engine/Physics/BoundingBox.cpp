@@ -3,6 +3,7 @@
 #include "Physics/Ray.h"
 #include "Physics/Intersection.h"
 
+
 bool Engine::BoundingBox::intersects(const Ray& ray, Intersection& intersection) const
 {
 	glm::vec2 invDir = ray.getInvDirection();

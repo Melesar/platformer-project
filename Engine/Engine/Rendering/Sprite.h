@@ -4,11 +4,11 @@
 #include <Rendering/IRenderable.h>
 #include "Physics/BoundingBox.h"
 #include "Physics/IPhysicsBody.h"
+#include "Rendering/Texture.h"
 
 namespace Engine
 {
 	class Shader;
-	class Texture;
 	
 	class ENGINE_API Sprite final : public IRenderable, public IPhysicsBody
 	{
@@ -53,12 +53,21 @@ namespace Engine
 	private:
 		int _ppu;
 
+		std::shared_ptr<Texture> _texture = nullptr;
+
 		glm::vec2 _position;
 		float _rotation;
 		float _scale;
 		int _sortingOrder = 0;
-		glm::vec2 _size{ 1, 1 };
+
+		const glm::vec2 _defaultSize = {
+			_texture != nullptr ? static_cast<float>(_texture->width()) / _ppu : _ppu * 0.01f,
+			_texture != nullptr ? static_cast<float>(_texture->height()) / _ppu : _ppu * 0.01f,
+		};
+		const glm::vec2 _invDefaultSize = 1.f / _defaultSize;
 		
+		glm::vec2 _size = _defaultSize;
+
 		glm::mat3x3 _modelMatrix;
 		glm::mat3x3 _viewMatrix{};
 		glm::mat3x3 _transformMatrix;
@@ -82,7 +91,6 @@ namespace Engine
 		GLuint _vbo[NUM_BUFFERS]{};
 
 		std::shared_ptr<Shader> _shader;
-		std::shared_ptr<Texture> _texture = nullptr;
 		Color _color = {1, 1, 1, 1};
 	};
 }

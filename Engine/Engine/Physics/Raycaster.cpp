@@ -10,6 +10,11 @@ Engine::Raycaster::Raycaster()
 void Engine::Raycaster::addBoundingBox(const IPhysicsBody& body)
 {
 	const BoundingBox box = body.getBoundingBox();
+	addBoundingBox(box);
+}
+
+void Engine::Raycaster::addBoundingBox(const BoundingBox& box)
+{
 	_boxes[box.layer].push_back(box);
 }
 
