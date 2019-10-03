@@ -15,7 +15,7 @@ void Platformer::Application::setup()
 	Engine::Application::setup();
 	_renderer->setBackgroundColor({ 0.42, 0.77, 0.77, 1 });
 
-	Engine::Sprite* playerSprite = createSprite(Engine::TEX_ELLIOT, 512);
+	Engine::Sprite* playerSprite = createSprite(Engine::TEX_PLAYER, 256);
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
 	
 	const glm::vec2 worldSize = { _renderer->worldWidth(), _renderer->worldHeight() };
@@ -52,6 +52,11 @@ void Platformer::Application::createWalls(const glm::vec2 worldSize)
 
 void Platformer::Application::update(float deltaTime)
 {
+	if (_input.keyPressed(Engine::Input::Q))
+	{
+		stop();
+	}
+	
 	_player->update(deltaTime);
 }
 

@@ -12,6 +12,7 @@ namespace Engine
 		TEX_BACKGROUND,
 		TEX_ENEMY,
 		TEX_PLATFORM,
+		TEX_PLAYER,
 
 		NUM_TEXTURES
 	};
