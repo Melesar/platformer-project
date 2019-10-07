@@ -129,3 +129,13 @@ glm::vec2 Engine::Renderer::worldToScreenPos(glm::vec2 worldPos) const
 
 	return screenNormalized * glm::vec2(_outputWidth, _outputHeight);
 }
+
+glm::vec2 Engine::Renderer::screenToWorldPos(glm::vec2 screenPos) const
+{
+	screenPos.x -= _outputWidth * 0.5f;
+	screenPos.y = -(screenPos.y - _outputHeight * 0.5f);
+
+	screenPos = screenPos / glm::vec2(_outputWidth, _outputHeight) * glm::vec2(_worldWidth, _worldHeight);
+
+	return screenPos;
+}

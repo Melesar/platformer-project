@@ -3,6 +3,7 @@
 #include "Input/Input.h"
 #include "Physics/Raycaster.h"
 #include "CharacterController.h"
+#include "PlayerShooting.h"
 
 namespace Platformer
 {
@@ -13,6 +14,8 @@ namespace Platformer
 		virtual ~Player();
 
 		void update(float deltaTime);
+
+		glm::vec2 getPosition() const;
 
 	private:
 		

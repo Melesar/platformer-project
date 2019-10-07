@@ -18,6 +18,7 @@ void Platformer::CharacterController::move(glm::vec2 moveDirection, float deltaT
 	glm::vec2 frameVelocity = _velocity * deltaTime;
 	move(frameVelocity);
 
+
 	_sprite->move(frameVelocity);
 }
 
@@ -138,7 +139,6 @@ bool Platformer::CharacterController::leftCollisions(glm::vec2 velocity, Engine:
 	for (int i = 0; i < _horizontalRays + 1; ++i)
 	{
 		r.setOrigin(origin + glm::vec2(0, i * _horizontalRaySpacing));
-
 		bool isHit = _raycaster.raycast(r, distance, Engine::BoundingBox::PLATFORM, intersec);
 		if (isHit && intersec.distance < distance)
 		{

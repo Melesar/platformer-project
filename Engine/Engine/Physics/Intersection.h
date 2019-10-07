@@ -6,6 +6,7 @@ namespace Engine
 	struct ENGINE_API Intersection
 	{
 		float distance;
+		BoundingBox bb;
 	};
 }
 

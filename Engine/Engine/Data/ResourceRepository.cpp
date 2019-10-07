@@ -31,6 +31,7 @@ void Engine::ResourcesRepository::loadTextures()
 	loadTexture("Platform.png", TEX_PLATFORM);
 	loadTexture("Elliot.png", TEX_ENEMY);
 	loadTexture("Player.png", TEX_PLAYER);
+	loadTexture("Bullet.png", TEX_BULLET);
 }
 
 void Engine::ResourcesRepository::loadTexture(const std::string& textureName, TextureId id)

@@ -23,6 +23,7 @@ namespace Engine
 
 		BoundingBox() = default;
 		BoundingBox(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}
+		BoundingBox(const BoundingBox& other) = default;
 
 		bool intersects(const Ray& ray, Intersection& intersection) const;
 		bool intersects(const BoundingBox& other) const;

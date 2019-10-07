@@ -22,6 +22,11 @@ void Platformer::Player::update(float deltaTime)
 	_controller.move(_input.getMoveDirection(), deltaTime);
 }
 
+glm::vec2 Platformer::Player::getPosition() const
+{
+	return _sprite->getPosition();
+}
+
 Platformer::Player::~Player()
 {
 }

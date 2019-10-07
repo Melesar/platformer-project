@@ -6,16 +6,16 @@
 
 bool Engine::BoundingBox::intersects(const Ray& ray, Intersection& intersection) const
 {
-	glm::vec2 invDir = ray.getInvDirection();
-	glm::vec2 orig = ray.getOrigin();
-	
-	float t0x = (min.x - orig.x) * invDir.x;
-	float t0y = (min.y - orig.y) * invDir.y;
-	float t1x = (max.x - orig.x) * invDir.x;
-	float t1y = (max.y - orig.y) * invDir.y;
+	const glm::vec2 invDir = ray.getInvDirection();
+	const glm::vec2 orig = ray.getOrigin();
 
-	float tmin = glm::max(glm::min(t0x, t1x), glm::min(t0y, t1y));
-	float tmax = glm::min(glm::max(t0x, t1x), glm::max(t0y, t1y));
+	const float t0x = (min.x - orig.x) * invDir.x;
+	const float t0y = (min.y - orig.y) * invDir.y;
+	const float t1x = (max.x - orig.x) * invDir.x;
+	const float t1y = (max.y - orig.y) * invDir.y;
+
+	const float tmin = glm::max(glm::min(t0x, t1x), glm::min(t0y, t1y));
+	const float tmax = glm::min(glm::max(t0x, t1x), glm::max(t0y, t1y));
 
 	if (tmax < 0)
 	{
@@ -29,6 +29,7 @@ bool Engine::BoundingBox::intersects(const Ray& ray, Intersection& intersection)
 		return false;
 	}
 
+	intersection.bb = *this;
 	intersection.distance = tmin;
 	return intersection.distance > 0;
 }

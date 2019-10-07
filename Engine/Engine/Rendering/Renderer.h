@@ -21,6 +21,7 @@ namespace Engine
 		float aspect() const;
 		
 		glm::vec2 worldToScreenPos(glm::vec2 worldPos) const;
+		glm::vec2 screenToWorldPos(glm::vec2 screenPos) const;
 
 		explicit Renderer(SDL_Window* window, float worldHeight);
 		

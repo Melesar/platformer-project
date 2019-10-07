@@ -14,6 +14,12 @@ inline std::ostream& operator << (std::ostream& stream, glm::vec2 vec)
 	return stream;
 }
 
+inline std::ostream& operator << (std::ostream& stream, Engine::BoundingBox box)
+{
+	stream << "Min: " << box.min << ", max: " << box.max;
+	return stream;
+}
+
 inline glm::vec3 vec3 (const glm::vec2& vec, float z)
 {
 	return glm::vec3(vec.x, vec.y, z);

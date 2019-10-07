@@ -192,12 +192,15 @@ void Engine::Sprite::updateBoundingBox()
 
 void Engine::Sprite::drawDebug() const
 {
+	//drawBoundingBox(_bb.min, _bb.max, _viewMatrix);
 }
 
 void Engine::Sprite::updateTransform() 
 {
-	_modelMatrix[0][0] = _scale * glm::cos(glm::radians(_rotation));
-	_modelMatrix[0][1] = -glm::sin(glm::radians(_rotation));
+	const float angle = glm::radians(_rotation);
+	
+	_modelMatrix[0][0] = _scale * glm::cos(angle);
+	_modelMatrix[0][1] = -glm::sin(angle);
 	_modelMatrix[0][2] = 0;
 	_modelMatrix[1][0] = -_modelMatrix[0][1];
 	_modelMatrix[1][1] = _modelMatrix[0][0];

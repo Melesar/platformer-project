@@ -13,6 +13,7 @@ namespace Engine
 		TEX_ENEMY,
 		TEX_PLATFORM,
 		TEX_PLAYER,
+		TEX_BULLET,
 
 		NUM_TEXTURES
 	};

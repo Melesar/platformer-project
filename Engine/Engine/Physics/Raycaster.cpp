@@ -9,22 +9,22 @@ Engine::Raycaster::Raycaster()
 
 void Engine::Raycaster::addBoundingBox(const IPhysicsBody& body)
 {
-	const BoundingBox box = body.getBoundingBox();
+	const BoundingBox& box = body.getBoundingBox();
 	addBoundingBox(box);
 }
 
 void Engine::Raycaster::addBoundingBox(const BoundingBox& box)
 {
-	_boxes[box.layer].push_back(box);
+	_boxes[box.layer].push_back(&box);
 }
 
 void Engine::Raycaster::removeBoundingBox(const IPhysicsBody& body)
 {
 	const BoundingBox box = body.getBoundingBox();
-	std::vector<BoundingBox> layerBoxes = _boxes[box.layer];
+		std::vector<const BoundingBox*> layerBoxes = _boxes[box.layer];
 	for (size_t i = 0; i < layerBoxes.size(); ++i)
 	{
-		if (layerBoxes[i] == box)
+		if (*layerBoxes[i] == box)
 		{
 			layerBoxes.erase(layerBoxes.begin() + i);
 			return;
@@ -51,33 +51,35 @@ bool Engine::Raycaster::raycast(const Ray& ray, float maxDistance, BoundingBox::
 	
 	Intersection intI {};
 	float minDistance = maxDistance;
-	for (int i = 0; i < BoundingBox::NUM_LAYERS; ++i)
+	for (int index = 0; index < BoundingBox::NUM_LAYERS; ++index)
 	{
-		bool intersects = raycast(ray, maxDistance, intI, _boxes[i]);
+		bool intersects = raycast(ray, maxDistance, intI, _boxes[index]);
 		if (intersects && intI.distance < minDistance)
 		{
 			minDistance = intI.distance;
 		}
 	}
 
+	i.bb = intI.bb;
 	i.distance = minDistance;
 	return minDistance < maxDistance;
 }
 
 bool Engine::Raycaster::raycast(const Ray& ray, float maxDistance, Intersection& i,
-	const std::vector<BoundingBox>& boxes)
+	const std::vector<const BoundingBox*>& boxes)
 {
 	float minDistance = maxDistance;
 	Intersection intI{};
-	for (const BoundingBox box : boxes)
+	for (const BoundingBox* box : boxes)
 	{
-		bool intersects = box.intersects(ray, intI);
+		bool intersects = box->intersects(ray, intI);
 		if (intersects && intI.distance < minDistance)
 		{
 			minDistance = intI.distance;
 		}
 	}
 
+	i.bb = intI.bb;
 	i.distance = minDistance;
 	return minDistance < maxDistance;
 }

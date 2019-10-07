@@ -13,7 +13,7 @@ namespace Engine
 		Raycaster();
 		
 		void addBoundingBox(const IPhysicsBody& body);
-		void addBoundingBox(const BoundingBox& body);
+		void addBoundingBox(const BoundingBox& box);
 		void removeBoundingBox(const IPhysicsBody& body);
 		
 		bool raycast(const Ray& ray, Intersection& i) const;
@@ -22,11 +22,11 @@ namespace Engine
 
 	private:
 
-		static bool raycast(const Ray& ray, float maxDistance, Intersection& i, const std::vector<BoundingBox>& boxes);
+		static bool raycast(const Ray& ray, float maxDistance, Intersection& i, const std::vector<const BoundingBox*>& boxes);
 		
 	private:
 		
-		std::vector<std::vector<BoundingBox>> _boxes;
+		std::vector<std::vector<const BoundingBox*>> _boxes;
 	};
 }
 
