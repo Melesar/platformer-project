@@ -18,6 +18,11 @@ namespace Platformer
 		Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster);
 
 		void update(float deltaTime);
+
+	private:
+
+		void moveToPoint(glm::vec2 destination, float deltaTime);
+		void moveInDirection(short direction, float deltaTime);
 		
 	private:
 

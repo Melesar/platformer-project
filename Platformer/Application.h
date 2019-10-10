@@ -3,6 +3,7 @@
 #include "../Engine/Engine/Application.h"
 #include "Bullet.h"
 #include "AI/Enemy.h"
+#include "AI/Navigation/Navmesh.h"
 
 
 namespace Platformer
@@ -35,6 +36,8 @@ namespace Platformer
 		
 	private:
 
+		Navmesh _navmesh;
+		
 		std::unique_ptr<Player> _player;
 		std::vector<Bullet> _bullets;
 		std::vector<std::unique_ptr<Engine::BoundingBox>> _walls;

@@ -1,4 +1,5 @@
 ﻿#include "Player.h"
+#include "Player/PlayerMovementConstants.h"
 
 Platformer::Player::Player(Engine::Sprite* sprite, const Engine::Input& input, const Engine::Raycaster& raycaster) :
 	_sprite(sprite),
@@ -9,6 +10,8 @@ Platformer::Player::Player(Engine::Sprite* sprite, const Engine::Input& input, c
 	_sprite->setPosition({ 1, -3.5 });
 	_sprite->setSortingOrder(50);
 	_sprite->setLayer(Engine::BoundingBox::PLAYER);
+
+	_controller.setValues(MOVEMENT_SPEED, JUMP_HEIGHT, JUMP_TIME);
 }
 
 

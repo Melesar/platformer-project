@@ -74,6 +74,11 @@ float Engine::Renderer::aspect() const
 	return  _aspect;
 }
 
+const glm::mat3x3& Engine::Renderer::viewMatrix() const
+{
+	return _viewMatrix;
+}
+
 void Engine::Renderer::setOutputSize(int screenWidth, int screenHeight, float worldHeight)
 {
 	_outputWidth = screenWidth;

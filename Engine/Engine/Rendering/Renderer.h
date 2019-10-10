@@ -19,6 +19,7 @@ namespace Engine
 		float worldWidth() const;
 		float worldHeight() const;
 		float aspect() const;
+		const glm::mat3x3& viewMatrix() const;
 		
 		glm::vec2 worldToScreenPos(glm::vec2 worldPos) const;
 		glm::vec2 screenToWorldPos(glm::vec2 screenPos) const;

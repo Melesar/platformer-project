@@ -163,6 +163,16 @@ bool Platformer::CharacterController::isGrounded() const
 	return _isGrounded;
 }
 
+void Platformer::CharacterController::setValues(float moveSpeed, float jumpHeight, float topJumpTime)
+{
+	_moveSpeed = moveSpeed;
+	_jumpHeight = jumpHeight;
+	_topJumpTime = topJumpTime;
+
+	_gravity = 2.f * _jumpHeight / (_topJumpTime * _topJumpTime);
+	_jumpVelocity = _gravity * _topJumpTime;
+}
+
 Platformer::CharacterController::CharacterController(const Engine::Raycaster& raycaster, Engine::Sprite* sprite) :
 	_bounds(sprite->getBoundingBox()),
 	_raycaster(raycaster),

@@ -17,6 +17,8 @@ namespace Platformer
 
 		bool isGrounded() const;
 
+		void setValues(float moveSpeed, float jumpHeight, float topJumpTime);
+		
 		CharacterController(const Engine::Raycaster& raycaster, Engine::Sprite* sprite);
 
 	private:
@@ -30,13 +32,14 @@ namespace Platformer
 		
 	private:
 
-		const float _moveSpeed = 3.f;
-		const float _jumpHeight = 3.f;
-		const float _topJumpTime = 0.5f;
+		float _moveSpeed;
+		float _jumpHeight;
+		float _topJumpTime;
+		
 		const float _skinWidth = 0.05f;
 
-		const float _gravity = 2.f * _jumpHeight / (_topJumpTime * _topJumpTime);
-		const float _jumpVelocity = _gravity * _topJumpTime;
+		float _gravity;
+		float _jumpVelocity;
 
 		const int _verticalRays = 4;
 		const int _horizontalRays = 4;

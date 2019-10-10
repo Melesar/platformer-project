@@ -7,7 +7,7 @@ Platformer::Application::Application()
 {
 	_title = "Platformer project";
 	_worldHeight = 10.f;
-	//_isFullscreen = true;
+	_isFullscreen = true;
 }
 
 
@@ -25,14 +25,16 @@ void Platformer::Application::setup()
 	
 	createPlatforms(worldSize);
 	createWalls(worldSize);
+
+	_navmesh.build(worldSize);
 }
 
 void Platformer::Application::createPlatforms(const glm::vec2 worldSize)
 {
 	const glm::vec2 worldExtents = worldSize * 0.5f;
-	createPlatform({ 0, -4.5f }, { worldSize.x, 1 });
+	createPlatform({ 0, -4.5f }, { 100, 1 });
 
-	float platformWidth = worldSize.x * 0.333f;
+	float platformWidth = glm::round(worldSize.x * 0.333f);
 	createPlatform({ -worldExtents.x + 0.5f * platformWidth, -2 }, { platformWidth, 1 });
 	createPlatform({ 0, 0 }, {worldSize.x * 0.167f, 1});
 	createPlatform({worldExtents.x - platformWidth * 0.5f, 1 }, { platformWidth, 1 });
@@ -131,6 +133,8 @@ void Platformer::Application::update(float deltaTime)
 	{
 		enemy->update(deltaTime);
 	}
+
+	_navmesh.draw(_renderer->viewMatrix());
 }
 
 void Platformer::Application::onExit()
@@ -152,6 +156,8 @@ Engine::Sprite* Platformer::Application::createPlatform(glm::vec2 position, glm:
 {
 	Engine::Sprite* platform = createPlatform(position);
 	platform->setSize(size);
+
+	_navmesh.addPlatform(platform->getBoundingBox());
 
 	return platform;
 }
