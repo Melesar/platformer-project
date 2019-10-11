@@ -87,7 +87,7 @@ inline void drawLine(glm::vec2 start, glm::vec2 end, const glm::mat3x3& matrix, 
 	glm::vec2 pMax = matrix * vec3(end, 1);
 
 	glVertex2f(pMin.x, pMin.y);
-	glVertex2f(pMin.x, pMax.y);
+	glVertex2f(pMax.x, pMax.y);
 	
 	glEnd();
 }

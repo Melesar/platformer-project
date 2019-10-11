@@ -26,7 +26,7 @@ namespace Platformer
 	private:
 
 		std::vector<Engine::BoundingBox*> _platforms;
-		std::vector<NavmeshNode> _nodes;
+		std::vector<std::unique_ptr<NavmeshNode>> _nodes;
 	};
 }
 
