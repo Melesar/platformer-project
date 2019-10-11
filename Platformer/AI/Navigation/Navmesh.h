@@ -21,7 +21,7 @@ namespace Platformer
 		void constructNavmesh(glm::vec2 worldSize);
 		void constructFallLinks();
 
-		NavmeshNode* sampleNode(glm::vec2 point) const;
+		NavmeshNode* sampleNode(glm::vec2 point, float& minDistance) const;
 
 	private:
 

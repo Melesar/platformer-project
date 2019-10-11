@@ -12,15 +12,13 @@ void Platformer::Navmesh::constructNavmesh(glm::vec2 worldSize)
 	float borderX = worldExtents.x - (worldExtents.x - (int)worldExtents.x - 0.5f);
 	for (Engine::BoundingBox* platform : _platforms)
 	{
-		const float width = platform->getWidth();
 		const float xStart = glm::max(platform->min.x + 0.5f, -borderX);
 		const float xEnd = glm::min(platform->max.x - 0.5f, borderX);
-		const float y = platform->max.y + 0.5f;
 
 		for(float x = xStart; x <= xEnd; x += 1.f)
 		{
 			NodeType type;
-			if (width <= 1.f)
+			if (platform->getWidth() <= 1.f)
 			{
 				type = SOLO;
 			}
@@ -37,7 +35,7 @@ void Platformer::Navmesh::constructNavmesh(glm::vec2 worldSize)
 				type = REGULAR;
 			}
 
-			glm::vec2 nodePosition{ x, y };
+			glm::vec2 nodePosition{ x, platform->max.y + 0.5f };
 			std::unique_ptr<NavmeshNode> node = std::make_unique<NavmeshNode>(nodePosition, type);
 			if (type == REGULAR && x > -borderX || type == RIGHT )
 			{
@@ -47,51 +45,6 @@ void Platformer::Navmesh::constructNavmesh(glm::vec2 worldSize)
 			_nodes.emplace_back(std::move(node));
 		}
 	}
-	
-	/*for (float y = worldExtents.y; y >= -worldExtents.y; y -= 1.f)
-	{
-		bool connectWalkable;
-		float borderX = worldExtents.x - (worldExtents.x - (int)worldExtents.x - 0.5f);
-		for(float x = -borderX; x <= borderX - 0.5f; x += 1.f)
-		{
-			if (isPlatform({x, y}) || !isPlatform({x, y - 1}))
-			{
-				continue;
-			}
-
-			NodeType nodeType;
-			if (!isPlatform({x - 1, y -1}) &&
-				!isPlatform({x + 1, y - 1}))
-			{
-				connectWalkable = false;
-				nodeType = SOLO;
-			}
-			else if (!isPlatform({x - 1, y - 1}))
-			{
-				connectWalkable = false;
-				nodeType = LEFT;
-			}
-			else if (!isPlatform({x + 1, y - 1}))
-			{
-				connectWalkable = true;
-				nodeType = RIGHT;
-			}
-			else
-			{
-				connectWalkable = x > -borderX;
-				nodeType = REGULAR;
-			}
-
-			std::unique_ptr<NavmeshNode> node = std::make_unique<NavmeshNode>(glm::vec2(x, y), nodeType);
-			_nodes.emplace_back(std::move(node));
-
-			unsigned size = _nodes.size();
-			if (connectWalkable && size > 1)
-			{
-				_nodes[size - 2]->transitions.insert({ WALKABLE, _nodes[size - 1].get() });
-			}
-		}
-	}*/
 }
 
 void Platformer::Navmesh::constructFallLinks()
@@ -99,17 +52,28 @@ void Platformer::Navmesh::constructFallLinks()
 	const auto traceNodes = [&](glm::vec2 from, NavmeshNode& fallFrom)
 	{
 		const int maxSteps = 15;
-		NavmeshNode* closest = sampleNode(from);
+		float distance;
+		NavmeshNode* currentNode = sampleNode(from, distance);
+		
+		float minDistance = distance;
+		NavmeshNode* closestNode = currentNode;
+		
 		int steps = 1;
-		while(steps < maxSteps && closest == nullptr)
+		while(steps < maxSteps)
 		{
-			from += glm::vec2{ 0, -steps };
+			from += glm::vec2{ 0, -1.f };
+			currentNode = sampleNode(from, distance);
+			if (distance < minDistance)
+			{
+				minDistance = distance;
+				closestNode = currentNode;
+			}
 			steps += 1;
 		}
 
-		if (closest != nullptr)
+		if (closestNode != nullptr)
 		{
-			fallFrom.transitions.insert({ FALL, closest });
+			fallFrom.transitions.insert({ FALL, closestNode });
 		}
 	};
 	
@@ -132,11 +96,11 @@ void Platformer::Navmesh::constructFallLinks()
 	}
 }
 
-Platformer::NavmeshNode* Platformer::Navmesh::sampleNode(glm::vec2 point) const
+Platformer::NavmeshNode* Platformer::Navmesh::sampleNode(glm::vec2 point, float& minDistance) const
 {
 	const float pointSampleDistance = 1.5f;
 
-	float minDistance = pointSampleDistance;
+	minDistance = pointSampleDistance;
 	NavmeshNode* result = nullptr;
 	for (const std::unique_ptr<NavmeshNode>& node : _nodes)
 	{
@@ -147,7 +111,7 @@ Platformer::NavmeshNode* Platformer::Navmesh::sampleNode(glm::vec2 point) const
 			result = node.get();
 		}
 	}
-
+	
 	return result;
 }
 
