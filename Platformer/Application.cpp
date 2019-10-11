@@ -23,25 +23,22 @@ void Platformer::Application::setup()
 	
 	const glm::vec2 worldSize = { _renderer->worldWidth(), _renderer->worldHeight() };
 	
-	createPlatforms(worldSize);
+	createPlatforms();
 	createWalls(worldSize);
 
 	_navmesh.build(worldSize);
 }
 
-void Platformer::Application::createPlatforms(const glm::vec2 worldSize)
+void Platformer::Application::createPlatforms()
 {
-	const glm::vec2 worldExtents = worldSize * 0.5f;
 	createPlatform({ 0, -4.5f }, { 100, 1 });
 
-	float platformWidth = glm::round(worldSize.x * 0.333f);
-	createPlatform({ -worldExtents.x + 0.5f * platformWidth, -2 }, { platformWidth, 1 });
-	createPlatform({ 0, 0 }, {worldSize.x * 0.167f, 1});
-	createPlatform({worldExtents.x - platformWidth * 0.5f, 1 }, { platformWidth, 1 });
+	createPlatform({ -3, -2 }, { 10, 1 }, {1, 0.5});
+	createPlatform({ 0, 0 }, {2, 1});
+	createPlatform({2, 2 }, { 10, 1 }, {0, 0.5f});
 
-	createPlatform({ -4, 2 });
-	platformWidth *= 0.5f;
-	createPlatform({ -worldExtents.x + platformWidth * 0.5f, 2 }, { platformWidth, 1 });
+	createPlatform({ -3, 2 }, {1, 1}, {1, 0.5f});
+	createPlatform({ -6, 2 }, { 10, 1 }, {1, 0.5});
 }
 
 void Platformer::Application::spawnBullet(glm::vec2 position, glm::vec2 direction)
@@ -144,18 +141,24 @@ void Platformer::Application::onExit()
 
 Engine::Sprite* Platformer::Application::createPlatform(glm::vec2 position)
 {
-	Engine::Sprite* platform = createSprite(Engine::TEX_PLATFORM, 256);
-	platform->setLayer(Engine::BoundingBox::PLATFORM);
-	platform->setPosition(position);
-	platform->setSortingOrder(10);
-
-	return platform;
+	return createPlatform(position, { 1, 1 }, { 0.5f, 0.5f });
 }
 
 Engine::Sprite* Platformer::Application::createPlatform(glm::vec2 position, glm::vec2 size)
 {
-	Engine::Sprite* platform = createPlatform(position);
+	return createPlatform(position, size, { 0.5f, 0.5f });
+}
+
+Engine::Sprite* Platformer::Application::createPlatform(glm::vec2 position, glm::vec2 size, glm::vec2 pivot)
+{
+	Engine::Sprite* platform = createSprite(Engine::TEX_PLATFORM, 256);
+	platform->setLayer(Engine::BoundingBox::PLATFORM);
+	platform->setSortingOrder(10);
 	platform->setSize(size);
+
+
+	position += (-pivot + 0.5f) * size;
+	platform->setPosition(position);
 
 	_navmesh.addPlatform(platform->getBoundingBox());
 
