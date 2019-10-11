@@ -6,10 +6,11 @@
 #include "AI/AIMovementConstants.h"
 
 
-Platformer::Enemy::Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster) :
+Platformer::Enemy::Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh) :
 	_sprite(sprite),
 	_player(player),
-	_controller(raycaster, sprite)
+	_controller(raycaster, sprite),
+	_navmesh(navmesh)
 {
 	sprite->setLayer(Engine::BoundingBox::ENEMY);
 	sprite->setSortingOrder(20);
@@ -19,7 +20,20 @@ Platformer::Enemy::Enemy(Engine::Sprite* sprite, const Player& player, const Eng
 
 void Platformer::Enemy::update(float deltaTime)
 {
+	_navmesh.getPath(_sprite->getPosition(), _player.getPosition(), _currentPath);
+	
+	if (_currentPath.empty())
+	{
+		return;
+	}
 
+	NavmeshLink nextLink = _currentPath.front();
+	if (nextLink.type == WALKABLE)
+	{
+		moveToPoint(nextLink.to->position, deltaTime);
+	}
+
+	_currentPath.pop();
 }
 
 void Platformer::Enemy::moveToPoint(glm::vec2 destination, float deltaTime)

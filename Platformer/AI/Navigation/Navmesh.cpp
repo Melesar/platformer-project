@@ -1,6 +1,29 @@
 ﻿#include "Navmesh.h"
 #include "Core.h"
 
+bool Platformer::Navmesh::getPath(glm::vec2 from, glm::vec2 to, NavmeshPath& path) const
+{
+	float d;
+	NavmeshNode* targetNode = sampleNode(to, d);
+	if (targetNode == nullptr || !path.empty() && path.back().to == targetNode)
+	{
+		return false;
+	}
+
+	NavmeshNode* startNode = sampleNode(from, d);
+	if (startNode == nullptr)
+	{
+		return false;
+	}
+
+	//clear the path
+	NavmeshPath().swap(path);
+
+	runAStar(startNode, targetNode, path);
+	
+	return true;
+}
+
 void Platformer::Navmesh::addPlatform(const Engine::BoundingBox& box)
 {
 	_platforms.push_back(const_cast<Engine::BoundingBox*>(&box));
@@ -113,6 +136,51 @@ Platformer::NavmeshNode* Platformer::Navmesh::sampleNode(glm::vec2 point, float&
 	}
 	
 	return result;
+}
+
+void Platformer::Navmesh::runAStar(NavmeshNode* from, NavmeshNode* to, NavmeshPath& path) const
+{
+	std::set<AStarNode, AStarCmp> openSet;
+	std::set<AStarNode, AStarCmp> closedSet;
+
+	openSet.emplace(from);
+	while(!openSet.empty())
+	{
+		AStarNode q = *openSet.begin();
+		openSet.erase(openSet.begin());
+
+		for(auto pair : q.node->transitions)
+		{
+			if (pair.second == to)
+			{
+				path.push(NavmeshLink{ q.node, pair.second, pair.first });
+				return;
+			}
+
+			AStarNode successor(pair.second);
+			successor.g = q.g + pair.first;
+			successor.h = glm::distance(to->position, successor.node->position);
+			successor.f = successor.g + successor.h;
+
+			auto checkSuccessor = [](const std::set<AStarNode, AStarCmp>& set, const AStarNode& successor) -> bool
+			{
+				auto iter = set.find(successor);
+				if (iter != set.end() && iter->f < successor.f)
+				{
+					return false;
+				}
+
+				return true;
+			};
+
+			if (checkSuccessor(openSet, successor) && checkSuccessor(closedSet, successor))
+			{
+				openSet.insert(successor);
+			}
+		}
+
+		closedSet.insert(q);
+	}
 }
 
 void Platformer::Navmesh::build(glm::vec2 worldSize)

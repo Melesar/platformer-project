@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CharacterController.h"
+#include "AI/Navigation/Navmesh.h"
 
 namespace Engine
 {
@@ -15,7 +16,7 @@ namespace Platformer
 	{
 	public:
 
-		Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster);
+		Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh);
 
 		void update(float deltaTime);
 
@@ -29,6 +30,8 @@ namespace Platformer
 		Engine::Sprite* _sprite;
 		const Player& _player;
 		CharacterController _controller;
+		const Navmesh& _navmesh;
+		NavmeshPath _currentPath;
 	};
 }
 

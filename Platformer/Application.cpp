@@ -19,7 +19,7 @@ void Platformer::Application::setup()
 	Engine::Sprite* playerSprite = createSprite(Engine::TEX_PLAYER, 256);
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
 
-	spawnEnemy({ 0, -2 });
+	spawnEnemy({ -6, -1 });
 	
 	const glm::vec2 worldSize = { _renderer->worldWidth(), _renderer->worldHeight() };
 	
@@ -90,7 +90,7 @@ void Platformer::Application::spawnEnemy(glm::vec2 position)
 {
 	Engine::Sprite* enemySprite = createSprite(Engine::TEX_ENEMY, 256);
 	enemySprite->setPosition(position);
-	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(enemySprite, *_player, _raycaster);
+	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(enemySprite, *_player, _raycaster, _navmesh);
 	_enemies.push_back(std::move(enemy));
 }
 

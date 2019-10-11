@@ -31,4 +31,6 @@ namespace Platformer
 		NavmeshNode* to;
 		LinkType type;
 	};
+
+	using NavmeshPath = std::queue<NavmeshLink>;
 }
