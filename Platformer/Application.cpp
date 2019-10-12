@@ -7,7 +7,7 @@ Platformer::Application::Application()
 {
 	_title = "Platformer project";
 	_worldHeight = 10.f;
-	_isFullscreen = true;
+	//_isFullscreen = true;
 }
 
 

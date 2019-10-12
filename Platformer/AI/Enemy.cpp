@@ -20,7 +20,7 @@ Platformer::Enemy::Enemy(Engine::Sprite* sprite, const Player& player, const Eng
 
 void Platformer::Enemy::update(float deltaTime)
 {
-	_navmesh.getPath(_sprite->getPosition(), _player.getPosition(), _currentPath);
+	bool isNewPath = _navmesh.getPath(_sprite->getPosition(), _player.getPosition(), _currentPath);
 	
 	if (_currentPath.empty())
 	{
@@ -28,12 +28,20 @@ void Platformer::Enemy::update(float deltaTime)
 	}
 
 	NavmeshLink nextLink = _currentPath.front();
-	if (nextLink.type == WALKABLE)
+	switch (nextLink.type)
 	{
+	case WALKABLE:
+	case FALL:
 		moveToPoint(nextLink.to->position, deltaTime);
+		break;
+	default:
+		break;
 	}
 
-	_currentPath.pop();
+	if (isNewPath)
+	{
+		_currentPath.pop();
+	}
 }
 
 void Platformer::Enemy::moveToPoint(glm::vec2 destination, float deltaTime)

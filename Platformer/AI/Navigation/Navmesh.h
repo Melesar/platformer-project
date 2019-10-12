@@ -36,8 +36,10 @@ namespace Platformer
 		{
 			float f, g, h;
 			NavmeshNode* node;
+			AStarNode* parentNode;
+			LinkType linkType;
 
-			AStarNode(NavmeshNode* node) : f(0.f), g(0.f), h(0.f), node(node) {}
+			AStarNode(NavmeshNode* node, AStarNode* parent, LinkType type) : f(0.f), g(0.f), h(0.f), node(node), parentNode(parent), linkType(type) {}
 
 			bool operator == (const AStarNode& other) const
 			{
@@ -47,11 +49,15 @@ namespace Platformer
 
 		struct AStarCmp
 		{
-			bool operator() (const AStarNode& lhs, const AStarNode& rhs) const
+			bool operator() (AStarNode* lhs, AStarNode* rhs) const
 			{
-				return lhs.f < rhs.f;
+				return lhs->f < rhs->f;
 			}
 		};
+
+	private:
+
+		static void constructPath(NavmeshPath& path, AStarNode* endNode);
 	};
 }
 

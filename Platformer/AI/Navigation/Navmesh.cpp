@@ -20,7 +20,7 @@ bool Platformer::Navmesh::getPath(glm::vec2 from, glm::vec2 to, NavmeshPath& pat
 	NavmeshPath().swap(path);
 
 	runAStar(startNode, targetNode, path);
-	
+
 	return true;
 }
 
@@ -63,6 +63,7 @@ void Platformer::Navmesh::constructNavmesh(glm::vec2 worldSize)
 			if (type == REGULAR && x > -borderX || type == RIGHT )
 			{
 				_nodes[_nodes.size() - 1]->transitions.insert({ WALKABLE, node.get() });
+				node->transitions.insert({ WALKABLE, _nodes[_nodes.size() - 1].get() });
 			}
 
 			_nodes.emplace_back(std::move(node));
@@ -140,32 +141,40 @@ Platformer::NavmeshNode* Platformer::Navmesh::sampleNode(glm::vec2 point, float&
 
 void Platformer::Navmesh::runAStar(NavmeshNode* from, NavmeshNode* to, NavmeshPath& path) const
 {
-	std::set<AStarNode, AStarCmp> openSet;
-	std::set<AStarNode, AStarCmp> closedSet;
+	std::vector<std::unique_ptr<AStarNode>> processedNodes;
+	std::set<AStarNode*, AStarCmp> openSet;
+	std::set<AStarNode*, AStarCmp> closedSet;
 
-	openSet.emplace(from);
+	std::unique_ptr<AStarNode> start = std::make_unique<AStarNode>(from, nullptr, WALKABLE);
+	openSet.insert(start.get());
+	processedNodes.emplace_back(std::move(start));
+	
 	while(!openSet.empty())
 	{
-		AStarNode q = *openSet.begin();
+		AStarNode* q = *openSet.begin();
 		openSet.erase(openSet.begin());
 
-		for(auto pair : q.node->transitions)
+		for(auto pair : q->node->transitions)
 		{
 			if (pair.second == to)
 			{
-				path.push(NavmeshLink{ q.node, pair.second, pair.first });
+				std::unique_ptr<AStarNode> goal = std::make_unique<AStarNode>(pair.second, q, pair.first);
+				constructPath(path, goal.get());
 				return;
 			}
 
-			AStarNode successor(pair.second);
-			successor.g = q.g + pair.first;
-			successor.h = glm::distance(to->position, successor.node->position);
-			successor.f = successor.g + successor.h;
+			std::unique_ptr<AStarNode> successor = std::make_unique<AStarNode>(pair.second, q, pair.first);
+			successor->g = q->g + pair.first;
+			successor->h = glm::distance(to->position, successor->node->position);
+			successor->f = successor->g + successor->h;
+			successor->parentNode = q;
+			successor->linkType = pair.first;
 
-			auto checkSuccessor = [](const std::set<AStarNode, AStarCmp>& set, const AStarNode& successor) -> bool
+
+			auto checkSuccessor = [](const std::set<AStarNode*, AStarCmp>& set, AStarNode* successor) -> bool
 			{
 				auto iter = set.find(successor);
-				if (iter != set.end() && iter->f < successor.f)
+				if (iter != set.end() && (*iter)->f < successor->f)
 				{
 					return false;
 				}
@@ -173,13 +182,25 @@ void Platformer::Navmesh::runAStar(NavmeshNode* from, NavmeshNode* to, NavmeshPa
 				return true;
 			};
 
-			if (checkSuccessor(openSet, successor) && checkSuccessor(closedSet, successor))
+			if (checkSuccessor(openSet, successor.get()) && checkSuccessor(closedSet, successor.get()))
 			{
-				openSet.insert(successor);
+				openSet.insert(successor.get());
 			}
+			
+			processedNodes.emplace_back(std::move(successor));
 		}
 
 		closedSet.insert(q);
+	}
+}
+
+void Platformer::Navmesh::constructPath(NavmeshPath& path, AStarNode* endNode)
+{
+	AStarNode* currentNode = endNode;
+	while (currentNode->parentNode != nullptr)
+	{
+		path.emplace(currentNode->parentNode->node, currentNode->node, currentNode->linkType);
+		currentNode = currentNode->parentNode;
 	}
 }
 
