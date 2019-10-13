@@ -1,5 +1,6 @@
 ﻿#include "Navmesh.h"
 #include "Core.h"
+#include <unordered_set>
 
 bool Platformer::Navmesh::getPath(glm::vec2 from, glm::vec2 to, NavmeshPath& path) const
 {
@@ -141,53 +142,62 @@ Platformer::NavmeshNode* Platformer::Navmesh::sampleNode(glm::vec2 point, float&
 
 void Platformer::Navmesh::runAStar(NavmeshNode* from, NavmeshNode* to, NavmeshPath& path) const
 {
-	std::vector<std::unique_ptr<AStarNode>> processedNodes;
-	std::set<AStarNode*, AStarCmp> openSet;
-	std::set<AStarNode*, AStarCmp> closedSet;
+	if (from == to)
+	{
+		return;
+	}
+	
+	std::unordered_map<NavmeshNode*, std::unique_ptr<AStarNode>> graph;
+	for (const std::unique_ptr<NavmeshNode>& node : _nodes)
+	{
+		graph.insert({ node.get(), std::make_unique<AStarNode>(node.get()) });
+	}
+	
+	std::set<AStarNode, AStarCmp> openSet;
+	std::unordered_set<AStarNode, AStarCmp> closedSet;
 
-	std::unique_ptr<AStarNode> start = std::make_unique<AStarNode>(from, nullptr, WALKABLE);
-	openSet.insert(start.get());
-	processedNodes.emplace_back(std::move(start));
+	AStarNode* start = graph.find(from)->second.get();
+	start->g = 0.f;
+	start->f = 0.f;
+	openSet.insert(*start);
 	
 	while(!openSet.empty())
 	{
-		AStarNode* q = *openSet.begin();
+		AStarNode q = *openSet.begin();
+		AStarNode* qptr = graph.find(q.node)->second.get();
 		openSet.erase(openSet.begin());
 
-		for(auto pair : q->node->transitions)
+		for(auto pair : q.node->transitions)
 		{
 			if (pair.second == to)
 			{
-				std::unique_ptr<AStarNode> goal = std::make_unique<AStarNode>(pair.second, q, pair.first);
+				std::unique_ptr<AStarNode>& goal = graph.find(pair.second)->second;
+				goal->parentNode = qptr;
+				goal->linkType = pair.first;
 				constructPath(path, goal.get());
 				return;
 			}
 
-			std::unique_ptr<AStarNode> successor = std::make_unique<AStarNode>(pair.second, q, pair.first);
-			successor->g = q->g + pair.first;
-			successor->h = glm::distance(to->position, successor->node->position);
-			successor->f = successor->g + successor->h;
-			successor->parentNode = q;
-			successor->linkType = pair.first;
-
-
-			auto checkSuccessor = [](const std::set<AStarNode*, AStarCmp>& set, AStarNode* successor) -> bool
+			std::unique_ptr<AStarNode>& successor = graph.find(pair.second)->second;
+			if (closedSet.find(*successor) != closedSet.end())
 			{
-				auto iter = set.find(successor);
-				if (iter != set.end() && (*iter)->f < successor->f)
-				{
-					return false;
-				}
-
-				return true;
-			};
-
-			if (checkSuccessor(openSet, successor.get()) && checkSuccessor(closedSet, successor.get()))
-			{
-				openSet.insert(successor.get());
+				continue;
 			}
-			
-			processedNodes.emplace_back(std::move(successor));
+
+			float g = q.g + pair.first;
+			if (g < successor->g)
+			{
+				successor->g = g;
+				successor->h = glm::distance(to->position, successor->node->position);
+				successor->f = successor->g + successor->h;
+				successor->parentNode = qptr;
+				successor->linkType = pair.first;
+
+				if (openSet.find(*successor) == openSet.end())
+				{
+					openSet.insert(*successor);
+				}
+			}
 		}
 
 		closedSet.insert(q);

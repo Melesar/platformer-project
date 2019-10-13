@@ -22,6 +22,7 @@ namespace Platformer
 		
 		void constructNavmesh(glm::vec2 worldSize);
 		void constructFallLinks();
+		void buildGraph();
 
 		NavmeshNode* sampleNode(glm::vec2 point, float& minDistance) const;
 
@@ -32,6 +33,8 @@ namespace Platformer
 		std::vector<Engine::BoundingBox*> _platforms;
 		std::vector<std::unique_ptr<NavmeshNode>> _nodes;
 
+		constexpr static float INF = 1000000.f;
+		
 		struct AStarNode
 		{
 			float f, g, h;
@@ -39,7 +42,16 @@ namespace Platformer
 			AStarNode* parentNode;
 			LinkType linkType;
 
-			AStarNode(NavmeshNode* node, AStarNode* parent, LinkType type) : f(0.f), g(0.f), h(0.f), node(node), parentNode(parent), linkType(type) {}
+			AStarNode() : f(INF), g(INF), h(INF), node(nullptr), parentNode(nullptr), linkType(WALKABLE) {}
+			AStarNode(NavmeshNode* node, AStarNode* parent, LinkType type) : f(INF), g(INF), h(INF), node(node), parentNode(parent), linkType(type) {}
+			explicit  AStarNode(NavmeshNode* node) : f(INF), g(INF), h(INF), node(node), parentNode(nullptr), linkType(WALKABLE) {}
+
+			void reset()
+			{
+				f = g = h = 0;
+				parentNode = nullptr;
+				linkType = WALKABLE;
+			}
 
 			bool operator == (const AStarNode& other) const
 			{
@@ -49,11 +61,18 @@ namespace Platformer
 
 		struct AStarCmp
 		{
-			bool operator() (AStarNode* lhs, AStarNode* rhs) const
+			bool operator() (const AStarNode& lhs, const AStarNode& rhs) const
 			{
-				return lhs->f < rhs->f;
+				return lhs.f < rhs.f;
+			}
+
+			unsigned operator() (const AStarNode& hash) const
+			{
+				return std::hash<NavmeshNode*>()(hash.node);
 			}
 		};
+		
+		std::unordered_map<NavmeshNode*, std::unique_ptr<AStarNode>> _graph;
 
 	private:
 

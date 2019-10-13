@@ -19,7 +19,7 @@ void Platformer::Application::setup()
 	Engine::Sprite* playerSprite = createSprite(Engine::TEX_PLAYER, 256);
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
 
-	spawnEnemy({ -6, -1 });
+	spawnEnemy({ -0.5f, -3.5 });
 	
 	const glm::vec2 worldSize = { _renderer->worldWidth(), _renderer->worldHeight() };
 	

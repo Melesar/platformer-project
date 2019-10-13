@@ -7,7 +7,7 @@ Platformer::Player::Player(Engine::Sprite* sprite, const Engine::Input& input, c
 	_raycaster(raycaster),
 	_controller(raycaster, sprite)
 {
-	_sprite->setPosition({ 1, -3.5 });
+	_sprite->setPosition({ 0.5, -3.5 });
 	_sprite->setSortingOrder(50);
 	_sprite->setLayer(Engine::BoundingBox::PLAYER);
 
