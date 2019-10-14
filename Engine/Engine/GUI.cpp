@@ -12,7 +12,8 @@ Engine::GUI::GUI(SDL_Window* window, void* glContext) : _window(window)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	
 	ImGui::StyleColorsDark();
 
 	// Setup Platform/Renderer bindings
@@ -27,7 +28,7 @@ Engine::GUI::~GUI()
 	ImGui::DestroyContext();
 }
 
-void Engine::GUI::handleEvents(const SDL_Event* event)
+void Engine::GUI::handleEvent(const SDL_Event* event)
 {
 	ImGui_ImplSDL2_ProcessEvent(event);
 }

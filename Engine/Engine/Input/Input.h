@@ -40,12 +40,15 @@ namespace Engine
 
 		glm::vec2 mouseCoords() const;
 
-		void handleEvents();
+		void handleEvent(const SDL_Event* e);
+		void reset();
 
 	private:
 
+		constexpr static int MAPPING_SIZE = 323;
+		
 		//Mapping between SDL key codes and custom ones
-		unsigned int mapping[323];
+		unsigned int mapping[MAPPING_SIZE];
 
 		bool _keysPressed[KEYS_AMOUNT];
 		bool _keysHold[KEYS_AMOUNT];
@@ -54,10 +57,6 @@ namespace Engine
 		bool _mouseButtonsPressed[BUTTONS_AMOUNT];
 		bool _mouseButtonsHold[BUTTONS_AMOUNT];
 		bool _mouseButtonsReleased[BUTTONS_AMOUNT];
-
-		void peekInputEvents();
-		void handleKeyboardInput(SDL_Event* events, int count);
-		void handleMouseInput(SDL_Event* events, int count);
 
 		void resetKeys();
 		void resetMouseButtons();

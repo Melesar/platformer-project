@@ -10,7 +10,7 @@ namespace Engine
 		GUI(SDL_Window* window, void* glContext);
 		~GUI();
 
-		void handleEvents(const SDL_Event* event);
+		void handleEvent(const SDL_Event* event);
 		void begin() const;
 		void end();
 

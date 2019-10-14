@@ -120,11 +120,19 @@ void Platformer::Application::update(float deltaTime)
 	if (_input.mouseButtonPressed(Engine::Input::LEFT))
 	{
 		const glm::vec2 shotPosition = _renderer->screenToWorldPos(_input.mouseCoords());
+		std::cout << shotPosition << std::endl;
+	}
+
+	
+
+	/*if (_input.mouseButtonPressed(Engine::Input::LEFT))
+	{
+		const glm::vec2 shotPosition = _renderer->screenToWorldPos(_input.mouseCoords());
 		const glm::vec2 shotDirection = glm::normalize(shotPosition - _player->getPosition());
 		spawnBullet(_player->getPosition(), shotDirection);
 	}
 
-	updateBullets(deltaTime);
+	updateBullets(deltaTime);*/
 
 	for (const auto& enemy : _enemies)
 	{
@@ -132,6 +140,8 @@ void Platformer::Application::update(float deltaTime)
 	}
 
 	_navmesh.draw(_renderer->viewMatrix());
+
+	//ImGui::ShowDemoWindow();
 }
 
 void Platformer::Application::onExit()

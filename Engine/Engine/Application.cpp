@@ -74,12 +74,19 @@ void Engine::Application::update()
 
 void Engine::Application::handleEvents()
 {
-	SDL_Event e[1];
-	int count = SDL_PeepEvents(e, 1, SDL_GETEVENT, SDL_QUIT, SDL_QUIT);
-	_isRunning = count == 0;
+	_input.reset();
+	
+	SDL_Event e;
+	while(SDL_PollEvent(&e))
+	{
+		if (e.type == SDL_QUIT)
+		{
+			_isRunning = false;
+		}
 
-	_input.handleEvents();
-	_gui->handleEvents(e);
+		_input.handleEvent(&e);
+		_gui->handleEvent(&e);
+	}
 }
 
 void Engine::Application::updatePendingSprites()
