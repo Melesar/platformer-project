@@ -12,18 +12,21 @@ namespace Platformer
 	class CharacterController
 	{
 	public:
-		void move(glm::vec2 moveDirection, float deltaTime);
+		void move(glm::vec2 moveDirection);
 		void jump();
+		void jump(glm::vec2 from, glm::vec2 to);
 
 		bool isGrounded() const;
 
 		void setValues(float moveSpeed, float jumpHeight, float topJumpTime);
+
+		void update(float deltaTime);
 		
 		CharacterController(const Engine::Raycaster& raycaster, Engine::Sprite* sprite);
 
 	private:
 
-		void move(glm::vec2& velocity);
+		void moveOneFrame(glm::vec2& velocity);
 
 		bool bottomCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
 		bool topCollisions(glm::vec2 velocity, Engine::Intersection& it) const;

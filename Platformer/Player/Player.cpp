@@ -22,7 +22,8 @@ void Platformer::Player::update(float deltaTime)
 		_controller.jump();
 	}
 	
-	_controller.move(_input.getMoveDirection(), deltaTime);
+	_controller.move(_input.getMoveDirection());
+	_controller.update(deltaTime);
 }
 
 glm::vec2 Platformer::Player::getPosition() const

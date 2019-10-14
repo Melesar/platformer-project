@@ -6,13 +6,14 @@ bool Platformer::Navmesh::getPath(glm::vec2 from, glm::vec2 to, NavmeshPath& pat
 {
 	float d;
 	NavmeshNode* targetNode = sampleNode(to, d);
-	if (targetNode == nullptr || !path.empty() && path.back().to == targetNode)
+	if (targetNode == nullptr)
 	{
 		return false;
 	}
 
 	NavmeshNode* startNode = sampleNode(from, d);
-	if (startNode == nullptr)
+	if (startNode == nullptr ||
+		!path.empty() && path.front().from == startNode && path.back().to == targetNode)
 	{
 		return false;
 	}
@@ -121,6 +122,26 @@ void Platformer::Navmesh::constructFallLinks()
 	}
 }
 
+auto Platformer::Navmesh::constructJumpLinks() const -> void
+{
+	constructJumpLink({ -2.5f, -3.5f }, { -3.5f, -1.f });
+	constructJumpLink({ -3.5f, -1.f }, { -0.5f, 1.f });
+	
+	constructJumpLink({ 0.5f, 1.f }, { 2.5f, 3.f });
+	constructJumpLink({ 2.5f, 3.f }, { 0.5f, 1.f });
+	
+	constructJumpLink({ -0.5f, 1.f }, { -3.5f, 3.f });
+	constructJumpLink({ -3.5f, 3.f }, { -0.5f, 1.f });
+}
+
+void Platformer::Navmesh::constructJumpLink(glm::vec2 from, glm::vec2 to) const
+{
+	float d;
+	NavmeshNode* fromNode = sampleNode(from, d);
+	NavmeshNode* toNode = sampleNode(to, d);
+	fromNode->transitions.insert({ JUMP, toNode });
+}
+
 Platformer::NavmeshNode* Platformer::Navmesh::sampleNode(glm::vec2 point, float& minDistance) const
 {
 	const float pointSampleDistance = 1.5f;
@@ -209,7 +230,7 @@ void Platformer::Navmesh::constructPath(NavmeshPath& path, AStarNode* endNode)
 	AStarNode* currentNode = endNode;
 	while (currentNode->parentNode != nullptr)
 	{
-		path.emplace(currentNode->parentNode->node, currentNode->node, currentNode->linkType);
+		path.emplace_front(currentNode->parentNode->node, currentNode->node, currentNode->linkType);
 		currentNode = currentNode->parentNode;
 	}
 }
@@ -218,6 +239,7 @@ void Platformer::Navmesh::build(glm::vec2 worldSize)
 {
 	constructNavmesh(worldSize);
 	constructFallLinks();
+	constructJumpLinks();
 }
 
 void Platformer::Navmesh::draw(const glm::mat3x3& matrix) const
@@ -228,7 +250,7 @@ void Platformer::Navmesh::draw(const glm::mat3x3& matrix) const
 		switch (node->type)
 		{
 			case REGULAR:  nodeColor = {1, 1, 1}; break;
-			case LEFT:     nodeColor = { 0, 1, 0 }; break;
+			case LEFT:     nodeColor = {0, 1, 0}; break;
 			case RIGHT:    nodeColor = {0, 0, 1}; break;
 			default: break;
 		}
@@ -244,6 +266,12 @@ void Platformer::Navmesh::draw(const glm::mat3x3& matrix) const
 		for(auto i = fallLinksRange.first; i != fallLinksRange.second; ++i)
 		{
 			drawLine(node->position, i->second->position, matrix, { 0, 1, 0 });
+		}
+
+		auto jumpLinksRange = node->transitions.equal_range(JUMP);
+		for (auto i = jumpLinksRange.first; i != jumpLinksRange.second; ++i)
+		{
+			drawLine(node->position, i->second->position, matrix, { 1, 0, 1 });
 		}
 	}
 }

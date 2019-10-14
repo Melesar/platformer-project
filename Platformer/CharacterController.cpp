@@ -4,7 +4,7 @@
 #include "Physics/Ray.h"
 #include "Physics/Intersection.h"
 
-void Platformer::CharacterController::move(glm::vec2 moveDirection, float deltaTime)
+void Platformer::CharacterController::move(glm::vec2 moveDirection)
 {
 	const float offsetX = _moveSpeed * moveDirection.x;
 	_velocity.x = offsetX;
@@ -12,17 +12,63 @@ void Platformer::CharacterController::move(glm::vec2 moveDirection, float deltaT
 	{
 		_sprite->flipX(offsetX < 0);
 	}
+}
 
+void Platformer::CharacterController::jump()
+{
+	if (isGrounded())
+	{
+		_velocity.y = _jumpVelocity;
+	}
+}
+
+void Platformer::CharacterController::jump(glm::vec2 from, glm::vec2 to)
+{
+	if (!isGrounded())
+	{
+		return;
+	}
+
+	const glm::vec2 target = to - from;
+
+	float theta = glm::pow(_jumpVelocity, 4) - _gravity * (_gravity * target.x * target.x + 2.f * target.y * _jumpVelocity * _jumpVelocity);
+	theta = _jumpVelocity * _jumpVelocity + glm::sqrt(theta);
+	theta = theta / (_gravity * target.x);
+	theta = glm::atan(theta);
+
+	_velocity.x = _jumpVelocity * glm::cos(theta);
+	_velocity.y = glm::abs(_jumpVelocity * glm::sin(theta));
+}
+
+void jumpDebugWindow()
+{
+	static bool isOpen = true;
+	if(ImGui::Begin("Jump debug", &isOpen))
+	{
+		static glm::vec2 from, to;
+		ImGui::InputFloat2("From", reinterpret_cast<float*>(&from), "%.1f", ImGuiInputTextFlags_CharsDecimal);
+		ImGui::InputFloat2("To", reinterpret_cast<float*>(&to), "%.1f", ImGuiInputTextFlags_CharsDecimal);
+	}
+
+	ImGui::End();
+}
+
+void Platformer::CharacterController::update(float deltaTime)
+{
 	_velocity.y -= _gravity * deltaTime;
 
+	if (_moveSpeed < 2.f)
+	{
+		jumpDebugWindow();
+	}
+	
 	glm::vec2 frameVelocity = _velocity * deltaTime;
-	move(frameVelocity);
-
+	moveOneFrame(frameVelocity);
 
 	_sprite->move(frameVelocity);
 }
 
-void Platformer::CharacterController::move(glm::vec2& velocity)
+void Platformer::CharacterController::moveOneFrame(glm::vec2& velocity)
 {
 	Engine::Intersection i {};
 	if (velocity.y < 0)
@@ -150,13 +196,7 @@ bool Platformer::CharacterController::leftCollisions(glm::vec2 velocity, Engine:
 	return distance < maxDistance;
 }
 
-void Platformer::CharacterController::jump()
-{
-	if (isGrounded())
-	{
-		_velocity.y = _jumpVelocity;
-	}
-}
+
 
 bool Platformer::CharacterController::isGrounded() const
 {
@@ -172,6 +212,8 @@ void Platformer::CharacterController::setValues(float moveSpeed, float jumpHeigh
 	_gravity = 2.f * _jumpHeight / (_topJumpTime * _topJumpTime);
 	_jumpVelocity = _gravity * _topJumpTime;
 }
+
+
 
 Platformer::CharacterController::CharacterController(const Engine::Raycaster& raycaster, Engine::Sprite* sprite) :
 	_bounds(sprite->getBoundingBox()),

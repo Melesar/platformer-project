@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "CharacterController.h"
 #include "AI/Navigation/Navmesh.h"
+#include <glm/common.hpp>
 
 namespace Engine
 {
@@ -22,16 +23,18 @@ namespace Platformer
 
 	private:
 
-		void moveToPoint(glm::vec2 destination, float deltaTime);
-		void moveInDirection(short direction, float deltaTime);
+		void moveToPoint(glm::vec2 destination);
+		void moveInDirection(short direction);
 		
 	private:
 
 		Engine::Sprite* _sprite;
 		const Player& _player;
 		CharacterController _controller;
+		
 		const Navmesh& _navmesh;
 		NavmeshPath _currentPath;
+		NavmeshLink* _currentTarget;
 	};
 }
 

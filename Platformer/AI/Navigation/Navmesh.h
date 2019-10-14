@@ -22,7 +22,8 @@ namespace Platformer
 		
 		void constructNavmesh(glm::vec2 worldSize);
 		void constructFallLinks();
-		void buildGraph();
+		void constructJumpLinks() const;
+		void constructJumpLink(glm::vec2 from, glm::vec2 to) const;
 
 		NavmeshNode* sampleNode(glm::vec2 point, float& minDistance) const;
 
@@ -48,7 +49,7 @@ namespace Platformer
 
 			void reset()
 			{
-				f = g = h = 0;
+				f = g = h = INF;
 				parentNode = nullptr;
 				linkType = WALKABLE;
 			}
