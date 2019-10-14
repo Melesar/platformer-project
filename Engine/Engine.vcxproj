@@ -93,6 +93,7 @@
     <ClInclude Include="Engine\Core.h" />
     <ClInclude Include="Engine\Data\Color.h" />
     <ClInclude Include="Engine\Data\ResourceRepository.h" />
+    <ClInclude Include="Engine\Entity.h" />
     <ClInclude Include="Engine\GUI.h" />
     <ClInclude Include="Engine\Input\Input.h" />
     <ClInclude Include="Engine\Physics\BoundingBox.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="Engine\Rendering\Texture.h" />
     <ClInclude Include="Engine\Time.h" />
     <ClInclude Include="Engine\Utils.h" />
+    <ClInclude Include="Engine\VisibleEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Application.cpp" />

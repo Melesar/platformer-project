@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <Core.h>
+#include "Entity.h"
 
 namespace Engine
 {
@@ -16,10 +17,13 @@ namespace Engine
 			PLAYER,
 			PLATFORM,
 			ENEMY,
+			BULLET,
 
 			NUM_LAYERS,
 			ALL
 		} layer = PLATFORM;
+
+		Entity* owner {nullptr};
 
 		BoundingBox() = default;
 		BoundingBox(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}

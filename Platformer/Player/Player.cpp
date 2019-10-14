@@ -2,7 +2,7 @@
 #include "Player/PlayerMovementConstants.h"
 
 Platformer::Player::Player(Engine::Sprite* sprite, const Engine::Input& input, const Engine::Raycaster& raycaster) :
-	_sprite(sprite),
+	VisibleEntity(sprite),
 	_input(input),
 	_raycaster(raycaster),
 	_controller(raycaster, sprite)
@@ -10,6 +10,7 @@ Platformer::Player::Player(Engine::Sprite* sprite, const Engine::Input& input, c
 	_sprite->setPosition({ 0.5, -3.5 });
 	_sprite->setSortingOrder(50);
 	_sprite->setLayer(Engine::BoundingBox::PLAYER);
+	_sprite->setOwner(this);
 
 	_controller.setValues(MOVEMENT_SPEED, JUMP_HEIGHT, JUMP_TIME);
 }

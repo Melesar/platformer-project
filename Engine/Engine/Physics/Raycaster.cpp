@@ -69,6 +69,7 @@ bool Engine::Raycaster::raycast(const Ray& ray, float maxDistance, Intersection&
 	const std::vector<const BoundingBox*>& boxes)
 {
 	float minDistance = maxDistance;
+	BoundingBox closestBox;
 	Intersection intI{};
 	for (const BoundingBox* box : boxes)
 	{
@@ -76,10 +77,11 @@ bool Engine::Raycaster::raycast(const Ray& ray, float maxDistance, Intersection&
 		if (intersects && intI.distance < minDistance)
 		{
 			minDistance = intI.distance;
+			closestBox = intI.bb;
 		}
 	}
 
-	i.bb = intI.bb;
+	i.bb = closestBox;
 	i.distance = minDistance;
 	return minDistance < maxDistance;
 }

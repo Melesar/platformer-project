@@ -4,10 +4,11 @@
 #include "Physics/Raycaster.h"
 #include "CharacterController.h"
 #include "PlayerShooting.h"
+#include "VisibleEntity.h"
 
 namespace Platformer
 {
-	class Player
+	class Player : public Engine::VisibleEntity
 	{
 	public:
 		Player(Engine::Sprite* sprite, const Engine::Input& input, const Engine::Raycaster& raycaster);
@@ -19,8 +20,6 @@ namespace Platformer
 
 	private:
 		
-		Engine::Sprite* _sprite;
-
 		const Engine::Input& _input;
 		const Engine::Raycaster& _raycaster;
 

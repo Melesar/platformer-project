@@ -7,16 +7,20 @@
 
 
 Platformer::Enemy::Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh) :
-	_sprite(sprite),
+	VisibleEntity(sprite),
 	_player(player),
 	_controller(raycaster, sprite),
 	_navmesh(navmesh)
 {
 	sprite->setLayer(Engine::BoundingBox::ENEMY);
 	sprite->setSortingOrder(20);
+	sprite->setOwner(this);
 
 	_controller.setValues(MOVEMENT_SPEED, JUMP_HEIGHT, JUMP_TIME);
 }
+
+Platformer::Enemy::~Enemy() = default;
+
 
 void showPath(Platformer::NavmeshPath path)
 {
@@ -82,6 +86,21 @@ void Platformer::Enemy::update(float deltaTime)
 	}
 
 	_controller.update(deltaTime);
+}
+
+float Platformer::Enemy::getHealth() const
+{
+	return _health;
+}
+
+float Platformer::Enemy::getMaxHealth() const
+{
+	return MAX_HEALTH;
+}
+
+void Platformer::Enemy::takeDamage(float damage)
+{
+	_health = glm::max(_health - damage, 0.f);
 }
 
 void Platformer::Enemy::moveToPoint(glm::vec2 destination)

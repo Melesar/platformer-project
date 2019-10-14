@@ -128,6 +128,11 @@ void Engine::Sprite::setLayer(BoundingBox::Layer layer)
 	_bb.layer = layer;
 }
 
+void Engine::Sprite::setOwner(Entity* owner)
+{
+	_bb.owner = owner;
+}
+
 Engine::Sprite::Sprite(std::shared_ptr<Shader> shader) :
 	_ppu(100),
 	_position(glm::vec2(0.f)),

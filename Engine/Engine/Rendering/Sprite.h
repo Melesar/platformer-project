@@ -34,6 +34,7 @@ namespace Engine
 		void setSize(glm::vec2 size);
 		void setColor(const Color& color);
 		void setLayer(BoundingBox::Layer layer);
+		void setOwner(Entity* owner);
 		
 		Sprite(std::shared_ptr<Shader> shader);
 		Sprite(std::shared_ptr<Shader> shader, int ppu);

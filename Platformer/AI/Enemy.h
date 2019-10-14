@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "CharacterController.h"
 #include "AI/Navigation/Navmesh.h"
-#include <glm/common.hpp>
+#include "VisibleEntity.h"
 
 namespace Engine
 {
@@ -13,14 +13,21 @@ namespace Platformer
 {
 	class Player;
 
-	class Enemy
+	class Enemy : public Engine::VisibleEntity
+	
 	{
 	public:
 
 		Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh);
-
+		virtual ~Enemy();
+		
 		void update(float deltaTime);
 
+		float getHealth() const;
+		float getMaxHealth() const;
+
+		void takeDamage(float damage);
+		
 	private:
 
 		void moveToPoint(glm::vec2 destination);
@@ -28,7 +35,11 @@ namespace Platformer
 		
 	private:
 
-		Engine::Sprite* _sprite;
+		const float MAX_HEALTH = 30.f;
+		
+		float _health {MAX_HEALTH};
+		
+		
 		const Player& _player;
 		CharacterController _controller;
 		

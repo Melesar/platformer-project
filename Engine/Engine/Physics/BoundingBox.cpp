@@ -61,14 +61,8 @@ float Engine::BoundingBox::getHeight() const
 	return glm::abs(max.y - min.y);
 }
 
-Engine::BoundingBox& Engine::BoundingBox::operator=(const BoundingBox& other)
-{
-	min = other.min;
-	max = other.max;
-	layer = other.layer;
+Engine::BoundingBox& Engine::BoundingBox::operator=(const BoundingBox& other) = default;
 
-	return *this;
-}
 
 bool Engine::BoundingBox::operator==(const BoundingBox& other) const
 {

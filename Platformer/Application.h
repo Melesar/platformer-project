@@ -28,6 +28,7 @@ namespace Platformer
 		Engine::Sprite* createPlatform(glm::vec2 position, glm::vec2 size, glm::vec2 pivot);
 
 		void createWalls(const glm::vec2 worldSize);
+		void updateEnemies(float deltaTime);
 		void createPlatforms();
 
 		void spawnBullet(glm::vec2 position, glm::vec2 direction);

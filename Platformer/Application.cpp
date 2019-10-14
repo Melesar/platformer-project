@@ -5,12 +5,15 @@
 
 #define DRAW_NAVMESH false
 #define DRAW_IMGUI_DEMO false
+#define IS_FULLSCREEN false
+#define SHOW_STATS true
+
 
 Platformer::Application::Application()
 {
 	_title = "Platformer project";
 	_worldHeight = 10.f;
-	_isFullscreen = true;
+	_isFullscreen = IS_FULLSCREEN;
 }
 
 
@@ -50,7 +53,8 @@ void Platformer::Application::spawnBullet(glm::vec2 position, glm::vec2 directio
 	bullet.sprite = createSprite(Engine::TEX_BULLET, 512);
 	bullet.sprite->setPosition(position);
 	bullet.sprite->setSortingOrder(40);
-
+	bullet.sprite->setLayer(Engine::BoundingBox::BULLET);
+	
 	const float angle = -glm::degrees(atan2f(direction.y, direction.x));
 	bullet.sprite->setRotation(angle);
 	bullet.direction = direction;
@@ -60,32 +64,34 @@ void Platformer::Application::spawnBullet(glm::vec2 position, glm::vec2 directio
 
 void Platformer::Application::updateBullets(float deltaTime)
 {
-	for(unsigned i = 0; i < _bullets.size();)
-	{
-		if (_bullets[i].sprite == nullptr)
-		{
-			_bullets.erase(_bullets.begin() + i);
-		}
-		else
-		{
-			++i;
-		}
-	}
+	std::vector<unsigned> destroyedBullets;
 	
-	for (Bullet& bullet : _bullets)
+	for (unsigned index = 0; index < _bullets.size(); ++index)
 	{
+		Bullet& bullet = _bullets[index];
 		Engine::Intersection i{};
 		glm::vec2 offset = bullet.speed * deltaTime * bullet.direction;
 		
-		if (_raycaster.raycast(Engine::Ray(bullet.sprite->getPosition(), bullet.direction), glm::length(offset), Engine::BoundingBox::PLATFORM, i))
+		if (_raycaster.raycast(Engine::Ray(bullet.sprite->getPosition(), bullet.direction), glm::length(offset), Engine::BoundingBox::ENEMY, i))
 		{
-			destroySprite(bullet.sprite);
-			bullet.sprite = nullptr;
+			destroyedBullets.push_back(index);
+			
+			Enemy* hitEnemy = dynamic_cast<Enemy*>(i.bb.owner);
+			if (hitEnemy != nullptr)
+			{
+				hitEnemy->takeDamage(16.f);
+			}
 		}
 		else
 		{
 			bullet.sprite->move(offset);
 		}
+	}
+
+	for (unsigned i : destroyedBullets)
+	{
+		destroySprite(_bullets[i].sprite);
+		_bullets.erase(_bullets.begin() + i);
 	}
 }
 
@@ -111,6 +117,33 @@ void Platformer::Application::createWalls(const glm::vec2 worldSize)
 	_raycaster.addBoundingBox(*_walls[2]);
 }
 
+void Platformer::Application::updateEnemies(float deltaTime)
+{
+	std::vector<int> enemiesDead;
+	
+	for (unsigned i = 0; i < _enemies.size(); ++i)
+	{
+		std::unique_ptr<Enemy>& enemy = _enemies[i];
+		if (enemy->getHealth() > 0.f)
+		{
+			enemy->update(deltaTime);
+		}
+		else 
+		{
+			enemiesDead.push_back(i);
+		}
+	}
+
+	for (int i : enemiesDead)
+	{
+		std::unique_ptr<Enemy>& deadEnemy = _enemies[i];
+		destroySprite(deadEnemy->getSprite());
+		deadEnemy.reset();
+
+		_enemies.erase(_enemies.begin() + i);
+	}
+}
+
 void Platformer::Application::update(float deltaTime)
 {
 	if (_input.keyPressed(Engine::Input::Q))
@@ -123,22 +156,12 @@ void Platformer::Application::update(float deltaTime)
 	if (_input.mouseButtonPressed(Engine::Input::LEFT))
 	{
 		const glm::vec2 shotPosition = _renderer->screenToWorldPos(_input.mouseCoords());
-		std::cout << shotPosition << std::endl;
-	}
-
-	/*if (_input.mouseButtonPressed(Engine::Input::LEFT))
-	{
-		const glm::vec2 shotPosition = _renderer->screenToWorldPos(_input.mouseCoords());
 		const glm::vec2 shotDirection = glm::normalize(shotPosition - _player->getPosition());
 		spawnBullet(_player->getPosition(), shotDirection);
 	}
 
-	updateBullets(deltaTime);*/
-
-	for (const auto& enemy : _enemies)
-	{
-		enemy->update(deltaTime);
-	}
+	updateBullets(deltaTime);
+	updateEnemies(deltaTime);
 
 	if (DRAW_NAVMESH)
 	{
@@ -148,6 +171,11 @@ void Platformer::Application::update(float deltaTime)
 	if (DRAW_IMGUI_DEMO)
 	{
 		ImGui::ShowDemoWindow();
+	}
+
+	if (SHOW_STATS)
+	{
+		showStats();
 	}
 }
 
@@ -172,7 +200,6 @@ Engine::Sprite* Platformer::Application::createPlatform(glm::vec2 position, glm:
 	platform->setLayer(Engine::BoundingBox::PLATFORM);
 	platform->setSortingOrder(10);
 	platform->setSize(size);
-
 
 	position += (-pivot + 0.5f) * size;
 	platform->setPosition(position);
