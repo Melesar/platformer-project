@@ -95,9 +95,7 @@ void Engine::Renderer::setOutputSize(int screenWidth, int screenHeight, float wo
 }
 
 Engine::Renderer::Renderer(SDL_Window* window, float worldHeight) :
-	_window(window),
-	_context(SDL_GL_CreateContext(window)),
-	_windowSurface(SDL_GetWindowSurface(window))
+	_window(window)
 {
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -122,8 +120,6 @@ Engine::Renderer::Renderer(SDL_Window* window, float worldHeight) :
 
 Engine::Renderer::~Renderer()
 {
-	SDL_FreeSurface(_windowSurface);
-	SDL_GL_DeleteContext(_context);
 	IMG_Quit();
 }
 

@@ -16,6 +16,10 @@
 #include <glm/vec3.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
+
 #include <iostream>
 #include <sstream>
 #include <fstream>

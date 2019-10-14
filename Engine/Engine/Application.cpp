@@ -43,6 +43,7 @@ void Engine::Application::initSDL()
 		dm.h = 600;
 	}
 	_window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, dm.w, dm.h, SDL_WINDOW_OPENGL);
+	_context = SDL_GL_CreateContext(_window);
 }
 
 void Engine::Application::stop()
@@ -54,6 +55,7 @@ void Engine::Application::setup()
 {
 	initSDL();
 
+	_gui = new GUI(_window, _context);
 	_renderer = new Renderer(_window, _worldHeight);
 	_resources.loadResources();
 }
@@ -61,9 +63,11 @@ void Engine::Application::setup()
 void Engine::Application::update()
 {
 	handleEvents();
-
+	
+	_gui->begin();
 	update(_time.delta());
-
+	_gui->end();
+	
 	_renderer->render();
 }
 
@@ -75,6 +79,7 @@ void Engine::Application::handleEvents()
 	_isRunning = count == 0;
 
 	_input.handleEvents();
+	_gui->handleEvents(e);
 }
 
 void Engine::Application::updatePendingSprites()
@@ -97,7 +102,9 @@ void Engine::Application::onExit()
 	}
 	
 	delete _renderer;
-
+	delete _gui;
+	
+	SDL_GL_DeleteContext(_context);
 	SDL_DestroyWindow(_window);
 	SDL_Quit();
 }

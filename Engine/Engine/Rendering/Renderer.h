@@ -46,8 +46,7 @@ namespace Engine
 		
 		Color _backgroundColor;
 		SDL_Window* _window;
-		SDL_GLContext _context;
-		SDL_Surface* _windowSurface;
+		SDL_GLContext* _context;
 
 		std::set<IRenderable*> _renderablesSet;
 		std::list<IRenderable*> _renderablesList;

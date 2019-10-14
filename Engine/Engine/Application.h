@@ -5,6 +5,7 @@
 #include "Input/Input.h"
 #include "Data/ResourceRepository.h"
 #include "Physics/Raycaster.h"
+#include "GUI.h"
 
 
 namespace Engine
@@ -58,9 +59,12 @@ namespace Engine
 	private:
 
 		SDL_Window* _window = nullptr;
+		SDL_GLContext _context;
 		Time _time = {};
 		bool _isRunning = false;
 
+		GUI* _gui;
+		
 		std::vector<Sprite*> _sprites;
 		std::vector<Sprite*> _pendingSprites;
 	};
