@@ -32,22 +32,37 @@ void Platformer::CharacterController::jump(glm::vec2 from, glm::vec2 to)
 	const glm::vec2 target = to - from;
 
 	float theta = glm::pow(_jumpVelocity, 4) - _gravity * (_gravity * target.x * target.x + 2.f * target.y * _jumpVelocity * _jumpVelocity);
-	theta = _jumpVelocity * _jumpVelocity + glm::sqrt(theta);
+	theta =  _jumpVelocity * _jumpVelocity + glm::sqrt(theta);
 	theta = theta / (_gravity * target.x);
 	theta = glm::atan(theta);
 
-	_velocity.x = _jumpVelocity * glm::cos(theta);
+	_velocity.x = glm::sign(target.x) * _jumpVelocity * glm::cos(theta);
 	_velocity.y = glm::abs(_jumpVelocity * glm::sin(theta));
 }
 
-void jumpDebugWindow()
+void Platformer::CharacterController::jumpDebugWindow() const
 {
 	static bool isOpen = true;
-	if(ImGui::Begin("Jump debug", &isOpen))
+	if (ImGui::Begin("Jump debug", &isOpen))
 	{
 		static glm::vec2 from, to;
 		ImGui::InputFloat2("From", reinterpret_cast<float*>(&from), "%.1f", ImGuiInputTextFlags_CharsDecimal);
 		ImGui::InputFloat2("To", reinterpret_cast<float*>(&to), "%.1f", ImGuiInputTextFlags_CharsDecimal);
+
+		const glm::vec2 target = to - from;
+
+		float theta = glm::pow(_jumpVelocity, 4) - _gravity * (_gravity * target.x * target.x + 2.f * target.y * _jumpVelocity * _jumpVelocity);
+		theta = _jumpVelocity * _jumpVelocity + glm::sqrt(theta);
+		theta = theta / (_gravity * target.x);
+		theta = glm::atan(theta);
+
+		glm::vec2 velocity;
+		velocity.x = _jumpVelocity * glm::cos(theta);
+		velocity.y = glm::abs(_jumpVelocity * glm::sin(theta));
+
+		ImGui::Separator();
+		ImGui::LabelText("Result velocity:", "(%.1f, %.1f)", velocity.x, velocity.y);
+		ImGui::LabelText("Current velocity:", "(%.1f, %.1f)", _velocity.x, _velocity.y);
 	}
 
 	ImGui::End();
@@ -56,11 +71,6 @@ void jumpDebugWindow()
 void Platformer::CharacterController::update(float deltaTime)
 {
 	_velocity.y -= _gravity * deltaTime;
-
-	if (_moveSpeed < 2.f)
-	{
-		jumpDebugWindow();
-	}
 	
 	glm::vec2 frameVelocity = _velocity * deltaTime;
 	moveOneFrame(frameVelocity);

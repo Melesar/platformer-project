@@ -32,6 +32,8 @@ namespace Platformer
 		bool topCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
 		bool rightCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
 		bool leftCollisions(glm::vec2 velocity, Engine::Intersection& it) const;
+
+		void jumpDebugWindow() const;
 		
 	private:
 

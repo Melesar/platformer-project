@@ -124,14 +124,22 @@ void Platformer::Navmesh::constructFallLinks()
 
 auto Platformer::Navmesh::constructJumpLinks() const -> void
 {
+	//Floor to platform on the left
 	constructJumpLink({ -2.5f, -3.5f }, { -3.5f, -1.f });
+	//Platform on the left to center
 	constructJumpLink({ -3.5f, -1.f }, { -0.5f, 1.f });
-	
+
+	//Center to right and back
 	constructJumpLink({ 0.5f, 1.f }, { 2.5f, 3.f });
 	constructJumpLink({ 2.5f, 3.f }, { 0.5f, 1.f });
-	
+
+	//Center to single and back
 	constructJumpLink({ -0.5f, 1.f }, { -3.5f, 3.f });
 	constructJumpLink({ -3.5f, 3.f }, { -0.5f, 1.f });
+
+	//Single to upper left and back
+	constructJumpLink({ -3.5f, 3.f }, { -6.5f, 3.f });
+	constructJumpLink({ -6.5f, 3.f }, { -3.5f, 3.f });
 }
 
 void Platformer::Navmesh::constructJumpLink(glm::vec2 from, glm::vec2 to) const

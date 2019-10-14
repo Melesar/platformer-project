@@ -3,11 +3,14 @@
 #include "Physics/Ray.h"
 #include "Physics/Intersection.h"
 
+#define DRAW_NAVMESH false
+#define DRAW_IMGUI_DEMO false
+
 Platformer::Application::Application()
 {
 	_title = "Platformer project";
 	_worldHeight = 10.f;
-	//_isFullscreen = true;
+	_isFullscreen = true;
 }
 
 
@@ -123,8 +126,6 @@ void Platformer::Application::update(float deltaTime)
 		std::cout << shotPosition << std::endl;
 	}
 
-	
-
 	/*if (_input.mouseButtonPressed(Engine::Input::LEFT))
 	{
 		const glm::vec2 shotPosition = _renderer->screenToWorldPos(_input.mouseCoords());
@@ -139,9 +140,15 @@ void Platformer::Application::update(float deltaTime)
 		enemy->update(deltaTime);
 	}
 
-	_navmesh.draw(_renderer->viewMatrix());
+	if (DRAW_NAVMESH)
+	{
+		_navmesh.draw(_renderer->viewMatrix());
+	}
 
-	//ImGui::ShowDemoWindow();
+	if (DRAW_IMGUI_DEMO)
+	{
+		ImGui::ShowDemoWindow();
+	}
 }
 
 void Platformer::Application::onExit()

@@ -5,3 +5,5 @@ DevAssets/
 
 *.vcxproj.filters
 *.vcxproj.user
+
+Platformer/imgui.ini
