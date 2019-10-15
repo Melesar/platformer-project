@@ -44,44 +44,57 @@ bool Engine::Raycaster::raycast(const Ray& ray, float maxDistance, Intersection&
 
 bool Engine::Raycaster::raycast(const Ray& ray, float maxDistance, BoundingBox::Layer layer, Intersection& i) const
 {
-	if (layer != BoundingBox::ALL)
-	{
-		return raycast(ray, maxDistance, i, _boxes[layer]);
-	}
-	
-	Intersection intI {};
-	float minDistance = maxDistance;
-	for (int index = 0; index < BoundingBox::NUM_LAYERS; ++index)
-	{
-		bool intersects = raycast(ray, maxDistance, intI, _boxes[index]);
-		if (intersects && intI.distance < minDistance)
-		{
-			minDistance = intI.distance;
-		}
-	}
-
-	i.bb = intI.bb;
-	i.distance = minDistance;
-	return minDistance < maxDistance;
+	return raycast(ray, maxDistance, layerToMask(layer), i);
 }
 
-bool Engine::Raycaster::raycast(const Ray& ray, float maxDistance, Intersection& i,
-	const std::vector<const BoundingBox*>& boxes)
+bool Engine::Raycaster::raycast(const Ray& ray, float maxDistance, LayerMask layers, Intersection& i) const
 {
 	float minDistance = maxDistance;
 	BoundingBox closestBox;
 	Intersection intI{};
-	for (const BoundingBox* box : boxes)
+	for (int layer = 0; layer < BoundingBox::NUM_LAYERS; ++layer)
 	{
-		bool intersects = box->intersects(ray, intI);
-		if (intersects && intI.distance < minDistance)
+		if (layers.test(layer))
 		{
-			minDistance = intI.distance;
-			closestBox = intI.bb;
+			const std::vector<const BoundingBox*>& boxes = _boxes[layer];
+			for (const BoundingBox* box : boxes)
+			{
+				bool intersects = box->intersects(ray, intI);
+				if (intersects && intI.distance < minDistance)
+				{
+					minDistance = intI.distance;
+					closestBox = intI.bb;
+				}
+			}
 		}
 	}
 
 	i.bb = closestBox;
 	i.distance = minDistance;
 	return minDistance < maxDistance;
+}
+
+Engine::Raycaster::LayerMask Engine::Raycaster::layerToMask(BoundingBox::Layer layer)
+{
+	LayerMask mask;
+	if (layer != BoundingBox::ALL)
+	{
+		mask.set(layer);
+	}
+	else
+	{
+		mask.set();
+	}
+	return mask;
+}
+
+Engine::Raycaster::LayerMask Engine::Raycaster::layersToMask(std::initializer_list<BoundingBox::Layer> layers)
+{
+	LayerMask mask;
+	for (BoundingBox::Layer layer : layers)
+	{
+		mask.set(layer);
+	}
+
+	return mask;
 }

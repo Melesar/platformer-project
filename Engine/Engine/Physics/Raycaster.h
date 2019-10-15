@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "Physics/BoundingBox.h"
 #include "Physics/IPhysicsBody.h"
+#include <bitset>
 
 namespace Engine
 {
@@ -9,9 +10,12 @@ namespace Engine
 	
 	class ENGINE_API Raycaster
 	{
+		
 	public:
 		Raycaster();
 		
+		using LayerMask = std::bitset<BoundingBox::NUM_LAYERS>;
+
 		void addBoundingBox(const IPhysicsBody& body);
 		void addBoundingBox(const BoundingBox& box);
 		void removeBoundingBox(const IPhysicsBody& body);
@@ -19,10 +23,10 @@ namespace Engine
 		bool raycast(const Ray& ray, Intersection& i) const;
 		bool raycast(const Ray& ray, float maxDistance, Intersection& i) const;
 		bool raycast(const Ray& ray, float maxDistance, BoundingBox::Layer layer, Intersection& i) const;
+		bool raycast(const Ray& ray, float maxDistance, LayerMask layers, Intersection& i) const;
 
-	private:
-
-		static bool raycast(const Ray& ray, float maxDistance, Intersection& i, const std::vector<const BoundingBox*>& boxes);
+		static LayerMask layerToMask(BoundingBox::Layer layer);
+		static LayerMask layersToMask(std::initializer_list<BoundingBox::Layer> layers);
 		
 	private:
 		
