@@ -26,6 +26,7 @@ namespace Engine
 		glm::vec2 getPosition() const;
 		float getScale() const;
 		float getRotation() const;
+		glm::vec2 getSize() const;
 		
 		void setPosition(const glm::vec2& position);
 		void setRotation(float rotation);
@@ -38,8 +39,8 @@ namespace Engine
 		
 		Sprite(std::shared_ptr<Shader> shader);
 		Sprite(std::shared_ptr<Shader> shader, int ppu);
+		Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture);
 		Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture, int ppu);
-		explicit Sprite(std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture);
 		
 		virtual ~Sprite();
 

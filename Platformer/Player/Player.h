@@ -3,7 +3,6 @@
 #include "Input/Input.h"
 #include "Physics/Raycaster.h"
 #include "CharacterController.h"
-#include "PlayerShooting.h"
 #include "VisibleEntity.h"
 
 namespace Platformer
@@ -16,9 +15,24 @@ namespace Platformer
 
 		void update(float deltaTime);
 
+		void damage();
+		bool isDamaged();
+		
+		int getMaxLives() const;
+		int getLives() const;
 		glm::vec2 getPosition() const;
 
 	private:
+
+		const int _maxLives = 3;
+		const float _invincibilityTime = 2.5f;
+		
+		int _lives {_maxLives};
+		bool _isDamaged {false};
+		bool _isInvincible{ false };
+		float _invincibilityTimer = 0.f;
+
+		float _currentAlpha = 1.f;
 		
 		const Engine::Input& _input;
 		const Engine::Raycaster& _raycaster;

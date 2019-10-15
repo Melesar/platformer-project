@@ -20,7 +20,14 @@ namespace Engine
 
 		bool isRunning() const;
 
+		Application();
 		virtual ~Application() = default;
+
+		static Sprite* createSprite();
+		static Sprite* createSprite(TextureId id);
+		static Sprite* createSprite(TextureId id, int ppu);
+
+		static void destroySprite(Sprite* sprite);
 
 	protected:
 
@@ -28,12 +35,6 @@ namespace Engine
 		virtual void setup();
 		virtual void update(float deltaTime) = 0;
 		virtual void onExit();
-
-		Sprite* createSprite();
-		Sprite* createSprite(TextureId id);
-		Sprite* createSprite(TextureId id, int ppu);
-
-		void destroySprite(Sprite* sprite);
 
 	private:
 
@@ -56,8 +57,10 @@ namespace Engine
 		ResourcesRepository _resources;
 		Raycaster _raycaster;
 
+		static Application* _current;
+		
 	private:
-
+		
 		SDL_Window* _window = nullptr;
 		SDL_GLContext _context;
 		Time _time = {};

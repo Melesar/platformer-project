@@ -32,6 +32,9 @@ void Platformer::Application::setup()
 	createSpawnPoints();
 
 	_navmesh.build(worldSize);
+
+	glm::vec2 widgetPosition = {0.f, worldSize.y * 0.5f - 0.5f};
+	_playerHealthWidget = std::make_unique<PlayerHealthWidget>(widgetPosition, _player.get());
 }
 
 void Platformer::Application::createPlatforms()
@@ -172,7 +175,7 @@ void Platformer::Application::update(float deltaTime)
 	}
 	
 	_player->update(deltaTime);
-
+	
 	if (_input.mouseButtonPressed(Engine::Input::LEFT))
 	{
 		const glm::vec2 shotPosition = _renderer->screenToWorldPos(_input.mouseCoords());
@@ -183,6 +186,8 @@ void Platformer::Application::update(float deltaTime)
 	updateBullets(deltaTime);
 	updateEnemies(deltaTime);
 
+	_playerHealthWidget->update();
+	
 	if (DRAW_NAVMESH)
 	{
 		_navmesh.draw(_renderer->viewMatrix());

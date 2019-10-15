@@ -21,6 +21,8 @@ namespace Platformer
 		void setValues(float moveSpeed, float jumpHeight, float topJumpTime);
 
 		void update(float deltaTime);
+
+		glm::vec2 getCurrentVelocity() const;
 		
 		CharacterController(const Engine::Raycaster& raycaster, Engine::Sprite* sprite);
 

@@ -2,6 +2,8 @@
 #include "Enemy.h"
 #include "Rendering/Sprite.h"
 #include "Physics/Raycaster.h"
+#include "Physics/Ray.h"
+#include "Physics/Intersection.h"
 #include "Player/Player.h"
 #include "AI/AIMovementConstants.h"
 
@@ -9,6 +11,8 @@
 Platformer::Enemy::Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh) :
 	VisibleEntity(sprite),
 	_player(player),
+	_raycaster(raycaster),
+	_boundingBox(sprite->getBoundingBox()),
 	_controller(raycaster, sprite),
 	_navmesh(navmesh)
 {
@@ -20,7 +24,6 @@ Platformer::Enemy::Enemy(Engine::Sprite* sprite, const Player& player, const Eng
 }
 
 Platformer::Enemy::~Enemy() = default;
-
 
 void showPath(Platformer::NavmeshPath path)
 {
@@ -86,6 +89,24 @@ void Platformer::Enemy::update(float deltaTime)
 	}
 
 	_controller.update(deltaTime);
+
+	attackPlayer();
+}
+
+void Platformer::Enemy::attackPlayer() const
+{
+	glm::vec2 attackDirection = glm::normalize(_controller.getCurrentVelocity());
+	glm::vec2 attackOrigin = _boundingBox.getCenter() + attackDirection * _boundingBox.getWidth() * 0.47f;
+	Engine::Ray attackRay{ attackOrigin, attackDirection };
+	Engine::Intersection i{};
+	if (_raycaster.raycast(attackRay, _attackRange, Engine::BoundingBox::PLAYER, i))
+	{
+		Player* hitPlayer = dynamic_cast<Player*>(i.bb.owner);
+		if (hitPlayer != nullptr)
+		{
+			hitPlayer->damage();
+		}
+	}
 }
 
 float Platformer::Enemy::getHealth() const
@@ -95,7 +116,7 @@ float Platformer::Enemy::getHealth() const
 
 float Platformer::Enemy::getMaxHealth() const
 {
-	return MAX_HEALTH;
+	return _maxHealth;
 }
 
 void Platformer::Enemy::takeDamage(float damage)

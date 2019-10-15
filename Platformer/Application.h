@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "AI/Enemy.h"
 #include "AI/Navigation/Navmesh.h"
+#include "UI/PlayerHealthWidget.h"
 
 
 namespace Platformer
@@ -43,6 +44,8 @@ namespace Platformer
 		float _lastEnemySpawnTime;
 
 		std::unique_ptr<Player> _player;
+		std::unique_ptr<PlayerHealthWidget> _playerHealthWidget;
+		
 		std::vector<glm::vec2> _spawnPoints;
 		std::vector<Bullet> _bullets;
 		std::vector<std::unique_ptr<Engine::BoundingBox>> _walls;

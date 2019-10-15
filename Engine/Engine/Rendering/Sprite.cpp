@@ -82,6 +82,11 @@ float Engine::Sprite::getRotation() const
 	return _rotation;
 }
 
+glm::vec2 Engine::Sprite::getSize() const
+{
+	return _size;
+}
+
 void Engine::Sprite::setRotation(const float rotation)
 {
 	_rotation = rotation;

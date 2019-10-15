@@ -78,6 +78,11 @@ void Platformer::CharacterController::update(float deltaTime)
 	_sprite->move(frameVelocity);
 }
 
+glm::vec2 Platformer::CharacterController::getCurrentVelocity() const
+{
+	return _velocity;
+}
+
 void Platformer::CharacterController::moveOneFrame(glm::vec2& velocity)
 {
 	Engine::Intersection i {};

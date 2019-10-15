@@ -3,6 +3,8 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
 
+Engine::Application* Engine::Application::_current;
+
 void Engine::Application::run()
 {
 	_isRunning = true;
@@ -31,6 +33,11 @@ void Engine::Application::run(int argc, char** argv)
 bool Engine::Application::isRunning() const
 {
 	return _isRunning;
+}
+
+Engine::Application::Application()
+{
+	_current = this;
 }
 
 void Engine::Application::initSDL()
@@ -118,29 +125,29 @@ void Engine::Application::onExit()
 
 Engine::Sprite* Engine::Application::createSprite()
 {
-	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
+	std::shared_ptr<Shader> shader = _current->_resources.getShader(SHADER_SPRITE);
 	const auto s = new Sprite(shader);
-	_pendingSprites.push_back(s);
+	_current->_pendingSprites.push_back(s);
 	
 	return s;
 }
 
 Engine::Sprite* Engine::Application::createSprite(TextureId id)
 {
-	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
-	std::shared_ptr<Texture> texture = _resources.getTexture(id);
+	std::shared_ptr<Shader> shader = _current->_resources.getShader(SHADER_SPRITE);
+	std::shared_ptr<Texture> texture = _current->_resources.getTexture(id);
 	const auto s = new Sprite(shader, texture);
-	_pendingSprites.push_back(s);
+	_current->_pendingSprites.push_back(s);
 
 	return s;
 }
 
 Engine::Sprite* Engine::Application::createSprite(TextureId id, int ppu)
 {
-	std::shared_ptr<Shader> shader = _resources.getShader(SHADER_SPRITE);
-	std::shared_ptr<Texture> texture = _resources.getTexture(id);
+	std::shared_ptr<Shader> shader = _current->_resources.getShader(SHADER_SPRITE);
+	std::shared_ptr<Texture> texture = _current->_resources.getTexture(id);
 	const auto s = new Sprite(shader, texture, ppu);
-	_pendingSprites.push_back(s);
+	_current->_pendingSprites.push_back(s);
 
 	return s;
 }
@@ -148,11 +155,11 @@ Engine::Sprite* Engine::Application::createSprite(TextureId id, int ppu)
 
 void Engine::Application::destroySprite(Sprite* sprite)
 {
-	_renderer->removeFromRenderingPool(sprite);
-	_raycaster.removeBoundingBox(*sprite);
+	_current->_renderer->removeFromRenderingPool(sprite);
+	_current->_raycaster.removeBoundingBox(*sprite);
 
-	removeSprite(_sprites, sprite);
-	removeSprite(_pendingSprites, sprite);
+	removeSprite(_current->_sprites, sprite);
+	removeSprite(_current->_pendingSprites, sprite);
 	
 	delete sprite;
 }

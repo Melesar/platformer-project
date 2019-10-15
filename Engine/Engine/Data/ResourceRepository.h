@@ -15,6 +15,9 @@ namespace Engine
 		TEX_PLAYER,
 		TEX_BULLET,
 
+		TEX_HEART,
+		TEX_HEART_EMPTY,
+
 		NUM_TEXTURES
 	};
 

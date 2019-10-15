@@ -20,7 +20,8 @@ namespace Platformer
 
 		Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh);
 		virtual ~Enemy();
-		
+
+		void attackPlayer() const;
 		void update(float deltaTime);
 
 		float getHealth() const;
@@ -35,14 +36,16 @@ namespace Platformer
 		
 	private:
 
-		const float MAX_HEALTH = 30.f;
+		const float _maxHealth = 30.f;
+		const float _attackRange = 0.2f;
 		
-		float _health {MAX_HEALTH};
-		
-		
+		float _health {_maxHealth};
+
 		const Player& _player;
+		const Engine::Raycaster& _raycaster;
+		const Engine::BoundingBox& _boundingBox;
 		CharacterController _controller;
-		
+
 		const Navmesh& _navmesh;
 		NavmeshPath _currentPath;
 		NavmeshLink* _currentTarget;
