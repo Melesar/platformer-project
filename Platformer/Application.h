@@ -28,22 +28,27 @@ namespace Platformer
 		Engine::Sprite* createPlatform(glm::vec2 position, glm::vec2 size, glm::vec2 pivot);
 
 		void createWalls(const glm::vec2 worldSize);
-		void updateEnemies(float deltaTime);
 		void createPlatforms();
+		void createSpawnPoints();
+		
+		void updateBullets(float deltaTime);
+		void updateEnemies(float deltaTime);
 
 		void spawnBullet(glm::vec2 position, glm::vec2 direction);
-		void updateBullets(float deltaTime);
-
 		void spawnEnemy(glm::vec2 position);
 		
 	private:
 
-		Navmesh _navmesh;
-		
+		const float _enemySpawnTime = 2.f;
+		float _lastEnemySpawnTime;
+
 		std::unique_ptr<Player> _player;
+		std::vector<glm::vec2> _spawnPoints;
 		std::vector<Bullet> _bullets;
 		std::vector<std::unique_ptr<Engine::BoundingBox>> _walls;
 		std::vector<std::unique_ptr<Enemy>> _enemies;
+
+		Navmesh _navmesh;
 	};
 }
 

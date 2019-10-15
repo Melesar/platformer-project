@@ -8,7 +8,7 @@ namespace Platformer
 		Engine::Sprite* sprite;
 		glm::vec2 direction;
 
-		const float speed = 5.f;
+		const float speed = 11.f;
 
 		Bullet& operator = (const Bullet& other)
 		{

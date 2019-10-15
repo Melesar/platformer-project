@@ -24,13 +24,12 @@ void Platformer::Application::setup()
 
 	Engine::Sprite* playerSprite = createSprite(Engine::TEX_PLAYER, 256);
 	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
-
-	spawnEnemy({ -6, -1 });
 	
 	const glm::vec2 worldSize = { _renderer->worldWidth(), _renderer->worldHeight() };
 	
 	createPlatforms();
 	createWalls(worldSize);
+	createSpawnPoints();
 
 	_navmesh.build(worldSize);
 }
@@ -45,6 +44,15 @@ void Platformer::Application::createPlatforms()
 
 	createPlatform({ -3, 2 }, {1, 1}, {1, 0.5f});
 	createPlatform({ -6, 2 }, { 10, 1 }, {1, 0.5});
+}
+
+void Platformer::Application::createSpawnPoints()
+{
+	float halfWidth = _renderer->worldWidth() * 0.5f;
+	_spawnPoints.emplace_back(-halfWidth + 1.f, -3.5f);
+	_spawnPoints.emplace_back(halfWidth - 1.f, -3.5f);
+	_spawnPoints.emplace_back(halfWidth - 1.f, 3.5f);
+	_spawnPoints.emplace_back(halfWidth - 1.f, 3.5f);
 }
 
 void Platformer::Application::spawnBullet(glm::vec2 position, glm::vec2 direction)
@@ -120,6 +128,17 @@ void Platformer::Application::createWalls(const glm::vec2 worldSize)
 
 void Platformer::Application::updateEnemies(float deltaTime)
 {
+	if (_lastEnemySpawnTime < _enemySpawnTime)
+	{
+		_lastEnemySpawnTime += deltaTime;
+	}
+	else
+	{
+		_lastEnemySpawnTime = 0.f;
+		glm::vec2 spawnPoint = *selectRandomly(_spawnPoints.begin(), _spawnPoints.end());
+		spawnEnemy(spawnPoint);
+	}
+	
 	std::vector<int> enemiesDead;
 	
 	for (unsigned i = 0; i < _enemies.size(); ++i)
