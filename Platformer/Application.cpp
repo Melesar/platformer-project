@@ -128,6 +128,12 @@ void Platformer::Application::restartGame()
 		enemy.reset();
 	}
 	_enemies.clear();
+
+	for (Bullet bullet : _bullets)
+	{
+		destroySprite(bullet.sprite);
+	}
+	_bullets.clear();
 	
 	_player.reset();
 
