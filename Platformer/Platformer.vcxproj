@@ -89,6 +89,7 @@
     <ClCompile Include="AI\Enemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="UI\GameOverWidget.cpp" />
     <ClCompile Include="UI\PlayerHealthWidget.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\PlayerShooting.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="AI\Enemy.h" />
+    <ClInclude Include="UI\GameOverWidget.h" />
     <ClInclude Include="UI\PlayerHealthWidget.h" />
     <ClInclude Include="Player\PlayerMovementConstants.h" />
     <ClInclude Include="Player\Player.h" />

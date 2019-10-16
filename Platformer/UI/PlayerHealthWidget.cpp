@@ -37,3 +37,11 @@ Platformer::PlayerHealthWidget::PlayerHealthWidget(glm::vec2 position, Player* p
 		heartPosition.x += _heartSize + _padding;
 	}
 }
+
+Platformer::PlayerHealthWidget::~PlayerHealthWidget()
+{
+	for (Engine::Sprite* heart : _hearts)
+	{
+		Application::destroySprite(heart);
+	}
+}

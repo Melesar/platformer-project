@@ -1,13 +1,14 @@
 ﻿#include "Player.h"
 #include "Player/PlayerMovementConstants.h"
+#include "Application.h"
 
-Platformer::Player::Player(Engine::Sprite* sprite, const Engine::Input& input, const Engine::Raycaster& raycaster) :
-	VisibleEntity(sprite),
+Platformer::Player::Player(glm::vec2 position, const Engine::Input& input, const Engine::Raycaster& raycaster) :
+	VisibleEntity(Application::createSprite(Engine::TEX_PLAYER, 256)),
 	_input(input),
 	_raycaster(raycaster),
-	_controller(raycaster, sprite)
+	_controller(raycaster, _sprite)
 {
-	_sprite->setPosition({ 0.5, -3.5 });
+	_sprite->setPosition(position);
 	_sprite->setSortingOrder(50);
 	_sprite->setLayer(Engine::BoundingBox::PLAYER);
 	_sprite->setOwner(this);

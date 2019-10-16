@@ -40,6 +40,21 @@ Engine::Application::Application()
 	_current = this;
 }
 
+Engine::Application::~Application()
+{
+	while(!_sprites.empty())
+	{
+		destroySprite(*(_sprites.end() - 1));
+	}
+
+	delete _renderer;
+	delete _gui;
+
+	SDL_GL_DeleteContext(_context);
+	SDL_DestroyWindow(_window);
+	SDL_Quit();
+}
+
 void Engine::Application::initSDL()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -110,17 +125,7 @@ void Engine::Application::updatePendingSprites()
 
 void Engine::Application::onExit()
 {
-	while(!_sprites.empty())
-	{
-		destroySprite(*(_sprites.end() - 1));
-	}
 	
-	delete _renderer;
-	delete _gui;
-	
-	SDL_GL_DeleteContext(_context);
-	SDL_DestroyWindow(_window);
-	SDL_Quit();
 }
 
 Engine::Sprite* Engine::Application::createSprite()

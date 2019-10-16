@@ -21,7 +21,7 @@ namespace Engine
 		bool isRunning() const;
 
 		Application();
-		virtual ~Application() = default;
+		virtual ~Application();
 
 		static Sprite* createSprite();
 		static Sprite* createSprite(TextureId id);

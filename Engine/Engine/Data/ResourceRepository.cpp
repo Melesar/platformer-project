@@ -34,6 +34,8 @@ void Engine::ResourcesRepository::loadTextures()
 	loadTexture("Bullet.png", TEX_BULLET);
 	loadTexture("Heart.png", TEX_HEART);
 	loadTexture("Heart_empty.png", TEX_HEART_EMPTY);
+	loadTexture("Restart_button.png", TEX_BUTTON_RESTART);
+	loadTexture("Game_over.png", TEX_GAME_OVER);
 }
 
 void Engine::ResourcesRepository::loadTexture(const std::string& textureName, TextureId id)

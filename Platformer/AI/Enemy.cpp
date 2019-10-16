@@ -6,19 +6,21 @@
 #include "Physics/Intersection.h"
 #include "Player/Player.h"
 #include "AI/AIMovementConstants.h"
+#include "Application.h"
 
 
-Platformer::Enemy::Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh) :
-	VisibleEntity(sprite),
+Platformer::Enemy::Enemy(glm::vec2 position, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh) :
+	VisibleEntity(Application::createSprite(Engine::TEX_ENEMY, 256)),
 	_player(player),
 	_raycaster(raycaster),
-	_boundingBox(sprite->getBoundingBox()),
-	_controller(raycaster, sprite),
+	_boundingBox(_sprite->getBoundingBox()),
+	_controller(raycaster, _sprite),
 	_navmesh(navmesh)
 {
-	sprite->setLayer(Engine::BoundingBox::ENEMY);
-	sprite->setSortingOrder(20);
-	sprite->setOwner(this);
+	_sprite->setPosition(position);
+	_sprite->setLayer(Engine::BoundingBox::ENEMY);
+	_sprite->setSortingOrder(20);
+	_sprite->setOwner(this);
 
 	_controller.setValues(MOVEMENT_SPEED, JUMP_HEIGHT, JUMP_TIME);
 }

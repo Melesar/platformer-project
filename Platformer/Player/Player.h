@@ -10,7 +10,7 @@ namespace Platformer
 	class Player : public Engine::VisibleEntity
 	{
 	public:
-		Player(Engine::Sprite* sprite, const Engine::Input& input, const Engine::Raycaster& raycaster);
+		Player(glm::vec2 position, const Engine::Input& input, const Engine::Raycaster& raycaster);
 		virtual ~Player();
 
 		void update(float deltaTime);

@@ -6,7 +6,7 @@
 #define DRAW_NAVMESH false
 #define DRAW_IMGUI_DEMO false
 #define IS_FULLSCREEN false
-#define SHOW_STATS true
+#define SHOW_STATS false
 
 
 Platformer::Application::Application()
@@ -16,15 +16,11 @@ Platformer::Application::Application()
 	_isFullscreen = IS_FULLSCREEN;
 }
 
-
 void Platformer::Application::setup()
 {
 	Engine::Application::setup();
 	_renderer->setBackgroundColor({ 0.42, 0.77, 0.77, 1 });
 
-	Engine::Sprite* playerSprite = createSprite(Engine::TEX_PLAYER, 256);
-	_player = std::make_unique<Player>(playerSprite, _input, _raycaster);
-	
 	const glm::vec2 worldSize = { _renderer->worldWidth(), _renderer->worldHeight() };
 	
 	createPlatforms();
@@ -33,8 +29,7 @@ void Platformer::Application::setup()
 
 	_navmesh.build(worldSize);
 
-	glm::vec2 widgetPosition = {0.f, worldSize.y * 0.5f - 0.5f};
-	_playerHealthWidget = std::make_unique<PlayerHealthWidget>(widgetPosition, _player.get());
+	createPlayer();
 }
 
 void Platformer::Application::createPlatforms()
@@ -56,6 +51,13 @@ void Platformer::Application::createSpawnPoints()
 	_spawnPoints.emplace_back(halfWidth - 1.f, -3.5f);
 	_spawnPoints.emplace_back(halfWidth - 1.f, 3.5f);
 	_spawnPoints.emplace_back(halfWidth - 1.f, 3.5f);
+}
+
+void Platformer::Application::createPlayer()
+{
+	_player = std::make_unique<Player>(glm::vec2{ 0.5, -3.5 }, _input, _raycaster);
+	glm::vec2 widgetPosition = { 0.f, _renderer->worldHeight() * 0.5f - 0.5f };
+	_playerHealthWidget = std::make_unique<PlayerHealthWidget>(widgetPosition, _player.get());
 }
 
 void Platformer::Application::spawnBullet(glm::vec2 position, glm::vec2 direction)
@@ -109,10 +111,28 @@ void Platformer::Application::updateBullets(float deltaTime)
 
 void Platformer::Application::spawnEnemy(glm::vec2 position)
 {
-	Engine::Sprite* enemySprite = createSprite(Engine::TEX_ENEMY, 256);
-	enemySprite->setPosition(position);
-	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(enemySprite, *_player, _raycaster, _navmesh);
+	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(position, *_player, _raycaster, _navmesh);
 	_enemies.push_back(std::move(enemy));
+}
+
+void Platformer::Application::restartGame()
+{
+	_gameOverWidget.reset();
+	_isGameOver = false;
+	
+	_playerHealthWidget.reset();
+	
+	for (std::unique_ptr<Enemy>& enemy : _enemies)
+	{
+		enemy.reset();
+	}
+	_enemies.clear();
+	
+	_player.reset();
+
+	_lastEnemySpawnTime = 0.f;
+	
+	createPlayer();
 }
 
 void Platformer::Application::createWalls(const glm::vec2 worldSize)
@@ -173,20 +193,36 @@ void Platformer::Application::update(float deltaTime)
 	{
 		stop();
 	}
-	
-	_player->update(deltaTime);
-	
-	if (_input.mouseButtonPressed(Engine::Input::LEFT))
+
+	if (_isGameOver)
 	{
-		const glm::vec2 shotPosition = _renderer->screenToWorldPos(_input.mouseCoords());
-		const glm::vec2 shotDirection = glm::normalize(shotPosition - _player->getPosition());
-		spawnBullet(_player->getPosition(), shotDirection);
+		if (_gameOverWidget->isButtonPressed())
+		{
+			restartGame();
+		}
 	}
+	else
+	{
+		_player->update(deltaTime);
 
-	updateBullets(deltaTime);
-	updateEnemies(deltaTime);
+		if (_input.mouseButtonPressed(Engine::Input::LEFT))
+		{
+			const glm::vec2 shotPosition = _renderer->screenToWorldPos(_input.mouseCoords());
+			const glm::vec2 shotDirection = glm::normalize(shotPosition - _player->getPosition());
+			spawnBullet(_player->getPosition(), shotDirection);
+		}
 
-	_playerHealthWidget->update();
+		updateBullets(deltaTime);
+		updateEnemies(deltaTime);
+
+		_playerHealthWidget->update();
+
+		if (_player->getLives() == 0)
+		{
+			_isGameOver = true;
+			_gameOverWidget = std::make_unique<GameOverWidget>(*_renderer, _input);
+		}
+	}
 	
 	if (DRAW_NAVMESH)
 	{

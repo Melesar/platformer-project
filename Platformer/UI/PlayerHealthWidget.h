@@ -17,6 +17,7 @@ namespace Platformer
 		void update();
 
 		PlayerHealthWidget(glm::vec2 position, Player* player);
+		virtual ~PlayerHealthWidget();
 
 	private:
 

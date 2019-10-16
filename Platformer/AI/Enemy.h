@@ -18,7 +18,7 @@ namespace Platformer
 	{
 	public:
 
-		Enemy(Engine::Sprite* sprite, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh);
+		Enemy(glm::vec2 position, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh);
 		virtual ~Enemy();
 
 		void attackPlayer() const;

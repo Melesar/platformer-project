@@ -17,6 +17,8 @@ namespace Engine
 
 		TEX_HEART,
 		TEX_HEART_EMPTY,
+		TEX_BUTTON_RESTART,
+		TEX_GAME_OVER,
 
 		NUM_TEXTURES
 	};
