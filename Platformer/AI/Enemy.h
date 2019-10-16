@@ -18,7 +18,7 @@ namespace Platformer
 	{
 	public:
 
-		Enemy(glm::vec2 position, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh);
+		Enemy(glm::vec2 position, Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh);
 		virtual ~Enemy();
 
 		void attackPlayer() const;
@@ -41,7 +41,7 @@ namespace Platformer
 		
 		float _health {_maxHealth};
 
-		const Player& _player;
+		Player& _player;
 		const Engine::Raycaster& _raycaster;
 		const Engine::BoundingBox& _boundingBox;
 		CharacterController _controller;

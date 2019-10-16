@@ -5,7 +5,7 @@
 
 #define DRAW_NAVMESH false
 #define DRAW_IMGUI_DEMO false
-#define IS_FULLSCREEN false
+#define IS_FULLSCREEN true
 #define SHOW_STATS false
 
 

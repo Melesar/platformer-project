@@ -9,7 +9,7 @@
 #include "Application.h"
 
 
-Platformer::Enemy::Enemy(glm::vec2 position, const Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh) :
+Platformer::Enemy::Enemy(glm::vec2 position, Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh) :
 	VisibleEntity(Application::createSprite(Engine::TEX_ENEMY, 256)),
 	_player(player),
 	_raycaster(raycaster),
@@ -97,6 +97,12 @@ void Platformer::Enemy::update(float deltaTime)
 
 void Platformer::Enemy::attackPlayer() const
 {
+	if (_boundingBox.intersects(_player.getSprite()->getBoundingBox()))
+	{
+		_player.damage();
+		return;
+	}
+	
 	glm::vec2 attackDirection = glm::normalize(_controller.getCurrentVelocity());
 	glm::vec2 attackOrigin = _boundingBox.getCenter() + attackDirection * _boundingBox.getWidth() * 0.47f;
 	Engine::Ray attackRay{ attackOrigin, attackDirection };
