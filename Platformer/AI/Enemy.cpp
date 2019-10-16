@@ -86,7 +86,14 @@ void Platformer::Enemy::update(float deltaTime)
 		moveToPoint(_currentTarget->to->position);
 		break;
 	case JUMP:
-		_controller.jump(_currentTarget->from->position, _currentTarget->to->position);
+		if (glm::distance(_sprite->getPosition(), _currentTarget->from->position) > 0.1f && _controller.isGrounded())
+		{
+			moveToPoint(_currentTarget->from->position);
+		}
+		else
+		{
+			_controller.jump(_currentTarget->from->position, _currentTarget->to->position);
+		}
 		break;
 	}
 

@@ -71,6 +71,8 @@ void Platformer::Navmesh::constructNavmesh(glm::vec2 worldSize)
 			_nodes.emplace_back(std::move(node));
 		}
 	}
+
+	
 }
 
 void Platformer::Navmesh::constructFallLinks()
@@ -124,8 +126,13 @@ void Platformer::Navmesh::constructFallLinks()
 
 auto Platformer::Navmesh::constructJumpLinks() const -> void
 {
+	float d;
+	glm::vec2 newNodePosition = { -2.f, -3.5f };
+	NavmeshNode* node = sampleNode({ -2.5f, -3.5f }, d);
+	node->position = newNodePosition;
+	
 	//Floor to platform on the left
-	constructJumpLink({ -2.5f, -3.5f }, { -3.5f, -1.f });
+	constructJumpLink(newNodePosition, { -3.5f, -1.f });
 	//Platform on the left to center
 	constructJumpLink({ -3.5f, -1.f }, { -0.5f, 1.f });
 
