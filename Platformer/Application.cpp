@@ -180,7 +180,6 @@ void Platformer::Application::updateEnemies(float deltaTime)
 	for (int i : enemiesDead)
 	{
 		std::unique_ptr<Enemy>& deadEnemy = _enemies[i];
-		destroySprite(deadEnemy->getSprite());
 		deadEnemy.reset();
 
 		_enemies.erase(_enemies.begin() + i);
