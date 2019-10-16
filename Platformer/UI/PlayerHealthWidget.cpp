@@ -26,7 +26,7 @@ Platformer::PlayerHealthWidget::PlayerHealthWidget(glm::vec2 position, Player* p
 	_hearts.resize(playerLives);
 
 	const float panelWidth = playerLives * _heartSize + (playerLives - 1) * _padding;
-	glm::vec2 heartPosition = {position.x - (panelWidth + _heartSize) * 0.5, position.y};
+	glm::vec2 heartPosition = {position.x - (panelWidth - _heartSize) * 0.5, position.y};
 	for (int i = 0; i < playerLives; ++i)
 	{
 		Engine::Sprite* heart = Application::createSprite(Engine::TEX_HEART, 600);
