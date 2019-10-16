@@ -7,6 +7,7 @@ namespace Engine
 	{
 		REPEAT = GL_REPEAT,
 		CLAMP = GL_CLAMP,
+		BORDER = GL_CLAMP_TO_BORDER
 	};
 
 	enum FilteringMode

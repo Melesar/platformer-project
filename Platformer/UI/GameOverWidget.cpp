@@ -7,7 +7,7 @@ Platformer::GameOverWidget::GameOverWidget(const Engine::Renderer& renderer, con
 	_renderer(renderer),
 	_input(input)
 {
-	_text = Application::createSprite(Engine::TEX_GAME_OVER, 100);
+	_text = Application::createSprite(Engine::TEX_GAME_OVER, 102);
 	_text->setPosition({ 0, 3 });
 	_text->setSortingOrder(1000);
 	

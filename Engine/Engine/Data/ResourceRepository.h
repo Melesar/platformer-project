@@ -49,7 +49,7 @@ namespace Engine
 		void loadShaders();
 		void loadTextures();
 
-		void loadTexture(const std::string& textureName, TextureId id);
+		std::shared_ptr<Texture> loadTexture(const std::string& textureName, TextureId id);
 		void loadShader(const std::string& shaderName, ShaderType type);
 		
 	private:

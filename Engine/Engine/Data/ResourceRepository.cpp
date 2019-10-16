@@ -30,18 +30,20 @@ void Engine::ResourcesRepository::loadTextures()
 {
 	loadTexture("Platform.png", TEX_PLATFORM);
 	loadTexture("Elliot.png", TEX_ENEMY);
-	loadTexture("Player.png", TEX_PLAYER);
+	loadTexture("Player.png", TEX_PLAYER)->setWrapMode(BORDER);
 	loadTexture("Bullet.png", TEX_BULLET);
-	loadTexture("Heart.png", TEX_HEART);
-	loadTexture("Heart_empty.png", TEX_HEART_EMPTY);
+	loadTexture("Heart.png", TEX_HEART)->setWrapMode(BORDER);
+	loadTexture("Heart_empty.png", TEX_HEART_EMPTY)->setWrapMode(BORDER);
 	loadTexture("Restart_button.png", TEX_BUTTON_RESTART);
 	loadTexture("Game_over.png", TEX_GAME_OVER);
 }
 
-void Engine::ResourcesRepository::loadTexture(const std::string& textureName, TextureId id)
+std::shared_ptr<Engine::Texture> Engine::ResourcesRepository::loadTexture(const std::string& textureName, TextureId id)
 {
 	std::shared_ptr<Texture> texture = std::make_shared<Texture>(texturesFolder + textureName, id);
 	_textures.emplace(std::pair<TextureId, std::shared_ptr<Texture>>(id, texture));
+
+	return texture;
 }
 
 void Engine::ResourcesRepository::loadShader(const std::string& shaderName, ShaderType type)
