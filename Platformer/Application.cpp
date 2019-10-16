@@ -84,9 +84,10 @@ void Platformer::Application::updateBullets(float deltaTime)
 		Bullet& bullet = _bullets[index];
 		Engine::Intersection i{};
 		glm::vec2 offset = bullet.speed * deltaTime * bullet.direction;
-
+		glm::vec2 raycastOrigin = bullet.sprite->getPosition() + bullet.direction * bullet.sprite->getSize().x * 0.5f;
+		
 		Engine::Raycaster::LayerMask hitMask = Engine::Raycaster::layersToMask({ Engine::BoundingBox::ENEMY, Engine::BoundingBox::PLATFORM });
-		if (_raycaster.raycast(Engine::Ray(bullet.sprite->getPosition(), bullet.direction), glm::length(offset), hitMask, i))
+		if (_raycaster.raycast(Engine::Ray(raycastOrigin, bullet.direction), glm::length(offset), hitMask, i))
 		{
 			destroyedBullets.push_back(index);
 			
