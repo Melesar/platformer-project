@@ -57,8 +57,14 @@ namespace Engine
 		std::map<TextureId, std::shared_ptr<Texture>> _textures;
 		std::map<ShaderType, std::shared_ptr<Shader>> _shaders;
 
+#if defined DEBUG
 		const std::string texturesFolder = "../res/Textures/";
 		const std::string shadersFolder = "../res/Shaders/";
+#else
+		const std::string texturesFolder = "res/Textures/";
+		const std::string shadersFolder = "res/Shaders/";
+#endif
+
 	};
 
 }
