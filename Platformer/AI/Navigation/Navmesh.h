@@ -1,6 +1,12 @@
 ﻿#pragma once
+
 #include "Core.h"
 #include "NavmeshNode.h"
+
+namespace Engine
+{
+    class BoundingBox;
+}
 
 namespace Platformer
 {

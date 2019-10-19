@@ -2,29 +2,30 @@
 #include "Texture.h"
 #include "cassert"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+
 Engine::Texture::Texture(const std::string& filename, TextureId id) : _id(id)
 {
-	SDL_Surface* imageData = IMG_Load(filename.c_str());
-	if (imageData == nullptr)
+    int channels;
+    unsigned char* data = stbi_load(filename.c_str(), &_width, &_height, &channels, 0);
+	if (data == nullptr)
 	{
 		std::cerr << "Failed to load texture " << filename << std::endl;
 		return;
 	}
-
-	_width = imageData->w;
-	_height = imageData->h;
 
 	glGenTextures(1, &_textureData);
 	glBindTexture(GL_TEXTURE_2D, _textureData);
 
 	setWrapModeInternal(REPEAT);
 	setFilteringInternal(LINEAR);
-	
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageData->w, imageData->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData->pixels);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	SDL_FreeSurface(imageData);
+	stbi_image_free(data);
 }
 
 Engine::Texture::~Texture()

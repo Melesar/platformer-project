@@ -1,27 +1,11 @@
 ﻿#pragma once
 #include <Core.h>
+#include <Enums.h>
 
 namespace Engine
 {
 	class Shader;
 	class Texture;
-
-	enum TextureId
-	{
-		TEX_ELLIOT,
-		TEX_BACKGROUND,
-		TEX_ENEMY,
-		TEX_PLATFORM,
-		TEX_PLAYER,
-		TEX_BULLET,
-
-		TEX_HEART,
-		TEX_HEART_EMPTY,
-		TEX_BUTTON_RESTART,
-		TEX_GAME_OVER,
-
-		NUM_TEXTURES
-	};
 
 	enum ShaderType
 	{
@@ -57,14 +41,8 @@ namespace Engine
 		std::map<TextureId, std::shared_ptr<Texture>> _textures;
 		std::map<ShaderType, std::shared_ptr<Shader>> _shaders;
 
-#if defined DEBUG
-		const std::string texturesFolder = "../res/Textures/";
-		const std::string shadersFolder = "../res/Shaders/";
-#else
 		const std::string texturesFolder = "res/Textures/";
 		const std::string shadersFolder = "res/Shaders/";
-#endif
-
 	};
 
 }

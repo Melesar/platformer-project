@@ -1,0 +1,1 @@
+target_sources(Engine PUBLIC src/glad.c)

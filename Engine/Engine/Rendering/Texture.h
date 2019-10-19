@@ -1,5 +1,7 @@
 ﻿#pragma once
-#include "Data/ResourceRepository.h"
+#include <Core.h>
+#include <Enums.h>
+
 
 namespace Engine
 {

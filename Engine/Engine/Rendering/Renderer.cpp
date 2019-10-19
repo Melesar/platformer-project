@@ -110,18 +110,14 @@ Engine::Renderer::Renderer(SDL_Window* window, float worldHeight) :
 	SDL_GetWindowSize(_window, &width, &height);
 	setOutputSize(width, height, worldHeight);
 
-	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
-	glewInit();
+	gladLoadGL();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 
-Engine::Renderer::~Renderer()
-{
-	IMG_Quit();
-}
+Engine::Renderer::~Renderer() = default;
 
 glm::vec2 Engine::Renderer::worldToScreenPos(glm::vec2 worldPos) const
 {

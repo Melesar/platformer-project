@@ -1,6 +1,7 @@
 ﻿#include "Navmesh.h"
 #include "Core.h"
 #include <unordered_set>
+#include <Physics/BoundingBox.h>
 
 bool Platformer::Navmesh::getPath(glm::vec2 from, glm::vec2 to, NavmeshPath& path) const
 {

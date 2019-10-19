@@ -1,7 +1,6 @@
 #include "Core.h"
 #include "Application.h"
 #include "Rendering/Renderer.h"
-#include "Rendering/Texture.h"
 
 Engine::Application* Engine::Application::_current;
 
@@ -77,8 +76,8 @@ void Engine::Application::setup()
 {
 	initSDL();
 
-	_gui = new GUI(_window, _context);
-	_renderer = new Renderer(_window, _worldHeight);
+    _renderer = new Renderer(_window, _worldHeight);
+    _gui = new GUI(_window, _context);
 	_resources.loadResources();
 }
 

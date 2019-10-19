@@ -45,3 +45,9 @@ namespace Engine
 	};
 }
 
+inline std::ostream& operator << (std::ostream& stream, const Engine::BoundingBox& box)
+{
+    stream << "Min: " << box.min << ", max: " << box.max;
+    return stream;
+}
+
