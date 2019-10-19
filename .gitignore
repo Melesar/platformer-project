@@ -1,11 +1,6 @@
 .vs/
 .idea/
-intermediate/
-bin/
 DevAssets/
 cmake/
-
-*.vcxproj.filters
-*.vcxproj.user
 
 Platformer/imgui.ini
