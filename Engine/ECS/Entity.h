@@ -11,8 +11,7 @@ namespace ECS
 
         Bitset bitset;
 
-        std::size_t entityIndex {0};
-        std::size_t componentDataIndex {0};
+        std::size_t index {0};
 
         bool isAlive {false};
     };

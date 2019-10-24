@@ -52,7 +52,7 @@ namespace ECS
             growIfNeeded();
 
             Entity& e = _entities[_nextEntityIndex];
-            e.componentDataIndex = e.entityIndex = _nextEntityIndex++;
+            e.index = _nextEntityIndex++;
             e.isAlive = true;
 
             _isDirty = true;
@@ -63,7 +63,7 @@ namespace ECS
         void deleteEntity(EntityHandle e)
         {
             _isDirty = true;
-            _entities[e.entityIndex].alive = false;
+            _entities[e.index].isAlive = false;
         }
 
         template<typename T, typename... TArgs>
@@ -71,7 +71,7 @@ namespace ECS
         {
             assertIsComponent<T>();
 
-            componentBit<T>(e.entityIndex) = true;
+            componentBit<T>(e.index) = true;
 
             T& c (getComponent<T>(e));
             c = T(std::forward<decltype(args)>(args)...);
@@ -82,7 +82,7 @@ namespace ECS
         bool hasComponent(EntityHandle e)
         {
             assertIsComponent<T>();
-            return componentBit<T>(e.entityIndex);
+            return componentBit<T>(e.index);
         }
 
         template<typename T>
@@ -91,7 +91,7 @@ namespace ECS
             assertIsComponent<T>();
             assert(hasComponent<T>(e));
 
-            return std::get<std::vector<T>>(_componentsStorage)[e.componentDataIndex];
+            return std::get<std::vector<T>>(_componentsStorage)[e.index];
         }
 
         template<typename T>
@@ -99,12 +99,12 @@ namespace ECS
         {
             assertIsComponent<T>();
 
-            componentBit<T>(e.entityIndex) = false;
+            componentBit<T>(e.index) = false;
         }
 
         bool isAlive(EntityHandle e)
         {
-            return isAlive(e.entityIndex);
+            return isAlive(e.index);
         }
 
         void clear()
@@ -122,10 +122,12 @@ namespace ECS
             if (_nextEntityIndex == 0)
             {
                 _currentEntityIndex = 0;
+                _isDirty = false;
                 return;
             }
 
             _currentEntityIndex = _nextEntityIndex = refreshImplementation();
+            _isDirty = false;
         }
 
         Manager()
@@ -144,8 +146,7 @@ namespace ECS
             for (UInt i = _currentCapacity; i < newCapacity; ++i)
             {
                 Entity& e = _entities[i];
-                e.componentDataIndex = i;
-                e.entityIndex = i;
+                e.index = i;
                 e.bitset.reset();
                 e.isAlive = false;
             }
@@ -206,9 +207,6 @@ namespace ECS
 
                 assert(!isAlive(deadIndex));
                 assert(isAlive(aliveIndex));
-
-                _entities[deadIndex].componentDataIndex = _entities[deadIndex].entityIndex = aliveIndex;
-                _entities[aliveIndex].componentDataIndex = _entities[aliveIndex].entityIndex = deadIndex;
 
                 std::swap(_entities[deadIndex], _entities[aliveIndex]);
                 MPL::forTuple([deadIndex, aliveIndex] (auto& vec) {
