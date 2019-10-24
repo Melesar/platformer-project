@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "EngineEntity.h"
 #include "Application.h"
 
 
@@ -13,10 +13,10 @@ namespace Engine
 
 		Sprite* getSprite() const { return _sprite; }
 
-		virtual ~VisibleEntity() { Application::destroySprite(_sprite); }
+		~VisibleEntity() override { Application::destroySprite(_sprite); }
 		
 	protected:
-		VisibleEntity(Sprite* sprite) : _sprite(sprite) {}
+		explicit VisibleEntity(Sprite* sprite) : _sprite(sprite) {}
 
 		Sprite* _sprite;
 	};

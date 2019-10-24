@@ -20,7 +20,7 @@ void Engine::Raycaster::addBoundingBox(const BoundingBox& box)
 
 void Engine::Raycaster::removeBoundingBox(const IPhysicsBody& body)
 {
-	const BoundingBox box = body.getBoundingBox();
+	const BoundingBox& box = body.getBoundingBox();
 		std::vector<const BoundingBox*> layerBoxes = _boxes[box.layer];
 	for (size_t i = 0; i < layerBoxes.size(); ++i)
 	{

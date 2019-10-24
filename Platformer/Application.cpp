@@ -3,18 +3,10 @@
 #include "Physics/Ray.h"
 #include "Physics/Intersection.h"
 
-#if defined DEBUG
 #define DRAW_NAVMESH false
 #define DRAW_IMGUI_DEMO false
-#define IS_FULLSCREEN true
+#define IS_FULLSCREEN false
 #define SHOW_STATS false
-#else
-#define DRAW_NAVMESH false
-#define DRAW_IMGUI_DEMO false
-#define IS_FULLSCREEN true
-#define SHOW_STATS false
-#endif
-
 
 Platformer::Application::Application()
 {

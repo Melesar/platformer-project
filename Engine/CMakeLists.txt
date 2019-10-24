@@ -3,7 +3,7 @@ add_library(Engine SHARED
         Engine/Core.h
         Engine/Application.cpp
         Engine/Application.h
-        Engine/Entity.h
+        Engine/EngineEntity.h
         Engine/GUI.h
         Engine/GUI.cpp
         Engine/Time.h
@@ -21,6 +21,8 @@ add_subdirectory(ImGUI)
 add_subdirectory(Engine/Input)
 add_subdirectory(Engine/Physics)
 add_subdirectory(Engine/Rendering)
+add_subdirectory(ECS)
+add_subdirectory(ECS/MPL)
 add_subdirectory(glad)
 add_subdirectory(stb)
 

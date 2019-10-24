@@ -19,7 +19,7 @@ namespace Platformer
 	public:
 
 		Enemy(glm::vec2 position, Player& player, const Engine::Raycaster& raycaster, const Navmesh& navmesh);
-		virtual ~Enemy();
+		~Enemy() override;
 
 		void attackPlayer() const;
 		void update(float deltaTime);
