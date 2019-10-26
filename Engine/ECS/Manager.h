@@ -130,6 +130,16 @@ namespace ECS
             _isDirty = false;
         }
 
+        template <typename TFunc>
+        void forEntities(TFunc&& func)
+        {
+            for (int i = 0; i < _currentEntityIndex; ++i)
+            {
+                func(_entities[i]);
+            }
+        }
+
+
         Manager()
         {
             grow(100);

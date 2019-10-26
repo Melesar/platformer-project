@@ -1,5 +1,5 @@
-#include <ECS/Manager.h>
 #include "Application.h"
+#include <ECS/System.h>
 
 #undef main
 
@@ -21,6 +21,26 @@ struct VelocityComponent
 
 using Settings = ECS::Settings<PositionComponent, VelocityComponent>;
 
+
+class MovementSystem : public ECS::ComponentSystem<Settings, MovementSystem, PositionComponent>
+{
+
+public:
+
+    static void onUpdate(EntityHandle e, PositionComponent& position)
+    {
+        std::cout << "Position: " << position.x << std::endl;
+    }
+
+
+    explicit MovementSystem(ECS::Manager<Settings>& manager) : ECS::ComponentSystem<Settings, MovementSystem, PositionComponent>(manager)
+    {
+    }
+
+};
+
+
+
 int main(int argc, char **argv)
 {
     ECS::Manager<Settings> manager;
@@ -41,6 +61,9 @@ int main(int argc, char **argv)
     manager.deleteEntity(entity2);
 
     manager.refresh();
+
+    MovementSystem system (manager);
+    system.update();
 
     assert(manager.getComponent<PositionComponent>(entity3).x == 3.f);
     assert(manager.getComponent<PositionComponent>(entity2).x == 2.f);
