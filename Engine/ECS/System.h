@@ -4,6 +4,19 @@
 #include "MPL/MPL.hpp"
 #include "Manager.h"
 
+
+template <typename T>
+constexpr auto type_name()
+{
+    std::string_view name, prefix, suffix;
+    name = __PRETTY_FUNCTION__;
+    prefix = "constexpr auto type_name() [with T = ";
+    suffix = "]";
+    name.remove_prefix(prefix.size());
+    name.remove_suffix(suffix.size());
+    return name;
+}
+
 namespace ECS
 {
     template <typename TSettings, typename TSystem, typename... TComponents>
@@ -25,7 +38,7 @@ namespace ECS
             _manager.forEntities([this](EntityHandle entity){
                if (entityMatch(entity))
                {
-                   TSystem::onUpdate(entity, _manager.template getComponent<TComponents>(entity)...);
+                   TSystem::onUpdate(entity, _manager, _manager.template getComponent<TComponents>(entity)...);
                }
             });
         }
@@ -39,14 +52,15 @@ namespace ECS
 
         bool entityMatch(EntityHandle e)
         {
-            return (e.bitset & _systemSignature) == _systemSignature;
+            return e.isAlive && (e.bitset & _systemSignature) == _systemSignature;
         }
+
 
         void initSignature()
         {
-            MPL::forTypes<TComponents...>([this](auto t)
+            MPL::forTypes<Components>([this](auto t)
             {
-                _systemSignature[TSettings::template componentId<typename decltype(t)::type>] = true;
+                _systemSignature[TSettings::template componentId<typename decltype(t)::type>()] = true;
             });
         }
 
@@ -56,6 +70,5 @@ namespace ECS
         Bitset _systemSignature;
     };
 }
-
 
 

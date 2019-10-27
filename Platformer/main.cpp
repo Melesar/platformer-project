@@ -22,18 +22,23 @@ struct VelocityComponent
 using Settings = ECS::Settings<PositionComponent, VelocityComponent>;
 
 
-class MovementSystem : public ECS::ComponentSystem<Settings, MovementSystem, PositionComponent>
+class MovementSystem : public ECS::ComponentSystem<Settings, MovementSystem, PositionComponent, VelocityComponent>
 {
 
 public:
 
-    static void onUpdate(EntityHandle e, PositionComponent& position)
+    static void onUpdate(EntityHandle e, ECS::Manager<Settings>& mgr, PositionComponent& position, VelocityComponent& velocity)
     {
-        std::cout << "Position: " << position.x << std::endl;
+        std::cout << "Position: " << position.x << std::endl << "Velocity: " << velocity.velocity.x << std::endl;
+        if (position.x > 2)
+        {
+            mgr.deleteEntity(e);
+        }
+
     }
 
 
-    explicit MovementSystem(ECS::Manager<Settings>& manager) : ECS::ComponentSystem<Settings, MovementSystem, PositionComponent>(manager)
+    explicit MovementSystem(ECS::Manager<Settings>& manager) : ECS::ComponentSystem<Settings, MovementSystem, PositionComponent, VelocityComponent>(manager)
     {
     }
 
@@ -56,19 +61,28 @@ int main(int argc, char **argv)
     manager.addComponent<PositionComponent>(entity3, 3.f, 14.f);
     manager.addComponent<VelocityComponent>(entity3, glm::vec2(3.f, 9.3f));
 
-    manager.refresh();
-
-    manager.deleteEntity(entity2);
-
-    manager.refresh();
-
     MovementSystem system (manager);
-    system.update();
 
-    assert(manager.getComponent<PositionComponent>(entity3).x == 3.f);
-    assert(manager.getComponent<PositionComponent>(entity2).x == 2.f);
-    assert(!manager.isAlive(entity2));
-    assert(manager.isAlive(entity3));
+    std::cout << "First update" << std::endl;
+    system.update();
+    manager.refresh();
+
+    std::cout << "Second update" << std::endl;
+    system.update();
+    manager.refresh();
+
+    //manager.deleteEntity(entity2);
+
+    std::cout << "Third update" << std::endl;
+    system.update();
+    manager.refresh();
+
+
+
+//    assert(manager.getComponent<PositionComponent>(entity3).x == 3.f);
+//    assert(manager.getComponent<PositionComponent>(entity2).x == 2.f);
+//    assert(!manager.isAlive(entity2));
+//    assert(manager.isAlive(entity3));
 
 //	Platformer::Application app;
 //	app.run(argc, argv);
