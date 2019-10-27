@@ -158,3 +158,15 @@ Iter selectRandomly(Iter start, Iter end) {
     static std::mt19937 gen(rd());
     return selectRandomly(start, end, gen);
 }
+
+template <typename T>
+constexpr auto typeName()
+{
+    std::string_view name, prefix, suffix;
+    name = __PRETTY_FUNCTION__;
+    prefix = "constexpr auto typeName() [with T = ";
+    suffix = "]";
+    name.remove_prefix(prefix.size());
+    name.remove_suffix(suffix.size());
+    return name;
+}

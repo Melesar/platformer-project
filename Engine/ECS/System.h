@@ -1,21 +1,7 @@
 #pragma once
 
 #include <Core.h>
-#include "MPL/MPL.hpp"
 #include "Manager.h"
-
-
-template <typename T>
-constexpr auto type_name()
-{
-    std::string_view name, prefix, suffix;
-    name = __PRETTY_FUNCTION__;
-    prefix = "constexpr auto type_name() [with T = ";
-    suffix = "]";
-    name.remove_prefix(prefix.size());
-    name.remove_suffix(suffix.size());
-    return name;
-}
 
 namespace ECS
 {

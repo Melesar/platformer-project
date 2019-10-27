@@ -1,5 +1,5 @@
 #include "Application.h"
-#include <ECS/System.h>
+#include <ECS/ECS.h>
 
 #undef main
 
@@ -29,7 +29,7 @@ public:
 
     static void onUpdate(EntityHandle e, ECS::Manager<Settings>& mgr, PositionComponent& position, VelocityComponent& velocity)
     {
-        std::cout << "Position: " << position.x << std::endl << "Velocity: " << velocity.velocity.x << std::endl;
+        std::cout << "Position x: " << position.x << std::endl;
         if (position.x > 2)
         {
             mgr.deleteEntity(e);
@@ -44,7 +44,19 @@ public:
 
 };
 
+class RenderingSystemGroup : public ECS::SystemsGroup<Settings, MovementSystem>
+{
+public:
+    explicit RenderingSystemGroup(ECS::Manager<Settings> &manager) : SystemsGroup(manager)
+    {}
+};
 
+class SystemsQueue : public ECS::SystemsQueue<Settings, RenderingSystemGroup>
+{
+public:
+    explicit SystemsQueue(ECS::Manager<Settings> &manager) : ECS::SystemsQueue<Settings, RenderingSystemGroup>(manager)
+    {}
+};
 
 int main(int argc, char **argv)
 {
@@ -61,22 +73,14 @@ int main(int argc, char **argv)
     manager.addComponent<PositionComponent>(entity3, 3.f, 14.f);
     manager.addComponent<VelocityComponent>(entity3, glm::vec2(3.f, 9.3f));
 
-    MovementSystem system (manager);
+    SystemsQueue systemsQueue (manager);
 
-    std::cout << "First update" << std::endl;
-    system.update();
-    manager.refresh();
-
-    std::cout << "Second update" << std::endl;
-    system.update();
-    manager.refresh();
-
-    //manager.deleteEntity(entity2);
-
-    std::cout << "Third update" << std::endl;
-    system.update();
-    manager.refresh();
-
+    std::cout << "Update #1" << std::endl;
+    systemsQueue.update();
+    std::cout << "Update #2" << std::endl;
+    systemsQueue.update();
+    std::cout << "Update #3" << std::endl;
+    systemsQueue.update();
 
 
 //    assert(manager.getComponent<PositionComponent>(entity3).x == 3.f);

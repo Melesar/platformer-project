@@ -74,7 +74,7 @@ namespace ECS
             componentBit<T>(e.index) = true;
 
             T& c (getComponent<T>(e));
-            c = T(std::forward<decltype(args)>(args)...);
+            c = T(std::forward<decltype(args)>(args)...);  //use TArgs instead of decltype(args)?
             return c;
         }
 
@@ -180,7 +180,7 @@ namespace ECS
         template<typename T>
         auto componentBit(UInt entityIndex)
         {
-            static_assert(Settings::template isComponent<T>(), "");
+            static_assert(Settings::template isComponent<T>());
 
             return _entities[entityIndex].bitset[Settings::template componentId<T>()];
         }
@@ -188,7 +188,7 @@ namespace ECS
         template<typename T>
         static constexpr void assertIsComponent()
         {
-            static_assert(Settings::template isComponent<T>(), "");
+            static_assert(Settings::template isComponent<T>());
         }
 
         bool isAlive(UInt entityIndex)
