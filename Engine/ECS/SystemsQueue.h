@@ -1,0 +1,8 @@
+//
+// Created by serge on 27.10.2019.
+//
+
+#ifndef PLATFORMER_SYSTEMSQUEUE_H
+#define PLATFORMER_SYSTEMSQUEUE_H
+
+#endif //PLATFORMER_SYSTEMSQUEUE_H
